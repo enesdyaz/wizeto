@@ -11,7 +11,7 @@
 <br>
         <v-subheader>ADMIN PANEL</v-subheader>
         <v-divider></v-divider>
-        <v-list-item v-for="(item, i) in items" :key="i" :to="item.to" router exact dense >
+        <v-list-item  v-for="(item, i) in items" :key="i" :to="item.to" dense>
 
           <v-list-item-action>
             <v-icon>{{ item.icon }}</v-icon>
@@ -25,8 +25,12 @@
       </v-list>
     </v-navigation-drawer>
 
+
+
+
+
 <!-- Tool bar -->
-    <v-app-bar :clipped-left="clipped" color='white' fixed height='60' app flat dense>
+    <v-app-bar>
 
       <v-app-bar-nav-icon class='d-lg-none' @click.stop="drawer = !drawer" />
       <div class='d-none d-sm-flex'>
@@ -36,13 +40,11 @@
       <!-- <v-toolbar-title v-text="title" /> -->
 
       <v-spacer />
-      <div style='padding-right: 20px;'>
+      <div class='d-none d-sm-flex' style='padding-right: 20px;'>
           <v-text-field v-model="search" append-icon="mdi-magnify" label="Search" single-line outlined  dense hide-details ></v-text-field>
       </div>
       <div><v-icon style='font-size: 1.2rem;'>mdi-account</v-icon><span style='font-size: 1rem;' >enesdyaz</span></div>
-      <!-- <v-btn icon @click.stop="rightDrawer = !rightDrawer" >
-        <v-icon>mdi-menu</v-icon>
-      </v-btn> -->
+ 
     </v-app-bar>
 
 
@@ -60,12 +62,16 @@
     </v-footer> -->
   </v-app>
 </template>
+<style lang="scss" scoped>
 
+
+</style>
 
 <script>
 export default {
   data () {
     return {
+      search: '',
       drawer: true,
       fixed: false,
       clipped: false,
@@ -75,13 +81,33 @@ export default {
         {
           icon: 'mdi-chevron-down',
           title: 'Home',
-          to: '/'
+          to: '/setup'
         },
         {
           icon: 'mdi-chevron-down',
           title: 'Service',
-          to: '/inspire'
-        }
+          to: '/setup/service'
+        },
+        {
+          icon: 'mdi-chevron-down',
+          title: 'Display',
+          to: '/display/service1'
+        },
+        {
+          icon: 'mdi-chevron-down',
+          title: 'Display2',
+          to: '/display/service2'
+        },
+        {
+          icon: 'mdi-chevron-down',
+          title: 'Booking',
+          to: '/setup/booking'
+        },
+        {
+          icon: 'mdi-chevron-down',
+          title: 'BookingDisplay',
+          to: '/display/bookingDisplay'
+        },
       ],
       miniVariant: false,
       right: true,

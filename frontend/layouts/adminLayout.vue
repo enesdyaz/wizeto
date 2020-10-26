@@ -25,6 +25,10 @@
       </v-list>
     </v-navigation-drawer>
 
+
+
+
+
 <!-- Tool bar -->
     <v-app-bar :clipped-left="clipped" color='white' fixed height='60' app flat dense>
 
@@ -66,6 +70,7 @@
 export default {
   data () {
     return {
+      search: '',
       drawer: true,
       fixed: false,
       clipped: false,
@@ -75,13 +80,33 @@ export default {
         {
           icon: 'mdi-chevron-down',
           title: 'Home',
-          to: '/'
+          to: '/setup/setup/'
         },
         {
           icon: 'mdi-chevron-down',
           title: 'Service',
-          to: '/inspire'
-        }
+          to: '/setup/service'
+        },
+        {
+          icon: 'mdi-chevron-down',
+          title: 'Display1',
+          to: '/display/service1/'
+        },
+         {
+          icon: 'mdi-chevron-down',
+          title: 'Display2',
+          to: '/display/service2'
+        },
+         {
+          icon: 'mdi-chevron-down',
+          title: 'Booking',
+          to: '/setup/booking'
+        },
+        {
+          icon: 'mdi-chevron-down',
+          title: 'BookingDisplay',
+          to: '/display/bookingDisplay'
+        },
       ],
       miniVariant: false,
       right: true,
