@@ -13,10 +13,13 @@
             <v-stepper-content step="1">
 <!-- calendar -->
                 <v-date-picker 
-                :first-day-of-week="1" v-model="date"  class="mt-4" :allowed-dates="allowedDates" :min='min' :max='this.max' color="blue-grey" ></v-date-picker>
-
-                <v-btn color="primary" @click="e6 = 2">Continue</v-btn>
+                :first-day-of-week="1" v-model="date"  class="mt-4" :allowed-dates="allowedDates" :min='min' :max='this.max' color="blue-grey" >
+                </v-date-picker>
+                <div>
+                    <v-btn color="primary" @click="e6 = 2">Continue</v-btn>
                 <v-btn text>Cancel</v-btn>
+                </div>
+                
             </v-stepper-content>
 
 
@@ -31,8 +34,8 @@
             </v-stepper-step>
 
             <v-stepper-content step="2">
-                <div v-if='date' style='clear: both;overflow:auto;'>
-                    <v-chip-group style=' padding: 5%' column v-for="(d, i) in booking_time" :key="i" v-model='chipSelection' active-class="deep-purple--text font-weight-bold" >
+                <div v-if='date'>
+                    <v-chip-group column v-for="(d, i) in booking_time" :key="i" v-model='chipSelection' active-class="deep-purple--text text--accent-4 font-weight-bold" >
 
                         <div v-for="(a, i) in d.time" :key='i' >
                             <v-chip v-if='a.booking' color='blue-grey' outlined small label :value='a.hour'>
@@ -40,11 +43,12 @@
                             </v-chip>
                         </div>
                     </v-chip-group> 
+                </div><br>
+                <div>
+                    <v-btn color="primary" @click="e6 = 3">Continue</v-btn>
+                    <v-btn text>Cancel</v-btn>
                 </div>
 
-
-                <v-btn color="primary" @click="e6 = 3">Continue</v-btn>
-                <v-btn text>Cancel</v-btn>
             </v-stepper-content>
 
 

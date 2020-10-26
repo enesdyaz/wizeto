@@ -72,8 +72,7 @@
                 <th>
                 </th>
                 <td>
-                    <v-btn class='mt-4' color='indigo' dark small @click='onClick()'>SHOW</v-btn>
-                    <v-btn class=' mt-4' color='blue-grey' dark small @click='onSave()'>SAVE</v-btn>
+                    <v-btn class='mt-4' color='indigo' dark small @click='onSave()'>SAVE</v-btn>
                     <!-- snackbar ( popping up a window ) --> 
                     <v-snackbar v-model="snackbar" :timeout="timeout"> {{ text }}
                         <template v-slot:action="{ attrs }">
@@ -106,28 +105,8 @@
                 </v-chip>
             </v-chip-group> 
 
-        </div> 
- <!-- Booking Display for Customer -->       
-        <div>
-            <v-date-picker 
-            :first-day-of-week="1" v-model="date"  class="mt-4" :allowed-dates="allowedDates" :min='min' :max='this.max' color="blue-grey" ></v-date-picker>
-            
-
-            <div v-if='date' style='clear: both;overflow:auto;'>
-                <v-btn class= 'body-2' color='blue-grey' style='margin-left: -30px;margin-top: 33px;' text><v-icon >mdi-chevron-down</v-icon>Available Time</v-btn>
-                <v-chip-group style='border: 1px solid red; padding: 5%' column v-for="(d, i) in booking_time" :key="i">
-                    <div style='width: 70px;'>
-                        <div class='caption' :class="[ new Date(d.date).getDay() == 6 ? 'sat' :  new Date(d.date).getDay() == 0 ? 'sun' : 'else' ]"  style='border-radius: 5px; margin-top: 5px; margin-right: 5px;font-size: 1rem;text-align: center;'>  {{changeDay(d.date)}}
-                        </div>
-                    </div>
-
-                    <v-chip color='blue-grey lighten-4' outlined small label v-for="(a, i) in d.time" :key='i'>
-                        <div :class="{chip:a.booking}">{{a.hour}}</div>
-                    </v-chip>
-                </v-chip-group> 
-            </div>
-        </div>
-<!-- end -->
+    </div> 
+ 
         
 </div>
 </template>
