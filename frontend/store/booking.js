@@ -5,33 +5,30 @@ export const state = () => ({
 export const mutations = {
    
     // Parent Data from category form //
-    ADD_BOOKING(state, payload){
-        
+    ADD_BOOKING(state, payload){    
         state.bookingData = payload
-        console.log(state.bookingData)
-    },
-    DELETE_PARENT_DATA(state, payload){
-        const parent_id = state.category.findIndex(e=>e.id === payload.parent_id)
-        const content_id = state.category.find(e=>e.id === payload.parent_id).content.findIndex(f=>f.id === payload.id)
-        state.category[parent_id].content.splice(content_id, 1)
-    },
-    UPDATE_PARENT_DATA(state, payload){
-        const parent_id = state.category.findIndex(e=>e.id === payload.parent_id)
-        const content_id = state.category.find(e=>e.id === payload.parent_id).content.findIndex(f=>f.id === payload.id)
-
-
-        state.category[parent_id].content[content_id].name = payload.name
-        state.category[parent_id].content[content_id].description = payload.description
-        state.category[parent_id].content[content_id].price = payload.price
-        state.category[parent_id].content[content_id].duration = payload.duration
-        state.category[parent_id].content[content_id].image = payload.image
     },
 
-    REMOVE_CATEGORY(state, payload){
-        const index = state.category.findIndex(v=>v.id === payload)
-        state.category.splice(index, 1)
+    CLOSE_COLS(state, hour){
+        for(let i=0; i<state.bookingData.book.length; i++){
+        state.bookingData.book[i].time.find(function(e){ if(e.hour === hour){  
+        e.booking = !e.booking }})
+        }
+    },
+    CHIP_BOOKING_TOGGLE(state, payload){
+        for(let i=0; i<state.bookingData.book.length; i++){
+            if(state.bookingData.book[i].date === payload.date){
+               state.bookingData.book[i].time.find(function(e){
+                    if(e.hour === payload.hour){
+                        e.booking = !e.booking
+                    }
+               })
+            
+            }
+            }
     }
 
+   
 
 }
 
@@ -40,38 +37,12 @@ export const actions= {
         commit('ADD_BOOKING', payload)
     },
 
-
-
-
-
-
-
-    // rest
-    addChild({commit}, payload){      // from category(child)
-        commit('ADD_CHILD', payload)
-    },
-    toggle({commit}, payload){          // admin toggle
-        commit('TOGGLE', payload)
-    },
-    delete({commit}, payload){          // admin only / remove Parent 
-        commit('DELETE_CATEGORY', payload)
-    },
-    addChildData({commit}, payload){  // from Form
-        commit('ADD_CHILD_DATA', payload)
+    closeCols({commit}, hour){
+        commit('CLOSE_COLS', hour)
     },
 
-
-    addParentData({commit}, payload){  // from Form
-        commit('ADD_PARENT_DATA', payload)
-    },
-    deleteParentData({commit}, payload){
-        commit('DELETE_PARENT_DATA', payload)
-    },
-    updateParentData({commit}, payload){
-        commit('UPDATE_PARENT_DATA', payload)
-    },
-    
-    removeCategory({commit}, payload){
-        commit('REMOVE_CATEGORY', payload)
+    chipBookingToggle({commit}, payload){
+        commit('CHIP_BOOKING_TOGGLE', payload)
     }
+
 }

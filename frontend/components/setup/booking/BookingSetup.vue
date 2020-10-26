@@ -6,14 +6,9 @@
                 <v-icon class='body-1 pr-2'>mdi-plus</v-icon> Setting up Your Booking 
             </v-btn>
     </div>
-
-
-
     <br>
     <div>
-   
-        <table class='body-1'>
-           
+        <table class='body-1'>  
             <tr>
                 <th>Available</th> 
                 <td><select v-model='period' required  style='font-size: 0.8rem; border: 1px solid grey; width: 90%; padding-left: 10px;' type="number" min='1'>
@@ -104,8 +99,7 @@
                     </div>
                 </div>
 
-                <v-chip color='blue-grey lighten-4' close-icon='mdi-circle' close @click:close="close(a.hour)" outlined small label v-for="(a, i) in d.time" :key='i' @click='a.booking = !a.booking'>
-
+                <v-chip color='blue-grey lighten-4' close-icon='mdi-circle' close @click:close="close(a.hour)" outlined small label v-for="(a, i) in d.time" :key='i' @click='chipBookingToggle(d.date, a.hour)'>
                     <div v-if='d.condition' :class="{chip:a.booking}">{{a.hour}}</div>
                     <div v-else >Close</div>
 
@@ -113,7 +107,7 @@
             </v-chip-group> 
 
         </div> 
-
+ <!-- Booking Display for Customer -->       
         <div>
             <v-date-picker 
             :first-day-of-week="1" v-model="date"  class="mt-4" :allowed-dates="allowedDates" :min='min' :max='this.max' color="blue-grey" ></v-date-picker>
@@ -128,13 +122,12 @@
                     </div>
 
                     <v-chip color='blue-grey lighten-4' outlined small label v-for="(a, i) in d.time" :key='i'>
-
                         <div :class="{chip:a.booking}">{{a.hour}}</div>
-
                     </v-chip>
                 </v-chip-group> 
             </div>
         </div>
+<!-- end -->
         
 </div>
 </template>
@@ -169,15 +162,7 @@ export default {
                 } 
             }
         },
-        // allowedDates(val){
-        //     var date = new Date(val).getDay()
-        //     for (var i = 0; i < this.arrayDay.length; i++) {
-        //         if (this.arrayDay[i] == date){
-        //             this.booking = val
-        //             return val
-        //         } 
-        //     }
-        // },
+ 
         getDateRangeData(param){  //param1은 시작일, param2는 종료일이다.
             var selectedDate = moment().add(+param, 'days').format("YYYY-MM-DD")
             var res_day = [];
@@ -220,17 +205,22 @@ export default {
             this.book.filter(f=>f.day===Number(num)).map(m=>m.condition=true)
         },
         onClick(){
-            var dateArray = this.getDateRangeData(this.period)  // 2020-10-26, 2020-10,27...
-            var bookArray = []
+            var dateArray = this.getDateRangeData(this.period)  // this.period -> 변경된 2020-10-26, 2020-10,27...  현재일부터 this.period기간 까지 날짜를 만듦
+            var bookArray = []  
             for(var i=0; i< dateArray.length; i++){
-                var dateTimeArray = this.getFullData(dateArray[i])
+                var dateTimeArray = this.getFullData(dateArray[i]) // this.interval, this.start_time, this.finish_time -> 변경된 timeObject에 시간을 interval로 계산하여 다 넣음.
                 bookArray.push(dateTimeArray)
             }
-            this.book = bookArray
-            this.arrayDay.forEach(e=>this.extract(e))
+            this.book = bookArray    // this.book에 넣음  // 신규건
+            this.arrayDay.forEach(e=>this.extract(e))   // this.arrayDay 변화된 폼의 월, 화, 수, 목, 금.. 을 체크한대로 데이터에 매칭 시킴
         },
 
         onSave(){
+            console.log(this.book.length)
+            if(1 >= this.book.length){
+                this.onClick()
+            }
+
             this.$store.dispatch('booking/addBooking', {
                 id: Date.now(),
                 date: this.date,  // picking a date
@@ -257,10 +247,12 @@ export default {
             if(dayOfWeek == 5){
             }
         },
-        close(selected){  // chip에서 O 선택하면 모든 시간이 동일하게 true/false 되는 함수
-            for(let i=0; i<this.book.length; i++){
-                let res = this.book[i].time.find(e=>e.hour === selected ? e.booking = !e.booking : '' )
-            }
+        close(hour){  // chip에서 O 선택하면 모든 시간이 동일하게 true/false 되는 함수
+        this.$store.dispatch('booking/closeCols', hour)
+       
+        },
+        chipBookingToggle(date, hour){
+            this.$store.dispatch('booking/chipBookingToggle', {date: date, hour: hour})
         },
     },
     created(){
@@ -289,8 +281,7 @@ export default {
         booking_time(){
             const d = this.date
             var result = this.book.filter(e=> e.date == d)
-            return result
-            
+            return result  
         },
         today(){
             var t = new Date()
