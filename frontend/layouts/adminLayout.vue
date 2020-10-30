@@ -97,6 +97,11 @@ export default {
           title: 'Display2',
           to: '/display/service2'
         },
+        {
+          icon: 'mdi-chevron-down',
+          title: 'Display3',
+          to: '/display/service3'
+        },
          {
           icon: 'mdi-chevron-down',
           title: 'Booking',

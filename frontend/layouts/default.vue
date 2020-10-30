@@ -100,6 +100,11 @@ export default {
         },
         {
           icon: 'mdi-chevron-down',
+          title: 'Display3',
+          to: '/display/service3'
+        },
+        {
+          icon: 'mdi-chevron-down',
           title: 'Booking',
           to: '/setup/booking'
         },
