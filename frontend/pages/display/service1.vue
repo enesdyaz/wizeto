@@ -31,7 +31,7 @@
                         <nuxt-link class='body-2 font-weight-bold' style='text-decoration: none; color: #455a64' :to="'/display/' + a.id" >{{a.name.toUpperCase()}}</nuxt-link>
                     </div>
                     <div class='caption' >{{textCut(a.description, 70)}}</div>
-                    <div class='body-2 font-weight-bold'  style='position: absolute; top: 69px; right: 10px; color: #8c9eff;'>${{a.price}}</div>
+                    <div class='body-2 font-weight-bold'  style='position: absolute; top: 23px; right: 10px; color: #8c9eff;'>${{a.price}}</div>
                 </div>
             </div>
         </div>

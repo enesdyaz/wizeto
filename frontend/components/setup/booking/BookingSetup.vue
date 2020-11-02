@@ -8,11 +8,12 @@
     </div>
     <br>
     <div>
-        <table class='body-1'>  
+        <form @submit.prevent="onClick">
+        <table class='body-1' >  
             <tr>
                 <th>Available</th> 
-                <td>
-                    <select v-model='period' :disabled='disabled' style='font-size: 0.8rem; border: 1px solid grey; width: 90%; padding-left: 10px;' type="number" min='1'>
+                <td :class='{disable: disabled}'>
+                    <select v-model='period' :disabled='disabled' style='font-size: 0.8rem; border: 1px solid grey; width: 90%; padding-left: 10px;' type="number" min='1' required>
                             <option value="7" selected>weekly</option>    
                             <option value="14">Fornightly</option>    
                             <option value="30">Monthly</option>    
@@ -26,9 +27,8 @@
                 <th>
                     Interval
                 </th>
-                <td>
+                <td :class='{disable: disabled}'>
                     <select v-model='duration' :disabled='disabled' style='font-size: 0.8rem; border: 1px solid grey; width: 90%; padding-left: 10px;' type="text" required>
-                        <option value="0" selected>none</option>    
                         <option value="10">10 min</option>    
                         <option value="15">15 min</option>    
                         <option value="30">30 min</option>    
@@ -46,28 +46,44 @@
             <br>
             <tr>
                 <th>Start Time</th>
-                <td >
-                    <input v-model='start_time' :disabled='disabled' style='font-size: 0.8rem; border: 1px solid grey; width: 90%; padding-left: 10px;' type="time" required>
+                <td :class='{disable: disabled}'>
+                    <input v-model='start_time'  :disabled='disabled' placeholder='ex. 0900'  maxlength = '4' min="0000" max="2359"  type="number" required
+                    style='font-size: 0.8rem; border: 1px solid grey; width: 90%; padding-left: 10px;'>
                 </td>
             </tr>
             <tr>
                 <th>Finish Time</th>
-                <td >
-                    <input v-model='finish_time' :disabled='disabled' style='font-size: 0.8rem; border: 1px solid grey; width: 90%; padding-left: 10px;' type="time" required>
+                <td :class='{disable: disabled}'>
+                    <input v-model='finish_time' :disabled='disabled' placeholder='ex. 1700' maxlength = '4' min="0000" max="2359" type="number" required 
+                    style='font-size: 0.8rem; border: 1px solid grey; width: 90%; padding-left: 10px;' >
                 </td>
             </tr>
-            <tr>
+            <br>
+            <tr >
                 <th>
                     Working Day
                 </th>
-                <td class='d-flex'>
-                    <v-checkbox  multiple persistent-hint hint='Mon' dense v-model="arrayDay"  value="1"></v-checkbox>
-                    <v-checkbox  multiple persistent-hint hint='Tue' dense v-model="arrayDay"  value="2"></v-checkbox>
-                    <v-checkbox  multiple persistent-hint hint='Wed' dense v-model="arrayDay"  value="3"></v-checkbox>
-                    <v-checkbox  multiple persistent-hint hint='Thu' dense v-model="arrayDay"  value="4"></v-checkbox>
-                    <v-checkbox  multiple persistent-hint hint='Fri' dense v-model="arrayDay"  value="5"></v-checkbox>
-                    <v-checkbox  multiple persistent-hint hint='Sat' dense v-model="arrayDay"  value="6" color='indigo'></v-checkbox>
-                    <v-checkbox  multiple persistent-hint hint='Sun' dense v-model="arrayDay"  value="0" color='red'></v-checkbox>
+                <td>
+                    <input style='border: 1px solid red;' id='mon' multiple v-model="arrayDay" type="checkbox" value='1' >
+                    <label for="mon" style='font-size: 0.7rem; margin: -3px;padding-right: 6px;'>Mon</label>
+
+                    <input style='border: 1px solid red;' id='Tue' multiple v-model="arrayDay" type="checkbox" value='2' >
+                    <label for="Tue" style='font-size: 0.7rem; margin: -3px;padding-right: 6px;'>Tue</label>
+
+                    <input style='border: 1px solid red;' id='Wed' multiple v-model="arrayDay" type="checkbox" value='3' >
+                    <label for="Wed" style='font-size: 0.7rem; margin: -3px;padding-right: 6px;'>Wed</label>
+
+                    <input style='border: 1px solid red;' id='Thu' multiple v-model="arrayDay" type="checkbox" value='4' >
+                    <label for="Thu" style='font-size: 0.7rem; margin: -3px;padding-right: 6px;'>Thu</label>
+
+                    <input style='border: 1px solid red;' id='Fri' multiple v-model="arrayDay" type="checkbox" value='5' >
+                    <label for="Fri" style='font-size: 0.7rem; margin: -3px;padding-right: 6px;'>Fri</label>
+
+                    <input style='border: 1px solid red;' id='Sat' multiple v-model="arrayDay" type="checkbox" value='6' >
+                    <label for="Sat" style='font-size: 0.7rem; margin: -3px;padding-right: 6px;'>Sat</label>
+
+                    <input style='border: 1px solid red;' id='Sun' multiple v-model="arrayDay" type="checkbox" value='0' >
+                    <label for="Sun" style='font-size: 0.7rem; margin: -3px;padding-right: 6px;'>Sun</label>
                 </td>
             </tr>
         
@@ -75,9 +91,9 @@
                 <th>
                 </th>
                 <td>
-                    <v-btn class='mt-4' color='indigo' dark small @click='onClick()'>SAVE</v-btn>
+                    <v-btn class='mt-4' color='indigo' dark small type='submit'>SAVE</v-btn>
                     <!-- snackbar ( popping up a window ) --> 
-                    <v-snackbar v-model="snackbar" :timeout="timeout"> {{ text }}
+                    <v-snackbar top v-model="snackbar" :timeout="timeout"> {{ text }}
                         <template v-slot:action="{ attrs }">
                             <v-btn color="blue" text  v-bind="attrs" @click="snackbar = false" > Close </v-btn>
                         </template>
@@ -87,7 +103,7 @@
                   
         
         </table>
-{{arrayDay}}
+        </form>
     </div>   <!-- end of Booking Form -->
 
 
@@ -163,8 +179,17 @@ export default {
 
 
         getBookingData(selectedDate){
-            const setFirstTime = this.start_time
-            const setFinishTime = this.finish_time
+            
+            var first = String(this.start_time).substring(0,2)
+            var second = String(this.start_time).substring(2,4)
+            var firstLetter = first + ":" + second
+            const setFirstTime = firstLetter
+
+            var third = String(this.finish_time).substring(0,2)
+            var fourth = String(this.finish_time).substring(2,4)
+            var secondLetter = third + ":" + fourth
+            const setFinishTime = secondLetter
+           
             const setInterval = this.duration
             var day = new Date(selectedDate).getDay()
             var date = new Date(selectedDate+" "+setFirstTime)
@@ -214,7 +239,8 @@ export default {
                     book: this.book,
                 }).then(()=>{ 
                     this.disabled = true;
-                    console.log('saved')}
+                    this.snackbar = true;
+                    }
                     ).catch(()=>{console.log('error')})
 
                 console.log('onClick end', this.book.length)
@@ -231,7 +257,8 @@ export default {
                     book: this.book
                     
                 }).then(()=>{ 
-
+                    this.disabled = true;
+                    this.snackbar = true;
                     console.log('saved')}
                     ).catch(()=>{console.log('error')})
             }
@@ -252,12 +279,12 @@ export default {
                     
                 ).then(()=>{ 
                         this.disabled = false;
-                        this.date = null
-                        this.period =null
-                        this.duration = null
-                        this.arrayDay= null
-                        this.start_time = null
-                        this.finish_time = null
+                        this.date = ''
+                        this.period =''
+                        this.duration = ''
+                        this.arrayDay= []
+                        this.start_time = ''
+                        this.finish_time = ''
                         this.book = []
                     console.log('saved')}
                     ).catch(()=>{console.log('error')
@@ -315,6 +342,7 @@ export default {
    },
 
     computed: {
+      
         max(){
             return moment().add(this.period, 'day').format('YYYY[-]MM[-]DD')
         },
@@ -346,12 +374,22 @@ export default {
             var today = t.getFullYear()+"-"+m+"-"+d
             return today
         },
-    },
+    }, 
 
     watch:{
         arrayDay(){
             this.$store.dispatch('booking/arrayDayChanged', this.arrayDay)
-
+        },
+        start_time(){
+           console.log('start time', this.start_time.length)
+            if(this.start_time.length > 4){
+            this.start_time = this.start_time.slice(0, 4);
+            }
+        },
+        finish_time(){
+            if(this.finish_time.length > 4){
+            this.finish_time = this.finish_time.slice(0, 4);
+            }
         }
     },
         
@@ -415,5 +453,8 @@ table{
     
     color: rgb(96,125,138);
     font-weight: bold;
+}
+.disable{
+    color: rgb(164, 178, 184);
 }
 </style>

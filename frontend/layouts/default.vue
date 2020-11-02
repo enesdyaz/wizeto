@@ -113,6 +113,11 @@ export default {
           title: 'BookingDisplay',
           to: '/display/bookingDisplay'
         },
+        {
+          icon: 'mdi-chevron-down',
+          title: 'inbox',
+          to: '/setup/inbox'
+        },
       ],
       miniVariant: false,
       right: true,

@@ -1,6 +1,7 @@
 
 export const state = () => ({
-    bookingData: []
+    bookingData: [],
+    book: []
 })
 
 export const mutations = {
@@ -32,6 +33,11 @@ export const mutations = {
     },
     RESET_BOOKING(state){
         state.bookingData = []
+    },
+
+    CONFIRM_BOOKING(state, payload){
+        console.log(payload)
+        state.book.unshift(payload)
     },
 
     CLOSE_COLS(state, hour){
@@ -72,6 +78,11 @@ export const actions= {
     resetBooking({commit}){
         commit('RESET_BOOKING')
     },
+    
+    confirmBooking({commit}, payload){
+        console.log('actions')
+        commit('CONFIRM_BOOKING', payload)
+    },
 
     closeCols({commit}, hour){
         commit('CLOSE_COLS', hour)
@@ -84,5 +95,6 @@ export const actions= {
     arrayDayChanged({commit}, payload){
         commit('ARRAY_DAY_CHANGED', payload)
     },
+
 
 }
