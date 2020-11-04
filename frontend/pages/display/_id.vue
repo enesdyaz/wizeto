@@ -15,9 +15,15 @@
         <div class='subtitle-2'>
             {{data.description}}
         </div>
+<!-- booking -->     
+        <div>
+            <booking-view></booking-view>
+        </div>
     </div>
 
+
     <br><br>
+<!-- recent Contents -->    
     <div style='padding: 0 5% 2% 5%;font-size: 1rem; color: #455a64' >
         <v-icon>mdi-table-of-contents</v-icon>
         Related Contents
@@ -55,7 +61,11 @@
 </template>
 
 <script>
+import bookingView from '../../components/setup/booking/bookingView';
 export default {
+    components:{
+        bookingView,
+    },
     data(){
         return{
             category: this.$store.state.parent.category

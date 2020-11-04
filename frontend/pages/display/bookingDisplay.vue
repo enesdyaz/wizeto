@@ -1,7 +1,6 @@
 <template>
     <div>
 
-
         <v-stepper v-model="e6" vertical>
 <!-- add service-->
 
@@ -182,6 +181,12 @@
 
             </v-stepper-content>
         </v-stepper>
+<!-- snackbar -->        
+        <v-snackbar color='primary'  v-model="snackbar" :timeout="timeout" >
+            <div style='text-align: center;'>
+                <v-icon>mdi-emoticon-happy-outline</v-icon> Your data is saved safely.
+            </div>
+        </v-snackbar>
     </div>
 </template>
 
@@ -189,6 +194,7 @@
 import moment from 'moment'
 import serviceDisplayToggle from '../../components/setup/display/serviceDisplayToggle'
 export default {
+  
     components:{
         serviceDisplayToggle,
     },
@@ -196,6 +202,8 @@ export default {
     data () {
         return {
             e6: 1, 
+            snackbar: false,
+            timeout: 5000,
             
             min: moment().format('YYYY[-]MM[-]DD'),
             book: [],
@@ -224,6 +232,15 @@ export default {
                 name: this.name,
                 email: this.email,
                 mobile: this.mobile
+            }).then(()=>{
+                this.date= ''
+                this.time= ''
+                this.service = ''
+                this.name= ''
+                this.email= ''
+                this.mobile= ''
+                this.snackbar = true
+                this.e6 = '1'
             })
             }else{
                 alert('Please check date&time')

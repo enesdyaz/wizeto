@@ -30,7 +30,7 @@
 
 
 <!-- Tool bar -->
-    <v-app-bar :clipped-left="clipped" color='white' fixed height='60' app flat dense>
+    <v-app-bar  :clipped-left="clipped" color='white' fixed height='70' app flat dense>
 
       <v-app-bar-nav-icon class='d-lg-none' @click.stop="drawer = !drawer" />
       <div class='d-none d-sm-flex'>
@@ -41,7 +41,7 @@
 
       <v-spacer />
       <div style='padding-right: 20px;'>
-          <v-text-field v-model="search" append-icon="mdi-magnify" label="Search" single-line outlined  dense hide-details ></v-text-field>
+          <v-text-field v-model="search" append-icon="mdi-magnify" label="Search"  outlined  dense hide-details ></v-text-field>
       </div>
       <div><v-icon style='font-size: 1.2rem;'>mdi-account</v-icon><span style='font-size: 1rem;' >enesdyaz</span></div>
       <!-- <v-btn icon @click.stop="rightDrawer = !rightDrawer" >
@@ -80,7 +80,7 @@ export default {
         {
           icon: 'mdi-chevron-down',
           title: 'Home',
-          to: '/setup/setup/'
+          to: '/client/client'
         },
         {
           icon: 'mdi-chevron-down',
@@ -116,6 +116,11 @@ export default {
           icon: 'mdi-chevron-down',
           title: 'inbox',
           to: '/setup/inbox'
+        },
+        {
+          icon: 'mdi-chevron-down',
+          title: 'mainWidget',
+          to: '/setup/mainWidget'
         },
       ],
       miniVariant: false,

@@ -11,28 +11,19 @@
             </div>
 
             <div class="mobileContent">
-              <!-- <mobilephone-client-view /> -->
+              <phone-view />
             </div>
 
     </div>
 </div>
 </template>
 
-<script>
-export default {
-  computed:{
-    companyInfo(){
-      return this.$store.state.company.companyInfo
-    }
-  }
-}
-</script>
 
 <script>
-// import MobilephoneClientView from '../../pages/device/MobilephoneClientView'
+import phoneView from '../../components/widgets/views/phoneView'
 export default {
   components:{
-    // MobilephoneClientView,
+    phoneView,
   },
 }
 </script>

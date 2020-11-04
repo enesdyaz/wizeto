@@ -156,8 +156,8 @@ export default {
         min: moment().format('YYYY[-]MM[-]DD'),
         // snackbar
         snackbar: false,
-        text: 'Your data have been securely saved',
-        timeout: 3000,
+        text: 'Your data have been securely saved. To change the date information, set it up again pressing the reset button which is located down at the bottom',
+        timeout: 6000,
         disabled: false,
     }),
     methods: {

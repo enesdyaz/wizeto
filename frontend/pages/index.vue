@@ -38,7 +38,7 @@
                 <div class='d-none d-sm-flex mt-2'><v-btn small text> </v-btn></div>
 
                 <div><v-btn text outlined color='green'> Signup</v-btn></div>
-                <div><v-btn text to='/setup'> Login</v-btn></div>
+                <div><v-btn text to='/setup/booking'> Login</v-btn></div>
                 <div class='d-sm-none'><v-icon @click.stop="drawer = !drawer" right style='margin-top: 6px;'>mdi-menu</v-icon></div>
 
             </div>
