@@ -17,7 +17,7 @@
         </div>
 <!-- booking -->     
         <div>
-            <booking-view></booking-view>
+            <booking-view :dataName = 'data.name'></booking-view>
         </div>
     </div>
 

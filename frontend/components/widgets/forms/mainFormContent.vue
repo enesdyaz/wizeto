@@ -114,6 +114,7 @@ export default {
             this.buttonName= data.buttonName
             this.description = data.description
             this.addOn = data.addOn
+            this.backgroundImage = data.backgroundImage
             }else{
                 console.log('no data length')
             }

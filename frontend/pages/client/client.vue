@@ -1,110 +1,113 @@
 <template>
-<div class='body'>
-<!-- top_bar -->
-  <v-card flat class="cardView"  >
-        <v-app-bar style='absolute: fixed' :style="{color: companyInfo.fontColor, backgroundColor: companyInfo.backgroundColor}" flat tile height='30' dense dark >
-              <v-icon :style="{color: companyInfo.fontColor}" style='font-size: 1rem;padding-right: 4px;'>mdi-drag</v-icon>
-            <v-toolbar-title :style="{color: companyInfo.fontColor}" style='font-size: 0.8rem;'> {{companyInfo.companyName}} </v-toolbar-title>
-              <v-spacer></v-spacer>
+<div>
+  
+    <v-toolbar dense>
+        <v-btn class='body-2' text> Layout </v-btn>
+      <v-btn-toggle v-model="select" dense group>
+          <v-btn>
+            <v-icon>mdi-dock-bottom</v-icon>
+          </v-btn>
+          <v-btn>
+            <v-icon>mdi-fit-to-page</v-icon>
+          </v-btn>
 
-              <v-btn icon>
-                <v-icon :style="{color: companyInfo.fontColor}">mdi-magnify</v-icon>
-              </v-btn>
+          <v-btn>
+            <v-icon>mdi-dock-right</v-icon>
+          </v-btn>
 
-              <v-app-bar-nav-icon :style="{color: companyInfo.fontColor}" @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
-        </v-app-bar>
+          <v-btn>
+            <v-icon>mdi-dock-bottom</v-icon>
+          </v-btn>
+    </v-btn-toggle>
 
-        <v-navigation-drawer v-model="drawer" absolute right temporary>
-            <v-list nav dense >
-              <v-list-item-group v-model="group" active-class="deep-purple--text text--accent-4">
-                <v-list-item>
-                  <v-list-item-title><v-btn text small to='/product'> Product</v-btn></v-list-item-title>
-                </v-list-item>
-
-                <v-list-item>
-                  <v-list-item-title>Bar</v-list-item-title>
-                </v-list-item>
-
-                <v-list-item>
-                  <v-list-item-title>Fizz</v-list-item-title>
-                </v-list-item>
-
-                <v-list-item>
-                  <v-list-item-title>Buzz</v-list-item-title>
-                </v-list-item>
-              </v-list-item-group>
-            </v-list>
-      </v-navigation-drawer>
-
-
-<!-- contents -->
-
-
-            <draggable v-model="component"  :options="{animation:300, handle:'.handle'}">
-                <div class='contentHeight' v-for="(item, index) in component" :key="index">
-                  <span class="handle" style='cursor: all-scroll'><v-icon class='contentHeightChild' >mdi-format-align-justify</v-icon></span>
-                  
-                  <div><keep-alive><component  v-bind:is='item'></component></keep-alive></div>
-                </div>
-            </draggable>
-        
-  </v-card>
+    <v-btn-toggle class='body-2' dense group v-model='textAlign'>
+      <v-btn>
+        <v-icon style='font-size: 1.4rem;'>mdi-format-align-left</v-icon>
+      </v-btn>
+      <v-btn>
+        <v-icon style='font-size: 1.4rem;'>mdi-format-align-center</v-icon>
+      </v-btn>
+    </v-btn-toggle>
+    </v-toolbar>
+    <br>
+    
+      
+    <div :class='selectUi' :style="{textAlign: textAlignUi}" style='padding: 5%; background: #ffebee'>
+        <div class='ui-image' ><v-img src='/pexels-andrea-piacquadio-3807386.jpg'></v-img></div>
+        <div class='ui-title'>TITLE NAME</div>
+        <div class='ui-subtitle'>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quisquam, aliquam harum consectetur dolor debitis eos porro vero minus pariatur molestias dolorem beatae iure nesciunt commodi sit. Voluptate quos officia molestias.</div>
+    </div>
 
 
-</div>        
+  
+
+
+</div>
 </template>
 
 <script>
-
-
-import draggable from 'vuedraggable';
-
-  export default {
-    layout:'landing',
-    components:{
-
-
-      draggable
+export default {
+  data(){
+    return{
+      select: '',
+      textAlign: ''
+    }
+  },
+  computed:{
+    selectUi(){
+      const items = ['ui-bottom','ui-left','ui-right', 'ui-top']
+      let select = items[this.select]
+      return select
     },
-
-    computed:{
-      companyInfo(){
-        return this.$store.state.company.companyInfo
-      }
-    },
-
-
-    layout: 'Landing',
-
-    data: () => ({
-      drawer: false,
-      group: null,
-      component: ['CompanyContent', 'CategoryView', 'CarouselView', 'CompanyDetailView', 'ParallaxView', ],
-    }),
-
-    watch: {
-      group () {
-        this.drawer = false
-      },
-    },
+    textAlignUi(){
+      const items = ['left', 'center']
+      let select = items[this.textAlign]
+      return select
+    }
   }
+}
 </script>
 
 
 <style lang="scss" scoped>
-
-
-.contentHeight{
-  position: relative;
-
-  .contentHeightChild{
-    font-size: .9rem;
-    position: absolute;
-    top: 2px;
-    left: 2px;
-    z-index: 10;
-    color: #4a148c;
+.textCenter{text-align: center;}
+.textLeft{text-align: left;}
+.ui-bottom{
+  .ui-image{
+    color: red;
+  }
+  .ui-title{
+      margin-top: 20px;
+      padding-left: 3%;
+      font-size: 1.2rem;
+      font-weight: 600;
+  }
+  .ui-subtitle{
+      margin-top: 20px;
+      padding-left: 3%;
+      font-size: 1rem;
+      font-weight: 300;
+      margin-bottom: 20px;
   }
 }
+
+.ui-left{ 
+  .ui-image{float: left;width: 50%;}
+  .ui-title{float: left; width: 49%;padding-left: 5px;}
+  .ui-subtitle{ padding-left: 5px; clear: both;}
+}
+
+.ui-right{
+  .ui-image{color: green;}
+  .ui-title{color: green;}
+  .ui-subtitle{color: green;}
+}
+
+.ui-top{
+  .ui-image{color: black;}
+  .ui-title{color: black;}
+  .ui-subtitle{color: black;}
+}
+
 
 </style>

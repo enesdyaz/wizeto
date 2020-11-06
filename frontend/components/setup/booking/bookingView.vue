@@ -66,7 +66,7 @@
                                 <tbody>
                                     <tr>
                                         <th>Service Name</th>
-                                        <td>{{category}}</td>
+                                        <td>{{dataName}}</td>
                                     </tr>
                                     <tr>
                                         <th> Name </th>
@@ -114,14 +114,19 @@
             
             </v-snackbar>
         </div>
-    </div>   {{category}}
+    </div>   {{dataName}}
 </div>
 </template>
 
 <script>
 import moment from 'moment'
 export default {
-
+    props:{
+        dataName:{
+            type: String,
+            required: true
+        }
+    },
     data () {
         return {
             dialog: false, 
@@ -136,8 +141,6 @@ export default {
 
             date: '',
             time: '',
-            serviceContent: '',
-
             name: '',
             email: '',
             mobile: '',
@@ -151,7 +154,7 @@ export default {
                 this.$store.dispatch('booking/confirmBooking', {
                 date: this.date,
                 time: this.time,
-                service: this.serviceContent,
+                service: this.dataName,
                 name: this.name,
                 email: this.email,
                 mobile: this.mobile
@@ -212,14 +215,6 @@ export default {
             var result = this.book.filter(e=> e.date == d)
             return result  
         },
-        category(){
-            const category = this.$store.state.parent.category
-            console.log(category)
-            const service = category[0].content[0].name
-            this.serviceContent = service
-            return service
-
-        }
     }
 }
 </script>

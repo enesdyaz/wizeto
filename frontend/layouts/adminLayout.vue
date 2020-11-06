@@ -122,6 +122,11 @@ export default {
           title: 'mainWidget',
           to: '/setup/mainWidget'
         },
+        {
+          icon: 'mdi-chevron-down',
+          title: 'cardWidget',
+          to: '/setup/cardWidget'
+        },
       ],
       miniVariant: false,
       right: true,
