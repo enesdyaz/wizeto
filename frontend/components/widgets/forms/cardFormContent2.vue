@@ -120,7 +120,6 @@
 <!-- save --> 
 <br><br><br><br>
     <div class='text-center'>
-
         <v-dialog v-model="dialog" width="500" >
             <template v-slot:activator="{ on, attrs }">
                 <v-btn color='blue-grey lighten-3' small dark v-bind="attrs" v-on="on" > remove </v-btn>
@@ -148,9 +147,6 @@
                 <v-icon>mdi-emoticon-happy-outline</v-icon> This card is saved safely.
             </div>
         </v-snackbar>
-
-
-        
     </div>
 </div>
 </template>
@@ -175,7 +171,7 @@ export default {
             storeFont: '',
             storeBg: '',
 
-            // dialog
+            //dialog
             dialog: false,
             snackbar: false,
             timeout: 3000,
@@ -184,7 +180,7 @@ export default {
 
     methods:{
         onSubmit(){
-            this.$store.dispatch('widget/addCard', {
+            this.$store.dispatch('widget/addCard2', {
                 title: this.title,
                 subtitle: this.subtitle,
                 addOn: true,
@@ -197,23 +193,23 @@ export default {
             }).then(()=>{this.snackbar = true})
         },
         onRemove(){
-            this.$store.dispatch('widget/removeCard', false)
-            this.title=''
-            this.subtitle=''
-            this.addOn=false
-            this.textAlign=''
-            this.bgArray= ''
-            this.fontArray= ''
-            this.sliderFont= '18'
-            this.sliderPadding= '4'
-            this.dialog = false
+                this.$store.dispatch('widget/removeCard2', false)
+
+                this.title=''
+                this.subtitle=''
+                this.addOn=false
+                this.textAlign=''
+                this.bgArray= ''
+                this.fontArray= ''
+                this.sliderFont= '18'
+                this.sliderPadding= '4'
+                this.dialog = false
         },
         colorNumber(array){
             const tags = this.tags
             const res = tags[array]
             return res
-        },
-      
+        }
     },
 
     computed:{
@@ -252,7 +248,7 @@ export default {
     },
 
     created(){
-    const data = this.$store.state.widget.card
+    const data = this.$store.state.widget.card2
     console.log(data)
         if(data.length !== 0){
             this.title =  data.title

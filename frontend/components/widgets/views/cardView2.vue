@@ -35,7 +35,7 @@ export default {
     },
     computed:{
         data(){
-            return this.$store.state.widget.card
+            return this.$store.state.widget.card2
         },
         textAlignUi(){
         const items = ['left', 'center', 'right']

@@ -1,8 +1,7 @@
 <template>
   <div>
       <div :class='{active: !isActive}' class='leftBox' style='overflow:hidden; '>
-          <card-form></card-form>
-          <card-view style='padding: 3%;'></card-view>
+          <card-form></card-form>    
       </div>
 
 
@@ -43,7 +42,7 @@ export default {
   layout: 'adminLayout',
   data() {
     return {
-      isActive: true
+      isActive: true,
     }
   },
   methods: {
