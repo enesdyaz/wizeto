@@ -1,5 +1,5 @@
 <template>
-<div>
+<div v-if='data.addOn'>
 <!-- ui --->   
         <div class='ui-basic' :style="{padding: paddingTitle, textAlign: textAlignUi, backgroundColor: colorNumber(data.bgArray), color: colorNumber(data.fontArray)}" >
             <!-- <div class='ui-image' ><v-img :src='data.backgroundImage'></v-img></div> -->

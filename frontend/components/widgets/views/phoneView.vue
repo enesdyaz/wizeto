@@ -1,29 +1,52 @@
 <template>
 <div>
-    <div><main-view /></div>
-    <div v-if='card.addOn'><card-view /></div>
-    <div v-if='card2.addOn'><card-view2 /></div>
-    <div v-if='card3.addOn'><card-view3 /></div>
-    <div><display1 /></div>
-    
-    
+    <draggable v-model="component" @change='onChange'>
+        <div v-for="(item, index) in component" :key="index">
+            <!-- <div class="handle" style='cursor: all-scroll;positon: absolute; top: 10px;'><v-icon class='contentHeightChild' >mdi-format-align-justify</v-icon></div> -->
+            <div class='handle' style='cursor: all-scroll'><component  v-bind:is='item'></component></div>
+        </div>
+    </draggable>
+
+
 
 </div>
 </template>
 
 <script>
+import draggable from 'vuedraggable'
 import mainView from '../../widgets/views/mainView'
 import display1 from '../../../pages/display/service1'
 import cardView from '../../widgets/views/cardView'
 import cardView2 from '../../widgets/views/cardView2'
 import cardView3 from '../../widgets/views/cardView3'
 export default {
+    data(){
+        return{
+            component: ['mainView', 'cardView', 'cardView2', 'cardView3', 'display1'],
+
+        }
+    },
+    methods:{
+        onChange(){
+            this.$store.dispatch('phoneView/changeView', this.component)
+        }
+    },
     components: {
         mainView,
         cardView,
         cardView2,
         cardView3,
         display1,
+        draggable,
+    },
+    created(){
+        const data = this.$store.state.phoneView.view
+        console.log(data)
+        if(data.length !== 0){
+            this.component =  data
+            }else{
+                console.log('no data length')
+            }
     },
     computed:{
         card(){
@@ -39,6 +62,6 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss" scoped>
 
 </style>
