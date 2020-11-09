@@ -5,23 +5,23 @@
             <table  style='width: 100%;'>
                 <tr>
                     <th><v-icon class='vIcon'>mdi-chevron-down</v-icon>Logo Name</th> 
-                    <td><input  v-model='logo'  type="text" ></td>
+                    <td><input  v-model='logo' v-on:keyup.enter="onEnter" type="text" ></td>
                 </tr>
                 <tr>
                     <th><v-icon class='vIcon'>mdi-chevron-down</v-icon>Title</th> 
-                    <td ><input  v-model='title'  type="text" /></td>
+                    <td ><input  v-model='title' v-on:keyup.enter="onEnter" type="text" /></td>
                 </tr>
                 <tr>
                     <th><v-icon class='vIcon'>mdi-chevron-down</v-icon>Subtitle</th> 
-                    <td ><input  v-model='subtitle'  type="text"  /></td>
+                    <td ><input  v-model='subtitle' v-on:keyup.enter="onEnter" type="text"  /></td>
                 </tr>
                 <tr>
                     <th><v-icon class='vIcon'>mdi-chevron-down</v-icon>Button Name</th> 
-                    <td ><input  v-model='buttonName'  type="text"  /></td>
+                    <td ><input  v-model='buttonName' v-on:keyup.enter="onEnter" type="text"  /></td>
                 </tr>
                 <tr>
                     <th><v-icon class='vIcon'>mdi-chevron-down</v-icon>Description</th> 
-                    <td ><textarea  v-model='description'  type="text" ></textarea></td>
+                    <td ><textarea  v-model='description' v-on:keyup.enter="onEnter" type="text" ></textarea></td>
                 </tr>
                 <tr>
                     <th><v-icon class='vIcon'>mdi-chevron-down</v-icon>Bg Image</th> 
@@ -145,7 +145,7 @@
         <v-menu :close-on-content-click="true" :nudge-width="250" offset-x >
                 <template v-slot:activator="{ on, attrs }">
                     <v-btn small v-bind="attrs" v-on="on" style='padding: 5px;'>
-                        <v-icon style='font-size: 1.3rem;'>mdi-invert-colors</v-icon>
+                        <v-icon>mdi-format-color-fill</v-icon>
                     </v-btn>
                 </template>
 
@@ -158,23 +158,6 @@
                     </v-card-text>
                 </v-card>
             </v-menu>
-<!-- line height -->
-            <v-menu :close-on-content-click="true" :nudge-width="250" offset-x >
-                <template v-slot:activator="{ on, attrs }">
-                    <v-btn small v-bind="attrs" v-on="on" style='padding: 5px;'>
-                        <v-icon style='font-size: 1.4rem;'>mdi-format-line-spacing</v-icon>
-                    </v-btn>
-                </template>
-
-                <v-card>
-                    <v-card-text>
-                        <div>
-                            <span style='float: left;margin-top: 5px;' v-text='sliderLineHeight'></span>
-                            <v-slider color='blue-grey' style='width: 85%;' hide-details v-model="sliderLineHeight" min='20' max='200' step="10" ></v-slider>
-                        </div>
-                    </v-card-text>
-                </v-card>
-            </v-menu>
 
 
             </v-btn-toggle>
@@ -183,25 +166,44 @@
 
 <!-- mainView -->    
     <div :style="{textAlign: textAlignUi, color: colorNumber(fontArray)}">
-        <div class='mainDiv-1' :style="{backgroundColor: colorNumber(bgArray), lineHeight: sliderLineHeightValue, color: colorNumber(fontArray), backgroundImage: 'url(' + backgroundImage + ')', } " >
-            <div :style="{background: sliderOpacityValue}">
-                <div :style="{ padding: sliderPaddingValue }">
-                    <div class='logoDiv' :style="{fontSize: sliderFontLogo}">
+        <div v-if='backgroundImage' class='mainDiv-1' :style="{backgroundImage: 'url(' + backgroundImage + ')', lineHeight: '60px', } " >
+            <div :style="{background: opacityImage}">
+                <div :style="{ padding: paddingTitle }">
+                    <div class='logoDiv' :style="{fontSize: fontLogo}">
                         {{logo}}
                     </div>
-                    <div class='titleDiv' :style="{fontSize: sliderFontTitle}">
-                        {{title.toUpperCase()}}
+                    <div class='titleDiv' :style="{fontSize: fontTitle}">
+                        {{title}}
                     </div>
-                    <div class='subtitleDiv' :style="{fontSize: sliderFontSubtitle}">
+                    <div class='subtitleDiv' :style="{fontSize: fontSubtitle}">
                         {{subtitle}}
                     </div>
                     <div v-if='buttonName' class='buttonDiv'>
                         <v-btn :color='colorNumber(buttonArray)' dark >{{buttonName}}</v-btn>
                     </div>
-                    <div class='descriptionDiv' :style="{fontSize: sliderFontDescription}">
+                    <div class='descriptionDiv' :style="{fontSize: fontDescription}">
                         {{description}}
                     </div>
                 </div>
+            </div>
+        </div>
+
+        <div v-else class='mainDiv-1' :style="{padding: paddingTitle, backgroundColor: colorNumber(bgArray), textAlign: textAlignUi, color: colorNumber(fontArray)}">
+            <div class='logoDiv' :style="{fontSize: fontLogo}">
+                <!-- <span><v-icon :style="{color: fontColor ? fontColor : 'white' }" style='font-size: 1rem; margin: 5px; '>mdi-cube-outline</v-icon></span> -->
+                {{logo}}
+            </div>
+            <div class='titleDiv' :style="{fontSize: fontTitle}">
+                {{title.toUpperCase()}}
+            </div>
+            <div class='subtitleDiv' :style="{fontSize: fontSubtitle}">
+                {{subtitle}}
+            </div>
+            <div v-if='buttonName' class='buttonDiv'>
+                <v-btn :color='colorNumber(buttonArray)' dark >{{buttonName}}</v-btn>
+            </div>
+            <div class='descriptionDiv' :style="{fontSize: fontDescription}">
+                {{description}}
             </div>
         </div>
     </div>
@@ -245,15 +247,13 @@ textarea{ width: 100%; border: 1px solid grey; border-radius: 5px; font-size: 0.
         font-size: 2rem;
         display: inline-block;
         width: 80%;
-        line-height: 140%;
-        
     }
     .subtitleDiv{
         display: inline-block;
         font-size: 1.2rem;
         font-weight: 300; 
         width: 90%;
-        line-height: 120%;
+        line-height: 100%;
     }
     .buttonDiv{
         margin-top: 30px;
@@ -264,7 +264,6 @@ textarea{ width: 100%; border: 1px solid grey; border-radius: 5px; font-size: 0.
         font-weight: 200;
         font-size: 0.8rem;
         width: 80%;
-        line-height: 100%;
     }
 }
 
@@ -299,7 +298,6 @@ export default {
             sliderFont: '22',
             sliderPadding: '0',
             sliderOpacity: '',
-            sliderLineHeight: '',
             storeFont: '',
             storeBg: '',
 
@@ -382,28 +380,24 @@ export default {
         let select = items[this.fontArray]
         return select
         },
-        
-        sliderFontTitle(){
+        fontTitle(){
             return this.sliderFont + "px"
         },
-        sliderFontSubtitle(){
+        fontSubtitle(){
             return (this.sliderFont - 5) + "px"
         },
-        sliderFontLogo(){
+        fontLogo(){
             return (this.sliderFont - 9 ) + "px"
         },
-        sliderFontDescription(){
+        fontDescription(){
             return (this.sliderFont - 10) + "px"
         },
 
-        sliderPaddingValue(){
+        paddingTitle(){
             return this.sliderPadding + "%"
         },
-        sliderOpacityValue(){
+        opacityImage(){
             return "rgba(0,0,0,"+ this.sliderOpacity+")"
-        },
-        sliderLineHeightValue(){
-            return this.sliderLineHeight + "px"
         }
 
     },

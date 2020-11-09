@@ -2,7 +2,7 @@
   <div>
       <div :class='{active: !isActive}' class='leftBox' style='overflow:hidden; '>
           <main-form></main-form>
-          <main-view style='padding: 3%;'></main-view>
+          <!-- <main-view style='padding: 3%;'></main-view> -->
       </div>
 
 

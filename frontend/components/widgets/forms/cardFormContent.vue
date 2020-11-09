@@ -162,10 +162,13 @@ export default {
             title: '',
             subtitle: '',
             addOn: false,
-            menuFont: false,
-            menuBackground: false,
+
+
+      
 
             // design
+            menuFont: false,
+            menuBackground: false,
             textAlign: '',
             tags: [ 'whitesmoke', '#000000', '#455a64', '#e64a19', '#5d4037', '#616161', '#1b5e20', '#827717', '#01579b', '#004d40', '#1a237e', '#311b92', '#b71c1c', '#7b1fa2', '#c2185b'],        
             bgArray: '',
@@ -217,11 +220,6 @@ export default {
     },
 
     computed:{
-        electUi(){
-        const items = ['ui-basic','ui-expand','ui-right', 'ui-top']
-        let select = items[this.select]
-        return select
-        },
         textAlignUi(){
         const items = ['left', 'center', 'right']
         let select = items[this.textAlign]

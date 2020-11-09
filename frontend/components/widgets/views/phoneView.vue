@@ -46,7 +46,7 @@ export default {
             this.component =  data
             }else{
                 console.log('no data length')
-            }
+        }
     },
     computed:{
         card(){
