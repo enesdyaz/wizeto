@@ -59,9 +59,6 @@ export default {
         paddingTitle(){
             return this.data.sliderPadding + "%"
         }
-        
-
-    
     },
 
 }

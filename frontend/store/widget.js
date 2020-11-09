@@ -10,8 +10,10 @@ export const state = () => ({
 export const mutations = {
     //main
     ADD_MAIN(state, payload){
-        console.log('mutations_main', state.main)
         state.main = payload
+    },
+    REMOVE_MAIN(state){
+        state.main = ''
     },
 
     //card
@@ -28,13 +30,13 @@ export const mutations = {
         state.card3 = payload
     },
 
-    REMOVE_CARD(state, payload){
+    REMOVE_CARD(state){
         state.card=''
     },
-    REMOVE_CARD2(state, payload){
+    REMOVE_CARD2(state){
         state.card2=''
     },
-    REMOVE_CARD3(state, payload){
+    REMOVE_CARD3(state){
         state.card3=''
     }
 }
@@ -45,6 +47,11 @@ export const actions= {
         console.log('actions_main', payload)
         commit('ADD_MAIN', payload)
     },
+    removeMain({commit}, payload){
+        console.log('remove Main')
+        commit('REMOVE_MAIN', payload)
+    },
+
 
     //card
     addCard({commit}, payload){

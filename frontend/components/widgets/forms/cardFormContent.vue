@@ -149,8 +149,6 @@
             </div>
         </v-snackbar>
 
-
-        
     </div>
 </div>
 </template>
@@ -162,9 +160,6 @@ export default {
             title: '',
             subtitle: '',
             addOn: false,
-
-
-      
 
             // design
             menuFont: false,
@@ -216,7 +211,6 @@ export default {
             const res = tags[array]
             return res
         },
-      
     },
 
     computed:{
@@ -225,7 +219,6 @@ export default {
         let select = items[this.textAlign]
         return select
         },
-
 
         backgroundColorSelect(){
         const items = this.tags
