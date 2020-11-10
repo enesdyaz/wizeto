@@ -9,8 +9,6 @@
         <tr>
             <td>
                 <ul class='parent' v-for="(p,i) in category" :key="i">
-                    
-                    
                     <div :class='{parent_item : p.toggle && p.child.length >0, bottom : true}'>
 <!-- 1. Parent Category -->
                         <button   @click='toggle(p.id)'>

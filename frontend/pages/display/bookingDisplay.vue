@@ -198,7 +198,6 @@ export default {
     components:{
         serviceDisplayToggle,
     },
-    layout: 'adminLayout',
     data () {
         return {
             e6: 1, 

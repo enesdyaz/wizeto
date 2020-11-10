@@ -17,7 +17,6 @@
 
 <script>
 export default {
-    layout: 'adminLayout',
     computed:{
         inbox(){
             const inbox = this.$store.state.booking.book

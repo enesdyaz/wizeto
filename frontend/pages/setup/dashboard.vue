@@ -1,11 +1,12 @@
 <template>
   <div>
       <div :class='{active: !isActive}' class='leftBox' style='overflow:auto; height: 100vh;'>
-          <category-form />
+          DashBoard  
       </div>
 
-      <div class='rightBox'>
-        <v-row  justify='center' align='center' class='d-none d-sm-flex'>
+
+      <div class='rightBox d-none d-sm-flex' >
+        <v-row justify='center' align='center'>
           <v-col>
             <mobile-phone></mobile-phone>
           </v-col>
@@ -25,21 +26,22 @@
 </template>
 
 <script>
-import MobilePhone from '../../components/setup/MobileIphone'
+import mobilePhone from '../../components/setup/MobileIphone'
+import cardForm from '../../components/widgets/forms/cardForm'
 import phoneView from '../../components/widgets/views/phoneView'
-import CategoryForm from '../../components/setup/service/CategoryForm'
-
+import cardView from '../../components/widgets/views/cardView'
 
 export default {
   components: {
-    MobilePhone,
+    mobilePhone,
+    cardForm,
     phoneView,
-    CategoryForm
+    cardView,
 
   },
   data() {
     return {
-      isActive: true
+      isActive: true,
     }
   },
   methods: {
@@ -58,14 +60,12 @@ export default {
 .leftBox{
   width: 50%;
   float: left;
-  overflow: scroll;
 }
 
 .rightBox{
   width: 50%;
   float: left;
   margin-top: 0;
-  overflow: scroll;
 }
 
 

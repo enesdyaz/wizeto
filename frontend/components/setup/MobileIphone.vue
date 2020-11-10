@@ -1,5 +1,5 @@
 <template>
-<div>
+<div><br><br>
     <div class="iphone-x">
             <div> <div class='c'>Speaker</div> <b>Camera</b> </div>
     <!-- time and signal -->
@@ -32,7 +32,7 @@ export default {
 // 모바일 컨텐트 내용 - 최상위  (height: 650px, scroll, )
 .mobileContent{
   overflow: scroll;
-  margin-top: 10px;
+  margin-top: 15px;
   height: 95.5%;
   border-bottom-left-radius: 40px;
   border-bottom-right-radius: 40px;
@@ -52,6 +52,7 @@ export default {
   &:after{
     content: '';
     position: absolute;
+    z-index: -11;
     left: 50%;
     transform: translateX(-50%);
 
@@ -74,6 +75,7 @@ export default {
   s,
   span {
     position: absolute;
+    z-index: -12;
     display: block;
     color: transparent;
 

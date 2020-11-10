@@ -1,13 +1,11 @@
 <template>
   <div>
-      <div :class='{active: !isActive}' class='leftBox' style='overflow:hidden; '>
+      <div :class='{active: !isActive}' class='leftBox' style='overflow:auto; height: 100vh;'>
           <main-form></main-form>
-          <!-- <main-view style='padding: 3%;'></main-view> -->
       </div>
 
-
-      <div class='rightBox d-none d-sm-flex' >
-        <v-row justify='center' align='center'>
+      <div class='rightBox'>
+        <v-row  justify='center' align='center' class='d-none d-sm-flex'>
           <v-col>
             <mobile-phone></mobile-phone>
           </v-col>
@@ -40,7 +38,6 @@ export default {
     phoneView,
 
   },
-  layout: 'adminLayout',
   data() {
     return {
       isActive: true
@@ -62,12 +59,14 @@ export default {
 .leftBox{
   width: 50%;
   float: left;
+  overflow: scroll;
 }
 
 .rightBox{
   width: 50%;
   float: left;
   margin-top: 0;
+  overflow: scroll;
 }
 
 

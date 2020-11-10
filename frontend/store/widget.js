@@ -1,6 +1,11 @@
 
 export const state = () => ({
     main: '',
+    main2: '',
+    main3: '',
+    main4: '',
+    main5: '',
+    
     card: '',
     card2: '',
     card3: '',
@@ -15,6 +20,32 @@ export const mutations = {
     REMOVE_MAIN(state){
         state.main = ''
     },
+    ADD_MAIN2(state, payload){
+        state.main2 = payload
+    },
+    REMOVE_MAIN2(state){
+        state.main2 = ''
+    },
+
+    ADD_MAIN3(state, payload){
+        state.main3 = payload
+    },
+    REMOVE_MAIN3(state){
+        state.main3 = ''
+    },
+    ADD_MAIN4(state, payload){
+        state.main4 = payload
+    },
+    REMOVE_MAIN4(state){
+        state.main4 = ''
+    },
+    ADD_MAIN5(state, payload){
+        state.main5 = payload
+    },
+    REMOVE_MAIN5(state){
+        state.main5 = ''
+    },
+
 
     //card
     ADD_CARD(state, payload){
@@ -44,13 +75,44 @@ export const mutations = {
 export const actions= {
     //main
     addMain({commit}, payload){
-        console.log('actions_main', payload)
         commit('ADD_MAIN', payload)
     },
     removeMain({commit}, payload){
-        console.log('remove Main')
         commit('REMOVE_MAIN', payload)
     },
+
+    addMain2({commit}, payload){
+        commit('ADD_MAIN2', payload)
+    },
+    removeMain2({commit}, payload){
+        commit('REMOVE_MAIN2', payload)
+    },
+
+    addMain3({commit}, payload){
+        commit('ADD_MAIN3', payload)
+    },
+    removeMain3({commit}, payload){
+        commit('REMOVE_MAIN3', payload)
+    },
+
+    addMain4({commit}, payload){
+        commit('ADD_MAIN4', payload)
+    },
+    removeMain4({commit}, payload){
+        commit('REMOVE_MAIN4', payload)
+    },
+
+    addMain5({commit}, payload){
+        commit('ADD_MAIN5', payload)
+    },
+    removeMain5({commit}, payload){
+        commit('REMOVE_MAIN5', payload)
+    },
+
+
+
+
+
 
 
     //card

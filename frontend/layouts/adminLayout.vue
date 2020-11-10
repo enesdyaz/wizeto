@@ -8,7 +8,7 @@
         <v-container class='d-flex justify-center'>
           <img width='100' alt="Vuetify Logo" :src="profileImage" >
         </v-container>
-<br>
+        <br>
         <v-subheader>ADMIN PANEL</v-subheader>
         <v-divider></v-divider>
         <v-list-item v-for="(item, i) in items" :key="i" :to="item.to" router exact dense >
@@ -30,7 +30,7 @@
 
 
 <!-- Tool bar -->
-    <v-app-bar  :clipped-left="clipped" color='white' fixed height='70' app flat dense>
+    <v-app-bar  :clipped-left="clipped" color='white'  height='70' app flat dense>
 
       <v-app-bar-nav-icon class='d-lg-none' @click.stop="drawer = !drawer" />
       <div class='d-none d-sm-flex'>
@@ -44,9 +44,7 @@
           <v-text-field v-model="search" append-icon="mdi-magnify" label="Search"  outlined  dense hide-details ></v-text-field>
       </div>
       <div><v-icon style='font-size: 1.2rem;'>mdi-account</v-icon><span style='font-size: 1rem;' >enesdyaz</span></div>
-      <!-- <v-btn icon @click.stop="rightDrawer = !rightDrawer" >
-        <v-icon>mdi-menu</v-icon>
-      </v-btn> -->
+
     </v-app-bar>
 
 
@@ -57,11 +55,6 @@
 
 <!-- right navigation -->
 
-
-
-    <!-- <v-footer :absolute="!fixed" app >
-      <span>&copy; {{ new Date().getFullYear() }}</span>
-    </v-footer> -->
   </v-app>
 </template>
 

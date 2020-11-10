@@ -1,6 +1,6 @@
 <template>
   <div>
-      <div :class='{active: !isActive}' class='leftBox' style='overflow:hidden; '>
+      <div :class='{active: !isActive}' class='leftBox' style='overflow:auto; height: 100vh;'>
           <card-form></card-form>    
       </div>
 
@@ -26,20 +26,19 @@
 </template>
 
 <script>
-import MobilePhone from '../../components/setup/MobileIphone'
+import mobilePhone from '../../components/setup/MobileIphone'
 import cardForm from '../../components/widgets/forms/cardForm'
 import phoneView from '../../components/widgets/views/phoneView'
 import cardView from '../../components/widgets/views/cardView'
 
 export default {
   components: {
-    MobilePhone,
+    mobilePhone,
     cardForm,
     phoneView,
     cardView,
 
   },
-  layout: 'adminLayout',
   data() {
     return {
       isActive: true,

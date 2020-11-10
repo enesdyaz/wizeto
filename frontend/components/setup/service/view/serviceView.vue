@@ -34,6 +34,7 @@
                     <div class='body-2 font-weight-bold'  style='position: absolute; top: 23px; right: 10px; color: #8c9eff;'>${{a.price}}</div>
                 </div>
             </div>
+            <br>
         </div>
     </div>
 </div>

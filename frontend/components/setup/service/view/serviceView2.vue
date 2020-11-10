@@ -6,7 +6,7 @@
             <v-icon style='font-size: 2rem;margin-left: 5px;'>mdi-menu-right</v-icon>{{c.parent.toUpperCase()}}
         </div>
 
-        <div style='display: flex;flex-wrap: nowrap; overflow-x: auto;'>
+        <div style='display: flex;flex-wrap: nowrap; overflow-x: auto;margin-bottom: 30px;'>
             <div v-for='a in c.content' :key='a.id' >
                 <div style='width: 230px;height: 350px;flex: 0 0 auto; border: 3px solid #eeeeee;margin-left: 20px; padding: 5px; border-radius: 5px;'>
                     <div v-if='a.image'>

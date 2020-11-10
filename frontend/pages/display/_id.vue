@@ -71,7 +71,6 @@ export default {
             category: this.$store.state.parent.category
         }
     },
-    layout: 'adminLayout',
     computed:{
         content(){
             const data = this.category

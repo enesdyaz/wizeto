@@ -1,40 +1,33 @@
 <template>
-  <div>
+  <div >
       <div :class='{active: !isActive}' class='leftBox' style='overflow:auto; height: 100vh;'>
           <category-form />
+          <!-- <service-list /> -->
       </div>
-
-      <div class='rightBox'>
-        <v-row  justify='center' align='center' class='d-none d-sm-flex'>
+      <div :class='{active: isActive}'  class='rightBox'>
+        <v-row justify='center' align='center' class='d-none d-sm-flex' >
           <v-col>
             <mobile-phone></mobile-phone>
-          </v-col>
+          </v-col>   
         </v-row>
+        
       </div>
-      
-
-      <div :class='{active: isActive}'  class='d-sm-none' >
-            <phone-view ></phone-view>
-      </div>
-
       <div class='bottomNavigation d-sm-none'>
-          <div class='bottomAdmin'><v-btn text class='body-2' @click='admin'><v-icon style='font-size: 1.2rem;'>mdi-cog-outline</v-icon><span style='font-size: 0.8rem;'>setting</span></v-btn> </div>
-          <div class='bottomView'><v-btn text class='body-2'  @click='view' ><v-icon style='font-size: 1.2rem;'>mdi-view-day</v-icon> <span style='font-size: 0.8rem;'>view</span></v-btn></div>
+          <div class='bottomAdmin'><v-btn text @click='admin'>ADMIN</v-btn> </div>
+          <div class='bottomView'><v-btn text @click='view' > VIEW</v-btn></div>
       </div>
   </div>
 </template>
 
 <script>
-import MobilePhone from '../../components/setup/MobileIphone'
-import phoneView from '../../components/widgets/views/phoneView'
-import CategoryForm from '../../components/setup/service/CategoryForm'
-
-
+// import MobilePhone from '../../components/setup/MobileIphone'
+// import CategoryForm from '../../components/setup/service/CategoryForm'
+// import ServiceList from '../../components/setup/service/serviceList'
 export default {
   components: {
-    MobilePhone,
-    phoneView,
-    CategoryForm
+    // MobilePhone,
+    // CategoryForm,
+    // ServiceList,
 
   },
   data() {
@@ -58,14 +51,11 @@ export default {
 .leftBox{
   width: 50%;
   float: left;
-  overflow: scroll;
 }
 
 .rightBox{
   width: 50%;
   float: left;
-  margin-top: 0;
-  overflow: scroll;
 }
 
 
@@ -86,9 +76,6 @@ export default {
   position: fixed;
   bottom: 0;
   width: 100%;
-  background: #cfd8dc;
-  z-index: 99999999;
-  height: 5vh;
   
   .bottomAdmin{
     float: left;
