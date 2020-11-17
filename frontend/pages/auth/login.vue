@@ -26,11 +26,11 @@
                         <div v-if='dialog'>
                         <br>
                             <div style='width: 400px; margin: 0 auto;'>
-                                <v-form>
-                                    <v-text-field type='email' style='width:80%; margin: 0 auto;' outlined hide-details dense placeholder='harry@wizeto.com'></v-text-field>    
-                                    <v-text-field type='password' style='width:80%; margin: 0 auto;' outlined hide-details dense placeholder='Password'></v-text-field>    
+                                <v-form @submit.prevent = 'onSubmit'>
+                                    <v-text-field type='email' v-model='email' style='width:80%; margin: 0 auto;' outlined hide-details dense placeholder='harry@wizeto.com'></v-text-field>    
+                                    <v-text-field type='password' v-model='password' style='width:80%; margin: 0 auto;' outlined hide-details dense placeholder='Password'></v-text-field>    
                                     <div>
-                                        <v-btn class='mt-4' small outlined to='/setup/booking' @submit='onSubmit' >Sign in</v-btn>
+                                        <v-btn class='mt-4' small outlined type='submit' >Sign in</v-btn>
                                     </div>
                                 </v-form>
                             </div>
@@ -61,13 +61,32 @@ export default {
     data(){
         return{
             dialog: false,
+            email: '',
+            password: '',
         }
     },
     methods:{
         onSubmit(){
-            console.log('onsubmit')
+            this.$store.dispatch('user/login', {
+                email: this.email,
+                password: this.password
+            })
         }
-    }
+    },
+    computed: {
+        me(){
+                return this.$store.state.user.me
+            }
+    },
+    watch: {
+        me(value) {
+            if (value) {
+            this.$router.push({
+                path: '/setup/dashboard',
+            });
+            }
+        }
+    },
 }
 </script>
 

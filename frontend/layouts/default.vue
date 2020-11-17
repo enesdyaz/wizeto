@@ -63,7 +63,7 @@
               <v-tooltip bottom>
                 <template v-slot:activator="{ on, attrs }">
                       <v-avatar color='primary' size='30'>
-                        <v-btn text to='/' v-bind="attrs" v-on="on"><v-icon class='white--text body-1'>mdi-power</v-icon></v-btn>
+                        <v-btn text @click='logout' v-bind="attrs" v-on="on"><v-icon class='white--text body-1'>mdi-power</v-icon></v-btn>
                       </v-avatar>
                 </template>
                 <span>Log out</span>
@@ -88,7 +88,6 @@
         <nuxt />
     </v-main>
 
-<!-- right navigation -->
   </v-app>
 </template>
 
@@ -131,12 +130,22 @@ export default {
         },
       ],
       miniVariant: false,
-      right: true,
-      rightDrawer: false,
+ 
       title: 'Wizeto',
 
       //auth
       avatar: false,
+    }
+  },
+
+  methods:{
+    logout(){
+      this.$store.dispatch('user/logout', {}).then(
+        this.$router.push({
+          path: '/'
+        })
+      )
+      
     }
   }
 }

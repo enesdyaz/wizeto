@@ -81,6 +81,7 @@ export const actions= {
         commit('REMOVE_MAIN', payload)
     },
 
+    
     addMain2({commit}, payload){
         commit('ADD_MAIN2', payload)
     },

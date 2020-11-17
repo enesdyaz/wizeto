@@ -26,10 +26,14 @@
                         <div v-if='dialog'>
                         <br>
                             <div style='width: 400px; margin: 0 auto;'>
-                                <v-text-field type='username' style='width:80%; margin: 0 auto;' outlined hide-details dense autofocus placeholder='User Name'></v-text-field>    
-                                <v-text-field type='email' style='width:80%; margin: 0 auto;' outlined hide-details dense placeholder='harry@wizeto.com'></v-text-field>    
-                                <v-text-field type='password' style='width:80%; margin: 0 auto;' outlined hide-details dense placeholder='Password'></v-text-field>    
-                                <v-text-field type='password' style='width:80%; margin: 0 auto;' outlined hide-details dense placeholder='Confirm Password'></v-text-field>    
+                                <v-form @submit.prevent='onSubmit'>
+                                    <v-text-field v-model='username' type='username' style='width:80%; margin: 0 auto;' outlined hide-details dense autofocus placeholder='User Name'></v-text-field>    
+                                    <v-text-field v-model='email' type='email' style='width:80%; margin: 0 auto;' outlined hide-details dense placeholder='harry@wizeto.com'></v-text-field>    
+                                    <v-text-field v-model='password' type='password' style='width:80%; margin: 0 auto;' outlined hide-details dense placeholder='Password'></v-text-field>    
+                                    <v-text-field v-model='confirmPassword' type='password' style='width:80%; margin: 0 auto;' outlined hide-details dense placeholder='Confirm Password'></v-text-field>    
+                                    <br>
+                                    <v-btn type='submit' small color='blue-grey' dark>sign up</v-btn>
+                                </v-form>
                             </div>
                         </div>
                         </transition>
@@ -58,8 +62,38 @@ export default {
     data(){
         return{
             dialog: false,
+
+            // signup store
+            username: '',
+            email: '',
+            password: '',
+            confirmPassword: '',
+
         }
-    }
+    },
+    methods:{
+        onSubmit(){
+            this.$store.dispatch('user/signup', {
+                username: this.username,
+                email: this.email,
+                password: this.password
+            })
+        }
+    },
+    computed: {
+        me(){
+                return this.$store.state.user.me
+            }
+    },
+    watch: {
+        me(value) {
+            if (value) {
+            this.$router.push({
+                path: '/setup/dashboard',
+            });
+            }
+        }
+    },
 }
 </script>
 
