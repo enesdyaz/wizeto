@@ -53,9 +53,9 @@
           <v-text-field v-model="search" append-icon="mdi-magnify" label="Search"  outlined dense hide-details ></v-text-field>
       </div>
 
-      <v-avatar color="red" size='30'>
-          <v-btn text v-model='avatar' @click='avatar = !avatar'><span class="white--text caption">HR</span></v-btn>
-      </v-avatar>
+      <v-btn style='border-radius: 25px; padding: 0' elevation='0' color="red" >
+          <v-btn text v-model='avatar' @click='avatar = !avatar'><span class="white--text caption"><v-icon style='font-size: 1rem;padding-right: 4px;'>mdi-fingerprint</v-icon>{{me.username}}</span></v-btn>
+      </v-btn>
 
       <transition name="slide-fade">
           <div v-if='avatar' class='ml-4'>
@@ -135,6 +135,11 @@ export default {
 
       //auth
       avatar: false,
+    }
+  },
+  computed:{
+    me(){
+      return this.$store.state.user.me
     }
   },
 

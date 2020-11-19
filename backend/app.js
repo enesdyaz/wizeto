@@ -1,12 +1,23 @@
+//------------------------------------------------//
+// BACKEND PORT
+//------------------------------------------------//
 const port = '3070'
 
 const express = require('express')
 const db = require('./models')
 const cors = require('cors')
 const morgan = require('morgan')
-const userRouter = require('./routes/user')
 
-// passport modules
+//------------------------------------------------//
+// ROUTER REQUIRE
+//------------------------------------------------//
+const userRouter = require('./routes/user')
+const widgetRouter= require('./routes/widget')
+const imageRouter = require('./routes/image')
+
+//------------------------------------------------//
+// PASSPORT MODULE
+//------------------------------------------------//
 const passport = require('passport')
 const passportConfig = require('./passport')
 const session = require('express-session')
@@ -15,9 +26,14 @@ const app = express()
 
 db.sequelize.sync() // db 실행
 
+
 app.use(morgan('dev'))
 app.use(express.json()) // express 가 json을 받기 위함
 app.use(express.urlencoded( {extended: false})) 
+
+//------------------------------------------------//
+// CORS FRONTEND PORT
+//------------------------------------------------//
 app.use(cors({
     origin: 'http://localhost:3000',
     credentials: true
@@ -41,12 +57,19 @@ passportConfig()
 // passport_end
 
 
+//------------------------------------------------//
+// ROUTER API
+//------------------------------------------------//
 
-// API만 작성해주세요
 app.get('/', (req,res)=>{ res.send('hello wizeto') })
 app.use('/user', userRouter)  // signUp, login, logout
+app.use('/image', imageRouter)
+app.use('/widget', widgetRouter) // widget - mainFormContent1, 2, 3, 4, 5
 
 
 
-// listen
+
+//------------------------------------------------//
+// LISTEN
+//------------------------------------------------//
 app.listen(port,()=>{ console.log(`YES backend server is ${port}`) })

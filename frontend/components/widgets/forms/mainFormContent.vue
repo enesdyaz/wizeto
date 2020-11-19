@@ -28,6 +28,7 @@
                     <td  v-if='!backgroundImage'>  
                         <input  style='border: none;padding: 0;' type="file" @change='onFileChange'>
                     </td>
+
                     <td v-else>
                         <img style='width: 150px;' :src="backgroundImage" />
                         <button @click="removeImage" style='padding-left: 10px'>Remove image</button>
@@ -291,7 +292,6 @@ export default {
                 buttonName: this.buttonName,
                 description: this.description,
                 addOn: true,
-                backgroundImage: this.backgroundImage,
                 tags: this.tags,
                 textAlign: this.textAlign,
                 bgArray: this.bgArray,
@@ -329,21 +329,36 @@ export default {
 
         //image
         onFileChange(e) {
+            console.log(e) 
+            var imageFormData = new FormData();
+            [].forEach.call(e.target.files, (f)=>{
+                imageFormData.append('image', f)    // { image: [file1, file2]}
+            }) 
+
+            this.$store.dispatch('image/addMainFormImage', imageFormData)
+            console.log('files', imageFormData)
+            
             var files = e.target.files || e.dataTransfer.files;
             if (!files.length)
                 return;
             this.createImage(files[0]);
+
+
+         
+
         },
 
         createImage(file) {
             var image = new Image();
             var reader = new FileReader();
-            var vm = this;
 
             reader.onload = (e) => {
-                vm.backgroundImage = e.target.result;
+                this.backgroundImage = e.target.result;
             };
             reader.readAsDataURL(file);
+
+            // DB save
+            
         },
         removeImage: function (e) {
             this.backgroundImage = '';

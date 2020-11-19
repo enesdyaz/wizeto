@@ -1,3 +1,4 @@
+const baseUrl = 'http://localhost:3070'
 
 export const state = () => ({
     main: '',
@@ -72,16 +73,40 @@ export const mutations = {
     }
 }
 
+
 export const actions= {
     //main
     addMain({commit}, payload){
-        commit('ADD_MAIN', payload)
+        this.$axios.post(`${baseUrl}/widget/mainFormContent`, {
+            logo: payload.logo,
+            title: payload.title,
+            subtitle: payload.subtitle,
+            buttonName: payload.buttonName,
+            description: payload.description,
+            addOn: payload.addOn,
+            tags: payload.tags,
+            textAlign: payload.textAlign,
+            bgArray: payload.bgArray,
+            fontArray: payload.fontArray,
+            buttonArray: payload.buttonArray,
+            sliderFont: payload.sliderFont,
+            sliderPadding: payload.sliderPadding,
+            sliderOpacity: payload.sliderOpacity,
+            sliderLineHeight: payload.sliderLineHeight,
+        }, {withCredentials: true})
+        .then((res)=>{
+            commit('ADD_MAIN', res.data)
+        }).catch((err)=>{
+            console.error(err)
+        })
     },
+
+
     removeMain({commit}, payload){
         commit('REMOVE_MAIN', payload)
     },
 
-    
+
     addMain2({commit}, payload){
         commit('ADD_MAIN2', payload)
     },

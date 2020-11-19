@@ -5,12 +5,19 @@ const db = {};
 
 const sequelize = new Sequelize(config.database, config.username, config.password, config);
 
-// 추가 database Table 여기에 입력해주세요
-db.User = require('./user') (sequelize, Sequelize)   // 순서 중요
+
+
+//------------------------------------------------//
+// ADD MODELS 
+//------------------------------------------------//
+
+db.User = require('./user') (sequelize, Sequelize)  
+db.Image = require('./image') (sequelize, Sequelize)  
+db.mainFormContent = require('./mainFormContent')(sequelize, Sequelize)
 
 
 
-//
+
 Object.keys(db).forEach(modelName => {
   if (db[modelName].associate) {
     db[modelName].associate(db);
