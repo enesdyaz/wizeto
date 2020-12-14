@@ -27,7 +27,7 @@
 <!-- right_column - Description -->
             <div style='width: 75%;position: relative'>
                 <div class='container'>
-                    <div >
+                    <div>
                         <nuxt-link class='body-2 font-weight-bold' style='text-decoration: none; color: #455a64' :to="'/display/' + a.id" >{{a.name.toUpperCase()}}</nuxt-link>
                     </div>
                     <div class='caption' >{{textCut(a.description, 70)}}</div>

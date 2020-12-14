@@ -10,10 +10,10 @@
                 <v-img contain max-width='120'  :src="profileImage" /><br>
             </v-container>    <br>
         
-            <v-subheader>ADMIN PANEL</v-subheader>
+            <v-subheader>ADMIN PANEL {{navItem}}</v-subheader>
             <v-divider></v-divider>
-
-            <v-list-item  class='tile' active-class='list_active' v-for="(item, i) in items" :key="i" :to="item.to" router exact dense >
+         
+            <v-list-item @click='click(item.title)' class='tile' active-class='list_active' v-for="(item, i) in items" :key="i" :to="item.to" router exact dense >
                 <v-list-item-action>
                     <v-icon class='icon' style='font-size: 1.2rem;  font-weight: 100;'>{{ item.icon }}</v-icon>
                 </v-list-item-action>
@@ -27,7 +27,7 @@
             <v-subheader>INBOX</v-subheader>
             <v-divider></v-divider>
         
-            <v-list-item  class='tile' to='/setup/inbox' router exact dense >
+            <v-list-item  class='tile' to='/setup/inbox'  router exact dense >
                 <v-list-item-action>
                     <v-icon class='icon' style='font-size: 1.2rem; font-weight: 100;'>mdi-bookmark-multiple-outline</v-icon>
                 </v-list-item-action>
@@ -85,7 +85,7 @@
 
 <!-- content -->
     <v-main style='background: whitesmoke;'>
-        <nuxt />
+        <nuxt  />
     </v-main>
 
   </v-app>
@@ -96,6 +96,7 @@
 export default {
   data () {
     return {
+      navItem:'',
       search: '',
       drawer: true,
       fixed: false,
@@ -106,27 +107,27 @@ export default {
         {
           icon: 'mdi-view-dashboard',
           title: 'DashBoard',
-          to: '/setup/dashboard'
+          // to: '/setup/dashboard'
         },
         {
           icon: 'mdi-gift-outline',
           title: 'Service',
-          to: '/setup/service'
+          // to: '/setup/service'
         },
         {
           icon: 'mdi-bookmark-minus-outline',
           title: 'Booking',
-          to: '/setup/booking'
+          // to: '/setup/booking'
         },
         {
           icon: 'mdi-image-edit-outline',
-          title: 'text + image',
-          to: '/setup/mainWidget'
+          title: 'Cards',
+          // to: '/setup/mainWidget'
         },
         {
           icon: 'mdi-text-box-outline',
           title: 'text',
-          to: '/setup/cardWidget'
+          // to: '/setup/cardWidget'
         },
       ],
       miniVariant: false,
@@ -144,6 +145,11 @@ export default {
   },
 
   methods:{
+    click(item){
+      this.navItem = item
+      console.log('navagation', item)
+      this.$store.commit('layout/navItem', item)
+    },
     logout(){
       this.$store.dispatch('user/logout', {}).then(
         this.$router.push({

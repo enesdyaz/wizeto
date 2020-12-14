@@ -13,7 +13,6 @@
             <div class="mobileContent">
               <phone-view />
             </div>
-
     </div>
 </div>
 </template>

@@ -4,7 +4,7 @@
     <div :class="{modal: isModal || isEditModal}" >
         <div style='text-align: center;'>
             <v-btn class=' subtitle-2' text color='blue-grey' >
-                <v-icon class='body-1 pr-2'>mdi-plus</v-icon> Register Your Service  aaa
+                <v-icon class='body-1 pr-2'>mdi-plus</v-icon> Register Your Service
             </v-btn>
         </div>
         <br>
