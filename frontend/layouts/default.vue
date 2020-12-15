@@ -4,37 +4,42 @@
 <!--- Drawer -->
     <v-navigation-drawer color='grey darken-4' dark v-model="drawer" :mini-variant="miniVariant" :clipped="clipped"  fixed app dense>
 
-      <v-list>
+      <v-list subheader>
         <br>
             <v-container class='d-flex justify-center align-end' style=' width: 70%; border-radius: 20px;'>
                 <v-img contain max-width='120'  :src="profileImage" /><br>
             </v-container>    <br>
         
-            <v-subheader>ADMIN PANEL {{navItem}}</v-subheader>
+            <v-subheader>ADMIN PANEL </v-subheader>
             <v-divider></v-divider>
-         
-            <v-list-item @click='click(item.title)' class='tile' active-class='list_active' v-for="(item, i) in items" :key="i" :to="item.to" router exact dense >
-                <v-list-item-action>
-                    <v-icon class='icon' style='font-size: 1.2rem;  font-weight: 100;'>{{ item.icon }}</v-icon>
-                </v-list-item-action>
 
-                <v-list-item-content style='margin-left: -20px;'>
-                    <v-list-item-title  class='list_title' v-text="item.title" />
-                </v-list-item-content>
-            </v-list-item>  <br>
-          
+           <v-list-item-group mandatory>
+              <v-list-item @click='click(item.title)' class='tile' v-for="(item, i) in items" :key="i" dense >
+                  <v-list-item-action>
+                      <v-icon   class='icon'  style='font-size: 1.2rem;  font-weight: 100;'>{{ item.icon }}</v-icon>
+                  </v-list-item-action>
+                  <nuxt-link  style='color: white;' :to="item.to">
+                  <v-list-item-content   style='margin-left: -20px;'>
+                      <v-list-item-title  class='list_title'  v-text="item.title" />
+                  </v-list-item-content></nuxt-link>
+              </v-list-item>  <br>
+          </v-list-item-group>
+
 
             <v-subheader>INBOX</v-subheader>
             <v-divider></v-divider>
-        
-            <v-list-item  class='tile' to='/setup/inbox'  router exact dense >
-                <v-list-item-action>
-                    <v-icon class='icon' style='font-size: 1.2rem; font-weight: 100;'>mdi-bookmark-multiple-outline</v-icon>
-                </v-list-item-action>
-                <v-list-item-content style='margin-left: -20px'>
-                    <v-list-item-title class='list_title' >Appointment</v-list-item-title>
-                </v-list-item-content>
-          </v-list-item>
+          <v-list-item-group >
+              <v-list-item @click='click(item.title)' class='tile' v-for="(item, i) in items2" :key="i" dense inactive>
+                  <v-list-item-action>
+                      <v-icon   class='icon'  style='font-size: 1.2rem;  font-weight: 100;'>{{ item.icon }}</v-icon>
+                  </v-list-item-action>
+                  <nuxt-link style='color: white;' :to="item.to">  
+                  <v-list-item-content   style='margin-left: -20px;'>
+                      <v-list-item-title  class='list_title'  v-text="item.title" />
+                  </v-list-item-content>
+                  </nuxt-link>
+              </v-list-item>  <br>
+          </v-list-item-group>
             
       </v-list>
     </v-navigation-drawer>
@@ -93,9 +98,14 @@
 
 
 <script>
+import listGroup from '../components/default/listGroup'
 export default {
+  components:{
+    listGroup
+  },
   data () {
     return {
+      listArray:'',
       navItem:'',
       search: '',
       drawer: true,
@@ -103,31 +113,38 @@ export default {
       clipped: false,
 
       profileImage: '/logo/logo_white.png',
+      items2: [
+        {
+          icon: 'mdi-view-dashboard',
+          title: 'Inbox',
+          to: '/setup/inbox'
+        },
+      ],
       items: [
         {
           icon: 'mdi-view-dashboard',
           title: 'DashBoard',
-          // to: '/setup/dashboard'
+          to: '/admin'
         },
         {
           icon: 'mdi-gift-outline',
           title: 'Service',
-          // to: '/setup/service'
+          to: '/admin'
         },
         {
           icon: 'mdi-bookmark-minus-outline',
           title: 'Booking',
-          // to: '/setup/booking'
+          to: '/admin'
         },
         {
           icon: 'mdi-image-edit-outline',
           title: 'Cards',
-          // to: '/setup/mainWidget'
+          to: '/admin'
         },
         {
           icon: 'mdi-text-box-outline',
           title: 'text',
-          // to: '/setup/cardWidget'
+          to: '/admin'
         },
       ],
       miniVariant: false,
@@ -164,6 +181,8 @@ export default {
 
 
 <style lang="scss" scoped>
+
+
 .tile{
   width:100%;
   height: 15px;

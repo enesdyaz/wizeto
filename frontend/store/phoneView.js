@@ -10,6 +10,7 @@ export const mutations = {
     }
 }
 
+// Draggable array 저장/
 export const actions= {
     changeView({commit}, payload){
         commit('CHANGE_VIEW', payload)
