@@ -1,6 +1,7 @@
 export const state = () => ({
     service_category: [],
-    service_items:[]
+    service_items:[],
+    select: 0,
 })
 
 export const mutations = {
@@ -56,6 +57,10 @@ export const mutations = {
     
     toggle(state, todo) {
     todo.done = !todo.done
+    },
+    SERVICE_LAYOUT(state, payload){
+        console.log('SERVICE_LAYOUT', payload)
+        state.select = payload
     }
 }
 
@@ -63,6 +68,9 @@ export const actions = {
     editData({commit}, id){
         commit('EDIT_TODO', id)
     },
+    serviceLayout({commit}, payload){
+        commit('SERVICE_LAYOUT', payload)
+    }
 }
 
 

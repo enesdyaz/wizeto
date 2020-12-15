@@ -2,11 +2,22 @@ const express = require('express');
 const bcrypt = require('bcrypt');
 const passport = require('passport');
 const db = require('../models');
-// const { isLoggedIn, isNotLoggedIn } = require('./middlewares');
+const { isLoggedIn, isNotLoggedIn } = require('./middlewares');
 
 const router = express.Router();
 
-router.post('/')
+
+//----------------------------------------------
+// GET 
+//----------------------------------------------
+router.get('/', isLoggedIn, async(req, res, next)=>{
+    const user = await req.user
+    res.json(user)
+})
+
+//----------------------------------------------
+// POST
+//----------------------------------------------
 
 // SIGN UP
 router.post('/signup', async (req, res, next)=>{  
@@ -35,7 +46,7 @@ router.post('/signup', async (req, res, next)=>{
                 return next(err)
             }
             if(info){
-                return res.status(401).send(info.reason)
+                return res.send(info.reason)
             }
             return req.login(user, async (err)=>{    // 세션이 저장됨, 어떻게 저장할 것인지는 (serializerUser)로 user, done 매개변수와 함께 넘어감, 
                                                         //이 부분에 Header 임, 보통 user.id로 저장이 됨. 프론트에 쿠키 저장도 같이 해줌. 
@@ -63,7 +74,7 @@ router.post('/login', (req, res, next)=>{
             return next(err)
         }
         if(info){
-            return res.status(401).send(info.reason)
+            return res.send(info.reason)
         }
         return req.login(user, async (err)=>{    // 세션이 저장됨, 어떻게 저장할 것인지는 (serializerUser)로 user, done 매개변수와 함께 넘어감, 
                                                     //이 부분에 Header 임, 보통 user.id로 저장이 됨. 프론트에 쿠키 저장(connect.sid) 도 같이 해줌. 
@@ -76,13 +87,16 @@ router.post('/login', (req, res, next)=>{
 })
 
 // LOGOUT
-router.post('/logout', (req, res)=>{
+router.post('/logout', isLoggedIn, (req, res)=>{
     if(req.isAuthenticated()){  // 로그인 하였는지 확인
         req.logout()
         req.session.destroy() //선택사항
         return res.status(200).send('successfully logged out')
     }
 })
+
+  
+  
 
 
 

@@ -20,6 +20,10 @@ module.exports = (sequelize, DataTypes) => {
     })
 
 
-    User.associate = (db) => {}
+    User.associate = (db) => {
+        db.User.hasMany(db.Post)
+        db.User.hasMany(db.Comment)
+        db.User.hasMany(db.TextImage)
+    }
     return User;
 }

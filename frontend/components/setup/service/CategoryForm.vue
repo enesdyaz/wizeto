@@ -1,6 +1,6 @@
 <template>
 <div style=' padding: 5%;  width: 100%;overflow: auto'>
-<!-- 1. Category Regster Form -->
+<!--  1. Form -->
     <div :class="{modal: isModal || isEditModal}" >
         <div style='text-align: center;'>
             <v-btn class=' subtitle-2' text color='blue-grey' >
@@ -8,17 +8,28 @@
             </v-btn>
         </div>
         <br>
-
         <div>
-            <v-row no-gutters>
-                <v-col xs='6'>
-                    <div class='subtitle-2 bold' style='color: #607D8A'><v-icon style='font-size: 1rem;'>mdi-chevron-down</v-icon>CATEGORY NAME</div>
-                    <div><input style='background: #fff; width: 100%;' v-model='category1' v-on:keyup.enter="onEnter"  type="text" ></div>
-                </v-col>
-            </v-row>                
+            <div class='caption'><v-icon style='font-size: 1rem;'>mdi-chevron-down</v-icon>CATEGORY NAME</div>
+            <div><input ref='category' style='background: #fff; border: 1px solid grey; width: 82%;margin-right: 10px;' v-model='category1' v-on:keyup.enter="onEnter"  type="text" >
+            <v-btn color="blue-grey" style='float: right' x-small text outlined @click.stop="onEnter" >Enter </v-btn></div>
         </div>
-        <br>
+        <br><br>
 
+<!-- Control -->
+        <div class='caption'><v-icon style='font-size: 1rem;'>mdi-chevron-down</v-icon>DISPLAY</div>
+
+        <div style='border: 1px solid grey;padding: 5px; '>
+            <v-btn-toggle v-model='serviceLayoutSelect' mandatory>{{serviceLayoutSelect}}
+                <v-btn color='blue-grey' text small><v-icon>mdi-view-sequential</v-icon></v-btn>
+                <v-btn color='blue-grey' text small><v-icon>mdi-view-column</v-icon></v-btn>
+                <v-btn color='blue-grey' text small><v-icon>mdi-view-grid</v-icon></v-btn>
+            </v-btn-toggle>
+        </div>
+
+    <br>
+
+
+<!-- View -->
         <div v-for='(c, index) in category' :key='index' style='margin-bottom: 40px'>
             <div class='body-2' style='color: #455a64;margin: 10px 0;'>
                 <v-icon style='font-size: 12px;'>mdi-menu-right-outline</v-icon> {{c.parent.toUpperCase()}}
@@ -32,13 +43,15 @@
             v-for='a in c.content' :key='a.id' >
                 <div style='width: 15%;line-height: 40px; text-align: center;' ><v-icon>mdi-checkbox-marked-circle-outline</v-icon></div>
                 <div style='width: 65%;'>
-                    <div class='overline'><button v-on:click="editService(a.parentId, a.id)">{{a.name}}</button></div>
+                    <div class='overline'><button v-on:click="editService(a.parentId, a.id)">{{textCut(a.name, 30)}}</button></div>
                     <div class='caption' style='margin-top: -11px;'><button v-on:click="editService(a.parentId, a.id)">{{textCut(a.description, 40)}}</button></div>
                 </div>
                 <div style='width: 20%;color: #ff6f00;' class='d-flex align-center mt-1'><div>$ {{a.price}}</div></div>
             </div>
         </div>
     </div>
+
+
 <!-- dialog Layout-->
     <div class='text-center'>
         <v-btn color="blue-grey" small  dark @click.stop="dialogLayout = true" >Open Layout </v-btn>
@@ -131,13 +144,26 @@ export default {
             
         }
     },
+    created(){
+        setTimeout(x => {
+        this.$nextTick(() => this.setFocus()); // just watch out with going too fast !!!
+        }, 1000);
+    },
 
     computed:{
         category(){
             return this.$store.state.parent.category
         }
     },
+    watch:{
+        serviceLayoutSelect(number){
+            this.$store.dispatch('category/serviceLayout', number)
+        }
+    },
     methods:{
+        setFocus: function() {
+        this.$refs.category.focus();
+        },
         addService(parentId, childId){   // add category
             this.categoryParent = {parent: parentId, child: childId}
             this.isModal = true
@@ -162,6 +188,7 @@ export default {
         },
     
         onEnter(){
+            if(this.category1.length === 0) return
             if(this.category2){
                 const index = this.category.findIndex(v => v.parent === this.category2)
                 this.$store.dispatch('parent/addChild', {

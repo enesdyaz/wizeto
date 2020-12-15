@@ -11,9 +11,18 @@ const sequelize = new Sequelize(config.database, config.username, config.passwor
 // ADD MODELS 
 //------------------------------------------------//
 
-db.User = require('./user') (sequelize, Sequelize)  
-db.Image = require('./image') (sequelize, Sequelize)  
-db.mainFormContent = require('./mainFormContent')(sequelize, Sequelize)
+db.User = require('./User') (sequelize, Sequelize)  
+db.Image = require('./Image') (sequelize, Sequelize)  
+db.Post = require('./Post')(sequelize, Sequelize)  
+db.Comment = require('./Comment')(sequelize, Sequelize)  
+db.TextImage = require('./TextImage')(sequelize, Sequelize)  
+db.Text = require('./Text')(sequelize, Sequelize)  
+db.Board = require('./Board')(sequelize, Sequelize)  
+// db.Hashtag = require('./hashtag')(sequelize, Sequelize)  
+
+
+// db.MainFormContent = require('./MainFormContent')(sequelize, Sequelize)
+// db.Database = require('./Database')(sequelize, Sequelize)
 
 
 

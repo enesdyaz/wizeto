@@ -1,7 +1,9 @@
 //------------------------------------------------//
-// BACKEND PORT
+// BACKEND/FRONT PORT
 //------------------------------------------------//
-const port = '3070'
+const backPort = '3085'
+const frontPort = '3000'
+
 
 const express = require('express')
 const db = require('./models')
@@ -12,8 +14,13 @@ const morgan = require('morgan')
 // ROUTER REQUIRE
 //------------------------------------------------//
 const userRouter = require('./routes/user')
-const widgetRouter= require('./routes/widget')
-const imageRouter = require('./routes/image')
+// const widgetRouter= require('./routes/widget')
+// const imageRouter = require('./routes/image')
+// const databaseRouter = require('./routes/database')
+const postRouter = require('./routes/post')
+const textImageRouter = require('./routes/textImage')
+const boardRouter = require('./routes/board')
+// const loadPostRouter = require('./routes/loadPost')
 
 //------------------------------------------------//
 // PASSPORT MODULE
@@ -23,23 +30,13 @@ const passportConfig = require('./passport')
 const session = require('express-session')
 const cookie = require('cookie-parser')
 const app = express()
-
-db.sequelize.sync() // db 실행
-
-
 app.use(morgan('dev'))
+
+db.sequelize.sync() // db 실행 {force:true}
+
+
 app.use(express.json()) // express 가 json을 받기 위함
 app.use(express.urlencoded( {extended: false})) 
-
-//------------------------------------------------//
-// CORS FRONTEND PORT
-//------------------------------------------------//
-app.use(cors({
-    origin: 'http://localhost:3000',
-    credentials: true
-}))   //
-
-
 // passport
 app.use(session({
     resave: false,
@@ -54,7 +51,23 @@ app.use(cookie('ns747800'))
 app.use(passport.initialize())
 app.use(passport.session())
 passportConfig()
-// passport_end
+
+
+
+//------------------------------------------------//
+// CORS FRONTEND PORT
+//------------------------------------------------//
+
+app.use(cors({
+    origin: `http://localhost:${frontPort}`,
+    credentials: true
+}))   
+
+//------------------------------------------------//
+// IMAGE STATIC FILES
+//------------------------------------------------//
+
+app.use('/', express.static('uploads'));
 
 
 //------------------------------------------------//
@@ -62,9 +75,16 @@ passportConfig()
 //------------------------------------------------//
 
 app.get('/', (req,res)=>{ res.send('hello wizeto') })
-app.use('/user', userRouter)  // signUp, login, logout
-app.use('/image', imageRouter)
-app.use('/widget', widgetRouter) // widget - mainFormContent1, 2, 3, 4, 5
+app.use('/user', userRouter)  
+app.use('/textImage', textImageRouter)
+app.use('/board', boardRouter)
+// app.use('/image', imageRouter)
+// app.use('/widget', widgetRouter) 
+
+// app.use('/database', databaseRouter)
+app.use('/post', postRouter)
+// app.use('/loadpost', loadPostRouter)
+
 
 
 
@@ -72,4 +92,4 @@ app.use('/widget', widgetRouter) // widget - mainFormContent1, 2, 3, 4, 5
 //------------------------------------------------//
 // LISTEN
 //------------------------------------------------//
-app.listen(port,()=>{ console.log(`YES backend server is ${port}`) })
+app.listen(backPort,()=>{ console.log(`YES backend server is ${backPort}`) })

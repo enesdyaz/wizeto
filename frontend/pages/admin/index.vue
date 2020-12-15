@@ -66,11 +66,20 @@
 import draggable from 'vuedraggable'
 
 import serviceView from './serviceView/serviceView'
+import serviceView2 from './serviceView/serviceView2'
+import serviceView3 from './serviceView/serviceView3'
 import cardView from './cardView/cardView'
 export default {
+    components: {
+        draggable,
+        cardView,
+        serviceView,
+        serviceView2,
+        serviceView3,
+    },
     data(){
         return{
-            component: ['cardView', 'serviceView'],
+            component: ['cardView', 'serviceView', 'serviceView2', 'serviceView3'],
             drawer: false,
             group: null,
 
@@ -89,11 +98,7 @@ export default {
             this.$store.dispatch('phoneView/changeView', this.component)
         }
     },
-    components: {
-        draggable,
-        cardView,
-        serviceView,
-    },
+
     created(){
         const data = this.$store.state.phoneView.view
         console.log(data)

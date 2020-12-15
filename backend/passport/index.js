@@ -8,7 +8,10 @@ module.exports = () => {
     })
     passport.deserializeUser( async (id, done)=>{    // login후 모든 request들은 이쪽으로 와서 사용자 정보를 전해준다.
         try{
-            const user = await db.User.findOne({ where: { id }})
+            const user = await db.User.findOne({ 
+                where: { id },
+                attributes: ['id', 'username']
+            })
             return done(null, user)   // req.user 로 넣어줌,  req.isAuthenticated()  = true 로 만들어줌
         }catch(err){
             console.log(err)

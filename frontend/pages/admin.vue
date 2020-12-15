@@ -9,8 +9,7 @@
         </div>
 
         <div :class='{active: isActive}' class='rightBox' >
-            <v-row  justify='center' align='center' >
-                <v-col>
+                <v-container>
                     <div class="iphone-x">
                             <div> 
                                 <div class='c'>Speaker</div> <b>Camera</b> 
@@ -18,7 +17,7 @@
         <!-- time and signal -->
                             <div>
                                 <div style='margin-left: 40px; display: inline-block; font-size: 0.8rem;font-weight: bold'>2:29</div>
-                                <div style='margin-left: 210px;display: inline-block; font-size: 0.8rem;'><v-icon style='font-size: 0.8rem;color:black'>mdi-signal</v-icon></div>
+                                <div style='margin-left: 230px;display: inline-block; font-size: 0.8rem;'><v-icon style='font-size: 0.8rem;color:black'>mdi-signal</v-icon></div>
                                 <div style='margin-left: -2px; display: inline-block; font-size: 0.6rem; color:black;'>4G</div>
                                 <div style='margin-left: -2px; display: inline-block; font-size: 0.8rem;'><v-icon class='battery' style='font-size: 1rem;color:black'>mdi-battery-10</v-icon></div>
                             </div>
@@ -27,8 +26,7 @@
                                     <nuxt-child />
                             </div>
                     </div>
-                </v-col>
-            </v-row>
+                </v-container>
         </div>
         
 <!-- 
@@ -105,7 +103,7 @@ export default {
     .iphone-x {
         position: relative;
         margin: 10px auto;
-        width: 350px;
+        width: 370px;
         height: 750px;
         border-radius: 40px;
         box-shadow: 0px 0px 0px 0px #1f1f1f, 0px 0px 0px 0px #191919, 0px 0px 0px 12px #111;

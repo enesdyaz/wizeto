@@ -1,8 +1,8 @@
 module.exports = (sequelize, DataTypes) => {
     const Image  = sequelize.define('Image', {   // user의 모델
-        MainFormImage: {
+        src: {
             type: DataTypes.STRING(200),
-            allowNull: false,
+            allowNull: true,
         }
     },
     {   // user의 설정 부분
@@ -12,7 +12,8 @@ module.exports = (sequelize, DataTypes) => {
 
 
     Image.associate = (db) => {
-        
+        db.Image.belongsTo(db.Post)
+        db.Image.belongsTo(db.TextImage)
     }
     return Image;
 }

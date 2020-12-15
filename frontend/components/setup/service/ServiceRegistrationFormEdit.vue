@@ -79,10 +79,28 @@
         
 <!-- 9. Submit ---->
         <v-card-actions>
-            <v-btn color='blue-grey' style='display: inline-block; float: left; margin-left: 47%;bottom: 10px;' depressed outlined small @click="onDelete">Remove</v-btn>
+            <v-dialog v-model="dialog" width="370">
+                <template v-slot:activator="{ on, attrs }">
+                    <v-btn color='blue-grey' v-bind="attrs" v-on="on" style='display: inline-block; float: left; margin-left: 47%;bottom: 10px;' depressed outlined small>Remove</v-btn> 
+                </template>
+
+                <v-card>
+                    <v-card-title></v-card-title>
+                    <v-card-text class='body-2'>
+                    Are you really want to delete this item?
+                    </v-card-text>
+
+                    <v-divider></v-divider>
+
+                    <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn color="blue-grey" small text @click="onDelete" >I accept </v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
             <v-btn color='lime darken-4' style='display: inline-block; float: left;; bottom: 10px;' depressed outlined small @click="onSubmit">Update</v-btn>
         </v-card-actions>
-        
+                        
     </v-card>
 <!-- Registration ends ---->
 </div>
@@ -104,6 +122,7 @@ export default {
 
     data() {
         return {
+            dialog: false,
             item: this.dataList,
             service_name: '',
             service_price: '',
@@ -156,12 +175,14 @@ export default {
             this.$emit("ModalEmit", false)  // close this windows of the registration form 
         },
         onDelete(){
+
             const id = this.service_id
             const parent_id = this.parent_id
             this.$store.dispatch('parent/deleteParentData', {
                 id: id,
                 parent_id: parent_id
             })
+            this.dialog = false
             
             this.$emit("ModalEmit", false)  // close this windows of the registration form 
         },
