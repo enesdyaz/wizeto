@@ -1,5 +1,3 @@
-const baseUrl = 'http://localhost:3070'
-
 export const state = () => ({
     me: ''
 })
@@ -13,7 +11,7 @@ export const mutations = {
 
 export const actions = {
     signup({commit}, payload){
-        this.$axios.post(`${baseUrl}/user/signup`, {
+        this.$axios.post(`/user/signup`, {
             username: payload.username,
             email: payload.email,
             password: payload.password
