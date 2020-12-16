@@ -19,10 +19,11 @@
         <div class='caption'><v-icon style='font-size: 1rem;'>mdi-chevron-down</v-icon>DISPLAY</div>
 
         <div style='border: 1px solid grey;padding: 5px; '>
-            <v-btn-toggle v-model='serviceLayoutSelect' mandatory>{{serviceLayoutSelect}}
-                <v-btn color='blue-grey' text small><v-icon>mdi-view-sequential</v-icon></v-btn>
-                <v-btn color='blue-grey' text small><v-icon>mdi-view-column</v-icon></v-btn>
-                <v-btn color='blue-grey' text small><v-icon>mdi-view-grid</v-icon></v-btn>
+            <v-btn-toggle v-model='serviceLayoutSelect' mandatory>
+                <v-btn color='blue-grey' text small><v-icon style='font-size: 1.8rem;'>mdi-image-text</v-icon></v-btn>
+                <v-btn color='blue-grey' text small><v-icon style='font-size: 1.2rem;'>mdi-image-move</v-icon></v-btn>
+                <v-btn color='blue-grey' text small><v-icon style='font-size: 1.2rem;'>mdi-image-area-close</v-icon></v-btn>
+                <v-btn color='blue-grey' text small><v-icon style='font-size: 1.2rem;'>mdi-view-grid</v-icon></v-btn>
             </v-btn-toggle>
         </div>
 

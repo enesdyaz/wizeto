@@ -2,16 +2,17 @@
 <div>
     <div v-if='select === 0'>
 <!-- Parent -->  
-        <div v-for='(c, index) in category' :key='index' style='padding: 5% 5% 0% 5%;'>
-            <!-- <div class='body-2' style='color: #455a64;margin: 10px 0;'>
-                <v-icon style='font-size: 12px;'>mdi-menu-right-outline</v-icon> {{c.parent.toUpperCase()}}
-            </div> -->
+        <div v-for='(c, index) in category' :key='index' style='padding: 5% 5% 0 5%;margin-bottom: 45px;'>
+            <div class='caption' style='color: black;margin: 10px 6px;'>
+                <v-icon class='body-2 pr-2'>mdi-dots-grid</v-icon>{{c.parent.toUpperCase()}}
+            </div>
 
     <!-- left_column - v-image -->
             <div style='display: flex; background: #fff;color: #455a64;border-radius: 5px;padding-bottom: 4px;margin: 5px 0;border-bottom: 1px solid rgba(0,0,0,0.1)' 
             v-for='a in c.content' :key='a.id' >
                 <div style='width: 22%;'>
                     <div v-if='a.image'>
+                        <nuxt-link :to="'/admin/serviceView/' + a.id" >
                         <v-img class='mt-1 ml-1' :src="a.image" aspect-ratio="1" alt="" >
                             <template v-slot:placeholder>
                                 <v-row class="fill-height ma-0" align="center" justify="center">
@@ -20,6 +21,7 @@
                                 </v-row>
                                 </template>
                         </v-img>
+                        </nuxt-link>
                     </div>
                     <div v-else style='margin-top: 25px; text-align: center;'><v-icon>mdi-checkbox-marked-circle-outline</v-icon></div>
                 </div>

@@ -68,6 +68,7 @@ import draggable from 'vuedraggable'
 import serviceView from './serviceView/serviceView'
 import serviceView2 from './serviceView/serviceView2'
 import serviceView3 from './serviceView/serviceView3'
+import serviceView4 from './serviceView/serviceView4'
 import cardView from './cardView/cardView'
 export default {
     components: {
@@ -76,10 +77,11 @@ export default {
         serviceView,
         serviceView2,
         serviceView3,
+        serviceView4,
     },
     data(){
         return{
-            component: ['cardView', 'serviceView', 'serviceView2', 'serviceView3'],
+            component: ['cardView', 'serviceView', 'serviceView2', 'serviceView3','serviceView4'],
             drawer: false,
             group: null,
 

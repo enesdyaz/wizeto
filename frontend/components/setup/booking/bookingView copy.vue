@@ -1,9 +1,10 @@
 <template>
 <div>
-    <div class='container' style='text-align: center;padding-bottom: 7vh;'>
-
-        <div class='title'>{{dataName}} <span class='caption'>(${{dataPrice}})</span> </div><br><br>
-
+    <div style='text-align: center;'>
+    <v-expansion-panels accordion>
+      <v-expansion-panel>
+        <v-expansion-panel-header>Booking</v-expansion-panel-header>
+        <v-expansion-panel-content>
 <!-- step 1 -->
             <div>
                 <div style='text-align: left'>1. Choose your date</div>
@@ -101,7 +102,9 @@
                 </v-card>
             </v-dialog>
 
-
+        </v-expansion-panel-content>
+      </v-expansion-panel>
+    </v-expansion-panels>
             <div class="text-center">
 
             <v-snackbar color='primary'  v-model="snackbar" :timeout="timeout" >
@@ -112,15 +115,18 @@
             </v-snackbar>
         </div>
     </div>
-
-   
 </div>
 </template>
 
 <script>
 import moment from 'moment'
 export default {
-    props:['dataName', 'dataPrice'],
+    props:{
+        dataName:{
+            type: String,
+            required: true
+        }
+    },
     data () {
         return {
             dialog: false, 
@@ -152,11 +158,7 @@ export default {
                 name: this.name,
                 email: this.email,
                 mobile: this.mobile
-            }).then(()=>{ 
-                this.snackbar = true 
-                this.$emit('bookingEmit', false)
-            
-            }).catch(()=>{console.log('failure')})
+            }).then(()=>{ this.snackbar = true }).catch(()=>{console.log('failure')})
             this.dialog = false
             this.date= ''
             this.time= ''
