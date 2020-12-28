@@ -137,9 +137,7 @@ export default {
         }
     },
 
-    created(){
-        this.dataList
-    },
+
 
     computed:{
         dataList(){

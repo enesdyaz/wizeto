@@ -2,7 +2,7 @@
   <v-app>
 
 <!--- Drawer -->
-    <v-navigation-drawer color='grey darken-4' dark v-model="drawer" :mini-variant="miniVariant" :clipped="clipped"  fixed app dense>
+    <v-navigation-drawer color='grey darken-4' dark v-model="drawer" fixed app dense>
 
       <v-list subheader>
         <br>
@@ -121,11 +121,7 @@ export default {
         },
       ],
       items: [
-        {
-          icon: 'mdi-view-dashboard',
-          title: 'DashBoard',
-          to: '/admin'
-        },
+
         {
           icon: 'mdi-gift-outline',
           title: 'Service',
@@ -147,8 +143,6 @@ export default {
           to: '/admin'
         },
       ],
-      miniVariant: false,
- 
       title: 'Wizeto',
 
       //auth

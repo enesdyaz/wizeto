@@ -70,6 +70,14 @@ export const actions = {
     },
     serviceLayout({commit}, payload){
         commit('SERVICE_LAYOUT', payload)
+    },
+    addCategory({commit, payload}){
+        this.$axios.post('/categories', {
+            name: payload.name,
+            decription: payload.description
+        }, {withCredentials: true})  
+        .then(res   // get (select)- post (insert) update - (put)  delete(destroy)
+            ).catch()
     }
 }
 

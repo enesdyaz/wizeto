@@ -38,17 +38,14 @@
                         </transition>
                         <br><br>
                         <v-divider></v-divider>
-                        <br>
+                        <!-- <br>
                         <div>
                             <v-btn text outlined class='subtitle' ><v-img class='mr-8' width='16' src='/logo/facebook.png'></v-img> Signin with Facebook</v-btn>
                         </div>
                         <div>
                             <v-btn text outlined class='subtitle mt-2 pr-4'><v-img class='mr-8' width='16' src='/logo/gmail.png'></v-img> Signin with Gmail <span style='width: 30px;'></span></v-btn>
-                        </div>
+                        </div> -->
                         
-            
-
-
                     </div>
                 </v-col>
             </v-row> 
@@ -64,6 +61,11 @@ export default {
             email: '',
             password: '',
         }
+    },
+    created(){
+        setTimeout(()=>{
+        this.dialog = true
+        },500);
     },
     methods:{
         onSubmit(){
@@ -82,7 +84,7 @@ export default {
         me(value) {
             if (value) {
             this.$router.push({
-                path: '/setup/dashboard',
+                path: '/admin',
             });
             }
         }

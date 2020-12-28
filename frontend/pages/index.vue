@@ -2,7 +2,7 @@
     <v-app>
 
 <!--- Drawer -->
-    <v-navigation-drawer v-model="drawer" right fixed app dense>
+    <!-- <v-navigation-drawer v-model="drawer" right fixed app dense>
         <v-list>
         <v-container class='d-flex justify-center'>
             <img width='100' alt="Vuetify Logo" :src="profileImage" >
@@ -22,7 +22,7 @@
 
         </v-list-item>
         </v-list>
-    </v-navigation-drawer>
+    </v-navigation-drawer> -->
 
 
 <!-- header --> 

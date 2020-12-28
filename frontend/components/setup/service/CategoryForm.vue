@@ -20,32 +20,31 @@
 
         <div style='border: 1px solid grey;padding: 5px; '>
             <v-btn-toggle v-model='serviceLayoutSelect' mandatory>
-                <v-btn color='blue-grey' text small><v-icon style='font-size: 1.8rem;'>mdi-image-text</v-icon></v-btn>
-                <v-btn color='blue-grey' text small><v-icon style='font-size: 1.2rem;'>mdi-image-move</v-icon></v-btn>
-                <v-btn color='blue-grey' text small><v-icon style='font-size: 1.2rem;'>mdi-image-area-close</v-icon></v-btn>
-                <v-btn color='blue-grey' text small><v-icon style='font-size: 1.2rem;'>mdi-view-grid</v-icon></v-btn>
+                <v-btn color='blue-grey' text small><v-icon style='font-size: 1.2rem;'>mdi-format-list-bulleted-square</v-icon></v-btn>
+                <v-btn color='blue-grey' text small><v-icon style='font-size: 1.2rem;'>mdi-table-arrow-right</v-icon></v-btn>
+                <v-btn color='blue-grey' text small><v-icon style='font-size: 1.2rem;'>mdi-table-arrow-down</v-icon></v-btn>
+                <v-btn color='blue-grey' text small><v-icon style='font-size: 1.2rem;'>mdi-view-grid-outline</v-icon></v-btn>
             </v-btn-toggle>
         </div>
 
     <br>
-
 
 <!-- View -->
         <div v-for='(c, index) in category' :key='index' style='margin-bottom: 40px'>
             <div class='body-2' style='color: #455a64;margin: 10px 0;'>
                 <v-icon style='font-size: 12px;'>mdi-menu-right-outline</v-icon> {{c.parent.toUpperCase()}}
                 <button style='float: right; border: 1px solid #455a64; padding: 0 10px;border-radius: 5px;' text color='blue-grey' dark small v-on:click='addService(c)'>ADD SERVICE</button>
-                <span v-if='c.content.length < 1'>
+                <!-- <span v-if='c.content.length < 1'>
                     <button style='float: right; border: 1px solid #90a4ae; color: #90a4ae; padding: 0 10px;border-radius: 5px;' text small v-on:click='removeCategory(c.id)'>REMOVE</button>
-                </span>
+                </span> -->
                 
             </div>
             <div style='display: flex; background: #fff;color: #455a64;border-radius: 5px;padding-bottom: 4px;margin: 5px 0;' 
-            v-for='a in c.content' :key='a.id' >
+            v-for='a in categoryChild' :key='a.id' >
                 <div style='width: 15%;line-height: 40px; text-align: center;' ><v-icon>mdi-checkbox-marked-circle-outline</v-icon></div>
                 <div style='width: 65%;'>
-                    <div class='overline'><button v-on:click="editService(a.parentId, a.id)">{{textCut(a.name, 30)}}</button></div>
-                    <div class='caption' style='margin-top: -11px;'><button v-on:click="editService(a.parentId, a.id)">{{textCut(a.description, 40)}}</button></div>
+                    <div class='overline'><button v-on:click="editService(a.CategoryId, a.id)">{{textCut(a.name, 30)}}</button></div>
+                    <div class='caption' style='margin-top: -11px;'><button v-on:click="editService(a.CategoryId, a.id)">{{textCut(a.description, 40)}}</button></div>
                 </div>
                 <div style='width: 20%;color: #ff6f00;' class='d-flex align-center mt-1'><div>$ {{a.price}}</div></div>
             </div>
@@ -53,49 +52,11 @@
     </div>
 
 
-<!-- dialog Layout-->
-    <div class='text-center'>
-        <v-btn color="blue-grey" small  dark @click.stop="dialogLayout = true" >Open Layout </v-btn>
-    </div>
-
-        <v-dialog v-model="dialogLayout" max-width="370" >
-        <v-card>
-            <v-card-title class="subtitle-1">Choose your Layout</v-card-title>
-
-            <v-card-text>
-                <div>
-                    <div class='text-center' >
-                        <v-btn-toggle v-model='serviceLayoutSelect' mandatory>
-                            <v-btn color='blue-grey' text small><v-icon>mdi-view-sequential</v-icon></v-btn>
-                            <v-btn color='blue-grey' text small><v-icon>mdi-view-column</v-icon></v-btn>
-                            <v-btn color='blue-grey' text small><v-icon>mdi-view-headline</v-icon></v-btn>
-                        </v-btn-toggle>
-                    </div>
-                </div>
-
-                <div>
-                    <div v-if='serviceLayoutSelect === 0 ' ><serviceView /></div>
-                    <div v-else-if ='serviceLayoutSelect === 1'><serviceView2 /></div>
-                    <div v-else><serviceView3 /></div>
-                </div>
-            </v-card-text>
-
-            <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn color="blue-grey" text @click="dialogLayout = false" > Cancel </v-btn>
-                <v-btn color="blue-grey" text @click="dialogLayout = false" > Confirm </v-btn>
-            </v-card-actions>
-        </v-card>
-    </v-dialog>     
-        
-
-
-
 <!-- transition -->
         <transition name='fade'> 
             <div v-if='isModal' >
                 <v-container >
-                    <service-registration-form :prop='categoryParent' @ModalEmit="ModalInfo"/>
+                    <service-registration-form :parentId='categoryParent' @ModalEmit="ModalInfo"/>
                 </v-container>
             </div>
         </transition>
@@ -119,7 +80,7 @@ import ServiceRegistrationFormEdit from './ServiceRegistrationFormEdit'
 import serviceView from '../service/view/serviceView'
 import serviceView2 from '../service/view/serviceView2'
 import serviceView3 from '../service/view/serviceView3'
-
+import {mapState} from 'vuex'
 export default {
     components:{
         ServiceRegistrationForm,
@@ -146,15 +107,12 @@ export default {
         }
     },
     created(){
-        setTimeout(x => {
-        this.$nextTick(() => this.setFocus()); // just watch out with going too fast !!!
-        }, 1000);
+        this.fetchData()
     },
 
     computed:{
-        category(){
-            return this.$store.state.parent.category
-        }
+        ...mapState('parent', ['categoryChild']),
+        ...mapState('parent', ['category'])
     },
     watch:{
         serviceLayoutSelect(number){
@@ -162,11 +120,15 @@ export default {
         }
     },
     methods:{
+        fetchData(){
+            this.$store.dispatch('parent/fetchData', {})
+        },
+
         setFocus: function() {
         this.$refs.category.focus();
         },
-        addService(parentId, childId){   // add category
-            this.categoryParent = {parent: parentId, child: childId}
+        addService(parentId){   // add category
+            this.categoryParent = parentId
             this.isModal = true
         },
 
@@ -202,11 +164,8 @@ export default {
             } 
             else{
                 this.$store.dispatch('parent/addParent', {
-                id: Date.now(),
                 parent: this.category1,
                 child: [],
-                content: [],
-                toggle: false
             }).then(()=>{ this.category1=''}).catch(()=>{ console.log('fail')})
             }
         },

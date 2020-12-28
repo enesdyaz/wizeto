@@ -40,12 +40,12 @@
                         <br><br>
                         <v-divider></v-divider>
                         <br>
-                        <div>
+                        <!-- <div>
                             <v-btn text outlined class='subtitle' ><v-img class='mr-8' width='16' src='/logo/facebook.png'></v-img> signup with Facebook</v-btn>
                         </div>
                         <div>
                             <v-btn text outlined class='subtitle mt-2 pr-4'><v-img class='mr-8' width='16' src='/logo/gmail.png'></v-img> signup with Gmail <span style='width: 30px;'></span></v-btn>
-                        </div>
+                        </div> -->
                         
             
 
@@ -79,6 +79,11 @@ export default {
                 password: this.password
             })
         }
+    },
+    created(){
+        setTimeout(()=>{
+        this.dialog = true
+        },500);
     },
     computed: {
         me(){

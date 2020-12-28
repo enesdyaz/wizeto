@@ -1,8 +1,6 @@
 <template>
     <div>
         <div :class='{active: !isActive}' class='leftBox' style='overflow:auto; height: 100vh;'>
-            <div>admin</div>
-                {{navItem}}
                 <div v-if="navItem ==='Service'"><category-form /></div>
                 <div v-if="navItem ==='Booking'"><booking-setup /></div>
                 <div v-if="navItem ==='Cards'"><main-form /></div>
