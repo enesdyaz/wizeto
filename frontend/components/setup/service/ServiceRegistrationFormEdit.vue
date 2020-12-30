@@ -1,5 +1,5 @@
 <template> 
-<div>
+<div>  ok 해봅시다 이것은 브렌치 이니까 마음대로 해볼께요~~
     <div class='mb-3'>
         <v-icon class='body' @click='routerBack'>mdi-arrow-left</v-icon>
     </div>
