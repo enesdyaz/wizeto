@@ -30,21 +30,19 @@
     <br>
 
 <!-- View -->
-        <div v-for='(c, index) in category' :key='index' style='margin-bottom: 40px'>
+        <div v-for='(c, index) in service' :key='index' style='margin-bottom: 40px'>
             <div class='body-2' style='color: #455a64;margin: 10px 0;'>
-                <v-icon style='font-size: 12px;'>mdi-menu-right-outline</v-icon> {{c.parent.toUpperCase()}}
-                <button style='float: right; border: 1px solid #455a64; padding: 0 10px;border-radius: 5px;' text color='blue-grey' dark small v-on:click='addService(c)'>ADD SERVICE</button>
-                <!-- <span v-if='c.content.length < 1'>
-                    <button style='float: right; border: 1px solid #90a4ae; color: #90a4ae; padding: 0 10px;border-radius: 5px;' text small v-on:click='removeCategory(c.id)'>REMOVE</button>
-                </span> -->
+                <v-icon style='font-size: 12px;'>mdi-menu-right-outline</v-icon> {{c.category.toUpperCase()}}
+                <button style='float: right; border: 1px solid #455a64; padding: 0 10px;border-radius: 5px;' text color='blue-grey' dark small v-on:click='addService(c._id)'>ADD SERVICE</button>
                 
             </div>
+
             <div style='display: flex; background: #fff;color: #455a64;border-radius: 5px;padding-bottom: 4px;margin: 5px 0;' 
-            v-for='a in categoryChild' :key='a.id' >
+            v-for='(a, i) in c.service' :key='i' >
                 <div style='width: 15%;line-height: 40px; text-align: center;' ><v-icon>mdi-checkbox-marked-circle-outline</v-icon></div>
                 <div style='width: 65%;'>
-                    <div class='overline'><button v-on:click="editService(a.CategoryId, a.id)">{{textCut(a.name, 30)}}</button></div>
-                    <div class='caption' style='margin-top: -11px;'><button v-on:click="editService(a.CategoryId, a.id)">{{textCut(a.description, 40)}}</button></div>
+                    <div class='overline'><button v-on:click="editService(a.categoryId, a.serviceId)">{{textCut(a.name, 30)}}</button></div>
+                    <div class='caption' style='margin-top: -11px;'><button v-on:click="editService(a.categoryId, a.serviceId)">{{textCut(a.description, 40)}}</button></div>
                 </div>
                 <div style='width: 20%;color: #ff6f00;' class='d-flex align-center mt-1'><div>$ {{a.price}}</div></div>
             </div>
@@ -111,8 +109,7 @@ export default {
     },
 
     computed:{
-        ...mapState('parent', ['categoryChild']),
-        ...mapState('parent', ['category'])
+        ...mapState('service', ['service'])
     },
     watch:{
         serviceLayoutSelect(number){
@@ -121,7 +118,7 @@ export default {
     },
     methods:{
         fetchData(){
-            this.$store.dispatch('parent/fetchData', {})
+            this.$store.dispatch('service/fetchData', {})
         },
 
         setFocus: function() {
@@ -151,29 +148,31 @@ export default {
         },
     
         onEnter(){
-            if(this.category1.length === 0) return
-            if(this.category2){
-                const index = this.category.findIndex(v => v.parent === this.category2)
-                this.$store.dispatch('parent/addChild', {
-                id: Date.now(),
-                index: index,
-                child: this.category1,
-                content: [],
-                }).then(()=>{this.category1=''})
-                .catch(()=>{console.log('fail')})
-            } 
-            else{
-                this.$store.dispatch('parent/addParent', {
-                parent: this.category1,
-                child: [],
-            }).then(()=>{ this.category1=''}).catch(()=>{ console.log('fail')})
-            }
+            this.$store.dispatch('service/addCategory', this.category1)
+
+            // if(this.category1.length === 0) return
+            // if(this.category2){
+            //     const index = this.category.findIndex(v => v.parent === this.category2)
+            //     this.$store.dispatch('parent/addChild', {
+            //     id: Date.now(),
+            //     index: index,
+            //     child: this.category1,
+            //     content: [],
+            //     }).then(()=>{this.category1=''})
+            //     .catch(()=>{console.log('fail')})
+            // } 
+            // else{
+            //     this.$store.dispatch('parent/addParent', {
+            //     parent: this.category1,
+            //     child: [],
+            // }).then(()=>{ this.category1=''}).catch(()=>{ console.log('fail')})
+            // }
         },
 
-        editService(parentId, id){
+        editService(categoryId, serviceId){
             this.isEditModal = true
-            this.service_id = id
-            this.parent_id = parentId
+            this.service_id = serviceId
+            this.parent_id = categoryId
             // this.$store.category.dispatch('editData', todo)
         },
 

@@ -1,29 +1,25 @@
 <template> 
-<!-- Registration Form -->
 <div>
-
-<!-- 1. Service Registration -->
-    <v-card class='card'  style='width: 330px;' v-for='(data, index) in dataList' :key='index'>
-        <div class='card_title' style='font-size: 0.8rem;height: 30px;line-height: 30px;text-align: center;background: #455a64;color: #fff;'>
-            <v-icon style='color: white; padding-right: 4px; font-size: 0.9rem'>mdi-content-duplicate</v-icon> Update Registration
-<!-- windows_close -->
-            <button class="window_close" @click="window_close"></button>
-        </div>
-
-        <v-card-text>
-            <br>
+    <div class='mb-3'>
+        <v-icon class='body' @click='routerBack'>mdi-arrow-left</v-icon>
+    </div>
+    <div style='text-align: center;'>
+        <v-btn class=' subtitle-2' text color='blue-grey' >
+            <v-icon class='body-1 pr-2'>mdi-plus</v-icon> EDIT Your Service
+        </v-btn>
+    </div>
 <!-- 2. Service Name ----->                            
-            <table style='font-size: 0.8rem;width: 98%;margin-bottom: 10px;'>
+            <table style='font-size: 0.8rem;width: 95%;margin: 0 auto;'>
                 <tr style='text-align: left;'>
                     <th> <v-icon style='font-size: 1rem;'>mdi-chevron-down</v-icon>Service Name</th> 
                 </tr>
                 <tr>
-                    <td><input v-model='service_name' v-text='data.name' required style='border: 1px solid grey; width: 99%; padding-left: 10px;' type="text" /></td>
+                    <td><input v-model='service_name' v-text='data[0].name' required style='border: 1px solid grey; width: 99%; padding-left: 10px;' type="text" /></td>
                 </tr>
             </table>
 
 <!-- 3. Price, 4. Duration ---->                            
-            <table style='font-size: 0.8rem;width: 98%;margin-bottom: 10px;'>
+            <table style='font-size: 0.8rem;width: 95%;margin: 0 auto;'>
                 <tr style='text-align: left;'>
                     <th> <v-icon style='font-size: 1rem;'>mdi-chevron-down</v-icon>Price ($AU)</th> 
                     <th> <v-icon style='font-size: 1rem;'>mdi-chevron-down</v-icon>Duration</th> 
@@ -51,7 +47,7 @@
 
 
 <!-- 7. description ------------------>
-            <table style='font-size: 0.8rem;width: 98%;'>
+            <table style='font-size: 0.8rem;width: 95%;margin: 0 auto;'>
                 <tr style='text-align: left;'>
                     <th> <v-icon style='font-size: 1rem;'>mdi-chevron-down</v-icon>Description</th> 
                 </tr>
@@ -61,7 +57,7 @@
             </table>
 
 <!-- 8. photo upload ------------------>
-            <table style='font-size: 0.8rem;width: 98%;'>
+            <table style='font-size: 0.8rem;width: 95%;margin: 0 auto;'>
                 <tr style='text-align: left;'>
                     <th> <v-icon style='font-size: 1rem;'>mdi-chevron-down</v-icon>Photo Upload (upto 2M)</th> 
                 </tr>
@@ -75,10 +71,10 @@
                     </td>
                 </tr>
             </table>
-        </v-card-text>
+
         
 <!-- 9. Submit ---->
-        <v-card-actions>
+
             <v-dialog v-model="dialog" width="370">
                 <template v-slot:activator="{ on, attrs }">
                     <v-btn color='blue-grey' v-bind="attrs" v-on="on" style='display: inline-block; float: left; margin-left: 47%;bottom: 10px;' depressed outlined small>Remove</v-btn> 
@@ -99,10 +95,10 @@
                 </v-card>
             </v-dialog>
             <v-btn color='lime darken-4' style='display: inline-block; float: left;; bottom: 10px;' depressed outlined small @click="onSubmit">Update</v-btn>
-        </v-card-actions>
-                        
-    </v-card>
-<!-- Registration ends ---->
+
+ 
+
+
 </div>
 </template>
 
@@ -123,14 +119,12 @@ export default {
     data() {
         return {
             dialog: false,
-            item: this.dataList,
             service_name: '',
             service_price: '',
             service_duration: '',
             service_description: '',
             service_image: '',
 
-            category_input: '',
             service_category: '',  //upper category of the service
             service_item: [],  // all data of the service
             dialog: false,  // dialog for removing a category selected
@@ -138,27 +132,45 @@ export default {
     },
 
 
-
+    // created(){
+    //     this.fetchData()
+    // },
     computed:{
-        dataList(){
-            const array = this.$store.state.parent.category
-            const id = this.service_id
-            const parent_id = this.parent_id
-            const data = array.find(e=>e.id === parent_id).content.filter(f=>f.id === id)
+        data(){
+            const Item = this.$store.state.service.service
+            // const data = Item.find(e=>e._id === this.parent_id)
+            // const result = data.filter(e=>e.serviceId === this.service_id)
 
-            this.service_name = data[0].name
-            this.service_price = data[0].price
-            this.service_duration = data[0].duration
-            this.service_description = data[0].description
-            this.service_image = data[0].image
-            this.category_input = data[0].category
+            const result = Item.find(e=>e._id === this.parent_id).service.filter(e=>e.serviceId === this.service_id)
 
-            return data
+            this.service_name = result[0].name
+            this.service_price = result[0].price
+            this.service_duration = result[0].duration
+            this.service_description = result[0].description
+            this.service_image = result[0].image
+
+            return result
         },
     },
 
     methods:{
+        fetchData(){
+            const Item = this.$store.state.service.service
+            // const data = Item.find(e=>e._id === this.parent_id)
+            // const result = data.filter(e=>e.serviceId === this.service_id)
 
+            const result = Item.find(e=>e._id === this.parent_id).service.filter(e=>e.serviceId === this.service_id)
+
+            this.service_name = result[0].name
+            this.service_price = result[0].price
+            this.service_duration = result[0].duration
+            this.service_description = result[0].description
+            this.service_image = result[0].image
+        },
+
+        routerBack(){
+          this.$emit("ModalEmit", false)
+        },
         onSubmit(){
             this.$store.dispatch('parent/updateParentData', {
                 id: this.service_id,
@@ -172,6 +184,7 @@ export default {
             })
             this.$emit("ModalEmit", false)  // close this windows of the registration form 
         },
+ 
         onDelete(){
 
             const id = this.service_id

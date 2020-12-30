@@ -67,7 +67,7 @@ export default {
     },
     computed:{
         navItem(){
-                return this.$store.state.layout.navItem
+                return this.$store.state.layout.navItem || "Service"
         }
     }
 }

@@ -121,7 +121,6 @@ export default {
         },
         routerBack(){
             this.$router.go(-1)
-            console.log(this.$router)
         },
         textCut(txt, len, lastTxt) {
             if (len == "" || len == null) { // 기본값

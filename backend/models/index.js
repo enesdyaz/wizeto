@@ -18,6 +18,8 @@ db.Comment = require('./Comment')(sequelize, Sequelize)
 db.TextImage = require('./TextImage')(sequelize, Sequelize)  
 db.Text = require('./Text')(sequelize, Sequelize)  
 db.Board = require('./Board')(sequelize, Sequelize)  
+db.Category = require('./Category')(sequelize, Sequelize)  
+db.Child = require('./Child')(sequelize, Sequelize)  
 // db.Hashtag = require('./hashtag')(sequelize, Sequelize)  
 
 

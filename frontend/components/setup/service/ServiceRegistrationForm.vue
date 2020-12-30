@@ -12,7 +12,6 @@
         <v-card-text>
             <form>
 
-
 <!-- 2. Service Name ----->                            
             <table style='font-size: 0.8rem;width: 98%;margin-bottom: 10px;color: #627F8C'>
                 <tr style='text-align: left;'>
@@ -97,7 +96,6 @@ export default {
     data () {
         return {
             //STORE
-            service_id: '',
             service_name: '',
             service_price: '',
             service_duration: '',
@@ -111,19 +109,13 @@ export default {
             error:'',
         }
     },
-    computed:{
-        category_list(){
-            return this.$store.state.parent.category
-        },
-        category_child(){
-            return this.$store.state.parent.categoryChild
-        }
-    },
+
     methods:{
         onSubmit(){
                 if(this.service_name && this.service_price){
-                    this.$store.dispatch('parent/addChildData', {
-                    parentId: this.parentId.id,
+                    this.$store.dispatch('service/addService', {
+                    categoryId: this.parentId,
+                    serviceId: Date.now(),
                     name: this.service_name,
                     price: this.service_price,
                     duration: this.service_duration,

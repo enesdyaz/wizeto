@@ -4,23 +4,27 @@
 const backPort = '3085'
 const frontPort = '3000'
 
-
 const express = require('express')
 const db = require('./models')
 const cors = require('cors')
 const morgan = require('morgan')
+const mongoose = require('mongoose')
+const bodyParser = require('body-parser')
+
+require('dotenv').config()
+
 
 //------------------------------------------------//
 // ROUTER REQUIRE
 //------------------------------------------------//
 const userRouter = require('./routes/user')
-// const widgetRouter= require('./routes/widget')
-// const imageRouter = require('./routes/image')
-// const databaseRouter = require('./routes/database')
 const postRouter = require('./routes/post')
 const textImageRouter = require('./routes/textImage')
 const boardRouter = require('./routes/board')
-// const loadPostRouter = require('./routes/loadPost')
+const CategoryRouter = require('./routes/Category')
+
+const serviceRouter = require('./routes/service')
+
 
 //------------------------------------------------//
 // PASSPORT MODULE
@@ -34,10 +38,9 @@ app.use(morgan('dev'))
 
 db.sequelize.sync() // db 실행 {force:true}
 
-
+app.use(bodyParser.json())
 app.use(express.json()) // express 가 json을 받기 위함
 app.use(express.urlencoded( {extended: false})) 
-// passport
 app.use(session({
     resave: false,
     saveUninitialized: false,
@@ -51,7 +54,6 @@ app.use(cookie('ns747800'))
 app.use(passport.initialize())
 app.use(passport.session())
 passportConfig()
-
 
 
 //------------------------------------------------//
@@ -78,16 +80,20 @@ app.get('/', (req,res)=>{ res.send('hello wizeto') })
 app.use('/user', userRouter)  
 app.use('/textImage', textImageRouter)
 app.use('/board', boardRouter)
-// app.use('/image', imageRouter)
-// app.use('/widget', widgetRouter) 
-
-// app.use('/database', databaseRouter)
+app.use('/Category', CategoryRouter)
 app.use('/post', postRouter)
-// app.use('/loadpost', loadPostRouter)
+app.use('/service', serviceRouter)
 
 
 
+//------------------------------------------------//
+// MONGO DB CONNECTION
+//------------------------------------------------//
 
+mongoose.connect(process.env.MONGO_URI, 
+    { useUnifiedTopology: true, useNewUrlParser: true },
+    ()=>{console.log('connected to MONGO DB!!!')
+})
 
 //------------------------------------------------//
 // LISTEN

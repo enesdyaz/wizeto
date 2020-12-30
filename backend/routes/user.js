@@ -56,9 +56,6 @@ router.post('/signup', async (req, res, next)=>{
                 return res.json(user)               // 이 부분은 Body 로 따로 들어감
             })
         })(req, res, next)
-
-
-
         return res.status(201).json(newUser)
         }
     } catch(error){
