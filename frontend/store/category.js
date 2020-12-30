@@ -59,7 +59,6 @@ export const mutations = {
     todo.done = !todo.done
     },
     SERVICE_LAYOUT(state, payload){
-        console.log('SERVICE_LAYOUT', payload)
         state.select = payload
     }
 }

@@ -10,10 +10,10 @@ const router = express.Router();
 
 
 
-// GET ALL
+// GET ALL (Service)
 router.get('/', async(req, res)=>{
     try{
-        const service = await Service.find()
+        const service = await Service.find().sort({_id: 1})
         res.json(service)
     }
     catch(err){
@@ -34,22 +34,8 @@ router.get('/:postId', async (req, res)=>{
     
 })
 
-// DELETE ONE
-router.delete('/:postId', async (req, res)=>{
-    try{
-        const post = await Post.remove({_id: req.params.postId})
-        res.json(post)
-    }
-    catch(err){
-        res.json({message: err})
-    }
-    
-})
-
-
-// UPDATE $push in Array
+// UPDATE $push in Array (Service)
 router.put('/:postId', async (req, res)=>{
-    console.log('harry-body', req.body)
     try{
         const service = await Service.updateOne({
             _id: req.params.postId
@@ -77,7 +63,7 @@ router.put('/:postId', async (req, res)=>{
 })
 
 
-// POST ONE  // category 
+// POST ONE  // (Add a category )
 router.post('/', async (req, res)=>{
     const service = new Service({
         category: req.body.category,
@@ -90,6 +76,31 @@ router.post('/', async (req, res)=>{
     catch(err){
         res.json({message: err})
     }
+})
+
+// DELETE ONE OK (Category)
+router.delete('/:postId', async (req, res)=>{
+    try{
+        const service = await Service.remove({_id: req.params.postId})
+        res.json(service)
+    }
+    catch(err){
+        res.json({message: err})
+    }
+    
+})
+
+// DELETE SERVICE (Service)
+router.put('/delete/:postId', async (req, res)=>{
+console.log('remove', req.body)    
+    try{
+        const service = await Service.updateOne({_id: req.params.postId}, {$pull: {service: { serviceId: req.body.service_id}}} )
+        res.json(service)
+    }
+    catch(err){
+        res.json({message: err})
+    }
+    
 })
 
 

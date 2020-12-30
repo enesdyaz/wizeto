@@ -33,16 +33,20 @@
         <div v-for='(c, index) in service' :key='index' style='margin-bottom: 40px'>
             <div class='body-2' style='color: #455a64;margin: 10px 0;'>
                 <v-icon style='font-size: 12px;'>mdi-menu-right-outline</v-icon> {{c.category.toUpperCase()}}
+
+                <div v-if="c.service?c.service.length>=1:c.service" style='display: none;'></div>
+                <div v-else> <button style='display: inline-block;float: right; border: 1px solid #455a64; margin-left: 10px;padding: 0 10px;border-radius: 5px;' text color='blue-grey' dark small v-on:click='onDelete(c._id)'>DELETE</button></div>
+
                 <button style='float: right; border: 1px solid #455a64; padding: 0 10px;border-radius: 5px;' text color='blue-grey' dark small v-on:click='addService(c._id)'>ADD SERVICE</button>
-                
+
             </div>
 
             <div style='display: flex; background: #fff;color: #455a64;border-radius: 5px;padding-bottom: 4px;margin: 5px 0;' 
             v-for='(a, i) in c.service' :key='i' >
                 <div style='width: 15%;line-height: 40px; text-align: center;' ><v-icon>mdi-checkbox-marked-circle-outline</v-icon></div>
                 <div style='width: 65%;'>
-                    <div class='overline'><button v-on:click="editService(a.categoryId, a.serviceId)">{{textCut(a.name, 30)}}</button></div>
-                    <div class='caption' style='margin-top: -11px;'><button v-on:click="editService(a.categoryId, a.serviceId)">{{textCut(a.description, 40)}}</button></div>
+                    <div class='overline'><button v-on:click="editService(a.categoryId, a.serviceId)">{{a.name?textCut(a.name, 30):''}}</button></div>
+                    <div class='caption' style='margin-top: -11px;'><button v-on:click="editService(a.categoryId, a.serviceId)">{{a.description?textCut(a.description, 40):''}}</button></div>
                 </div>
                 <div style='width: 20%;color: #ff6f00;' class='d-flex align-center mt-1'><div>$ {{a.price}}</div></div>
             </div>
@@ -109,7 +113,14 @@ export default {
     },
 
     computed:{
-        ...mapState('service', ['service'])
+        service(){
+            const data = this.$store.state.service.service
+            if(data === null || undefined){
+                return 
+            }
+            return data
+        }
+        
     },
     watch:{
         serviceLayoutSelect(number){
@@ -141,32 +152,27 @@ export default {
             alert('dialog')
         },
         onDelete(id){
-            this.$store.dispatch('parent/delete', id)
+            this.$store.dispatch('service/deleteCategory', id)
         },
         toggle(id){
             this.$store.dispatch('parent/toggle', id)
         },
     
         onEnter(){
-            this.$store.dispatch('service/addCategory', this.category1)
+            const serviceItem = this.$store.state.service.service
+            const index = serviceItem.findIndex(e=>e.category === this.category1)
 
-            // if(this.category1.length === 0) return
-            // if(this.category2){
-            //     const index = this.category.findIndex(v => v.parent === this.category2)
-            //     this.$store.dispatch('parent/addChild', {
-            //     id: Date.now(),
-            //     index: index,
-            //     child: this.category1,
-            //     content: [],
-            //     }).then(()=>{this.category1=''})
-            //     .catch(()=>{console.log('fail')})
-            // } 
-            // else{
-            //     this.$store.dispatch('parent/addParent', {
-            //     parent: this.category1,
-            //     child: [],
-            // }).then(()=>{ this.category1=''}).catch(()=>{ console.log('fail')})
-            // }
+            if(!this.category1.length){
+                alert('no empty value')
+                return  
+            } 
+            if(index >= 0){
+                alert('same name exists')
+                return
+            }
+            this.$store.dispatch('service/addCategory', this.category1)
+            this.category1 = ''
+
         },
 
         editService(categoryId, serviceId){

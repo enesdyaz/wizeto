@@ -45,6 +45,7 @@
     </v-navigation-drawer>
 
 <!-- Tool bar -->
+<client-only>
     <v-app-bar  :clipped-left="clipped" color='white' hide-on-scroll height='60' app  flat dense >
 
       <v-app-bar-nav-icon class='d-lg-none' @click.stop="drawer = !drawer" />
@@ -86,7 +87,7 @@
           </div>
       </transition>
     </v-app-bar>
-
+</client-only>>
 
 <!-- content -->
     <v-main style='background: whitesmoke;'>

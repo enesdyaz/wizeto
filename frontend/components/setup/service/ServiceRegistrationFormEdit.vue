@@ -1,5 +1,5 @@
 <template> 
-<div>  ok 해봅시다 이것은 브렌치 이니까 마음대로 해볼께요~~  branch 입니다. 이거 push를 할 수 있는 건가?
+<div>  
     <div class='mb-3'>
         <v-icon class='body' @click='routerBack'>mdi-arrow-left</v-icon>
     </div>
@@ -154,22 +154,8 @@ export default {
     },
 
     methods:{
-        fetchData(){
-            const Item = this.$store.state.service.service
-            // const data = Item.find(e=>e._id === this.parent_id)
-            // const result = data.filter(e=>e.serviceId === this.service_id)
-
-            const result = Item.find(e=>e._id === this.parent_id).service.filter(e=>e.serviceId === this.service_id)
-
-            this.service_name = result[0].name
-            this.service_price = result[0].price
-            this.service_duration = result[0].duration
-            this.service_description = result[0].description
-            this.service_image = result[0].image
-        },
-
         routerBack(){
-          this.$emit("ModalEmit", false)
+            this.$emit("ModalEmit", false)
         },
         onSubmit(){
             this.$store.dispatch('parent/updateParentData', {
@@ -186,12 +172,11 @@ export default {
         },
  
         onDelete(){
-
-            const id = this.service_id
-            const parent_id = this.parent_id
-            this.$store.dispatch('parent/deleteParentData', {
-                id: id,
-                parent_id: parent_id
+            // const id = this.service_id
+            // const parent_id = this.parent_id
+            this.$store.dispatch('service/deleteService', {
+                service_id: this.service_id,
+                category_id: this.parent_id
             })
             this.dialog = false
             

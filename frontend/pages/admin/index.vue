@@ -103,12 +103,9 @@ export default {
 
     created(){
         const data = this.$store.state.phoneView.view
-        console.log(data)
         if(data.length !== 0){
             this.component =  data
-            }else{
-                console.log('no data length')
-        }
+            }
     },
     computed:{
         card(){

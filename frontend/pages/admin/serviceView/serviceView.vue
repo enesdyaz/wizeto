@@ -50,7 +50,6 @@ export default {
             return this.$store.state.parent.category
         },
         select(){
-            console.log('select', this.$store.state.category.select)
             return this.$store.state.category.select
         }
     },

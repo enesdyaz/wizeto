@@ -3,21 +3,30 @@ export const state = () => ({
     service: []
 })
 
-export const getters = {
-    
-}
+
 
 export const mutations = {
     ADD_CATEGORY(state, payload){
-        console.log('ADD_CATEGORY', payload)
         state.service.unshift(payload)
+    },
+    DELETE_CATEGORY(state, payload){
+        const index = state.service.findIndex(e=>e._id === payload)
+        state.service.splice(index, 1)
+    },
+    
+    ADD_SERVICE(state, payload){
+        console.log('ADD_SERVICE_DATA', payload)
+        const index = state.service.findIndex(v => v._id == payload.categoryId)
+        state.service[index].service.unshift(payload)
 
     },
-    ADD_SERVICE(state, payload){
-        const index = state.service.findIndex(v => v._id == payload.categoryId)
-        console.log(index)
-        console.log(state.service[index])
+    DELETE_SERVICE(state, payload){
+        const i = state.service.findIndex(e=>e._id === payload.category_id)
+        const j = state.service[i].service.findIndex(e=>e.serviceId === payload.service_id)
+        state.service[i].service.splice(j, 1)
     },
+
+
     FETCH_DATA(state, payload){
         state.service = payload
     }
@@ -29,19 +38,34 @@ export const actions= {
             category: payload ,
         }, {withCredentials: true})
         .then((res)=>{
-            console.log(res.data)
             commit('ADD_CATEGORY', res.data)
         })
         .catch((err)=>{console.log(err)})
     },
 
+    deleteCategory({commit}, payload){
+        this.$axios.delete(`/service/${payload}`, {
+        }, {withCredentials: true})
+        .then((res)=>{
+            commit('DELETE_CATEGORY', payload)
+        })
+        .catch((err)=>{console.log(err)})
+    },
 
-    addService({dispatch}, payload){
-        console.log('addService', payload)
+
+
+    addService({commit}, payload){
         this.$axios.put(`/service/${payload.categoryId}`, payload, {withCredentials: true})
         .then((res)=>{
-            console.log('addServiceResponse', res.data)
-            dispatch('fetchData', res.data)
+            commit('ADD_SERVICE', payload)
+        })
+        .catch((err)=>{console.log(err)})
+    },
+
+    deleteService({commit}, payload){
+        this.$axios.put(`/service/delete/${payload.category_id}`, payload, {withCredentials: true})
+        .then((res)=>{
+            commit('DELETE_SERVICE', payload)
         })
         .catch((err)=>{console.log(err)})
     },
@@ -56,8 +80,7 @@ export const actions= {
     fetchServiceData({commit}, payload){
         this.$axios.get(`/service/${payload}`, {withCredentials:true})
         .then((res)=>{
-            console.log('fetchServiceData', res.data)
-            // commit('FETCH_DATA', res.data)
+            commit('FETCH_DATA', res.data)
         })
         .catch((err)=>{console.log(err)})
     },
