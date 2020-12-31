@@ -13,7 +13,7 @@ const router = express.Router();
 // GET ALL (Service)
 router.get('/', async(req, res)=>{
     try{
-        const service = await Service.find().sort({_id: 1})
+        const service = await Service.find().sort({_id: -1})
         res.json(service)
     }
     catch(err){

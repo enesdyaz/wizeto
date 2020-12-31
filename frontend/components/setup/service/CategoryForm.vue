@@ -34,7 +34,7 @@
             <div class='body-2' style='color: #455a64;margin: 10px 0;'>
                 <v-icon style='font-size: 12px;'>mdi-menu-right-outline</v-icon> {{c.category.toUpperCase()}}
 
-                <div v-if="c.service?c.service.length>=1:c.service" style='display: none;'></div>
+                <div v-if="c.service?c.service.length:c.service" style='display: none;'></div>
                 <div v-else> <button style='display: inline-block;float: right; border: 1px solid #455a64; margin-left: 10px;padding: 0 10px;border-radius: 5px;' text color='blue-grey' dark small v-on:click='onDelete(c._id)'>DELETE</button></div>
 
                 <button style='float: right; border: 1px solid #455a64; padding: 0 10px;border-radius: 5px;' text color='blue-grey' dark small v-on:click='addService(c._id)'>ADD SERVICE</button>

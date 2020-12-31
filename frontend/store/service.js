@@ -7,6 +7,7 @@ export const state = () => ({
 
 export const mutations = {
     ADD_CATEGORY(state, payload){
+        console.log('ADD_CATEGORY', payload)
         state.service.unshift(payload)
     },
     DELETE_CATEGORY(state, payload){
@@ -17,8 +18,16 @@ export const mutations = {
     ADD_SERVICE(state, payload){
         console.log('ADD_SERVICE_DATA', payload)
         const index = state.service.findIndex(v => v._id == payload.categoryId)
-        state.service[index].service.unshift(payload)
 
+        console.log('index', index)
+        if(!state.service[index].service){
+            console.log('아무것도 없어요 서비스 안에는~~ 만들어랏')
+            state.service[index].service = []
+        }
+   
+        state.service[index].service.unshift(payload)
+        
+        
     },
     DELETE_SERVICE(state, payload){
         const i = state.service.findIndex(e=>e._id === payload.category_id)
@@ -54,10 +63,10 @@ export const actions= {
 
 
 
-    addService({commit}, payload){
+    addService({commit, dispatch}, payload){
         this.$axios.put(`/service/${payload.categoryId}`, payload, {withCredentials: true})
         .then((res)=>{
-            commit('ADD_SERVICE', payload)
+            dispatch('fetchData')
         })
         .catch((err)=>{console.log(err)})
     },
