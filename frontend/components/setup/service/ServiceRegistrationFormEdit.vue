@@ -25,8 +25,8 @@
                     <th> <v-icon style='font-size: 1rem;'>mdi-chevron-down</v-icon>Duration</th> 
                 </tr>
                 <tr>
-                    <td><input v-model='service_price' required style='border: 1px solid grey; width: 99%; padding-left: 10px;' type="number" min='1'></td>
-                    <td><select v-model='service_duration' style='border: 1px solid grey; width: 99%; padding-left: 10px;' type="text" >
+                    <td><input v-model='service_price' required style='border: 1px solid grey; width: 95%; padding-left: 10px;' type="number" min='1'></td>
+                    <td><select v-model='service_duration' style='border: 1px solid grey; width: 97%; padding-left: 10px;' type="text" >
                         <option value="0" selected>none</option>    
                         <option value="10">10 min</option>    
                         <option value="15">15 min</option>    
@@ -158,7 +158,7 @@ export default {
             this.$emit("ModalEmit", false)
         },
         onSubmit(){
-            this.$store.dispatch('parent/updateParentData', {
+            this.$store.dispatch('service/updateService', {
                 id: this.service_id,
                 parent_id: this.parent_id,
 

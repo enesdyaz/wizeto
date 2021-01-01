@@ -34,6 +34,41 @@ router.get('/:postId', async (req, res)=>{
     
 })
 
+router.put('/update',  async(req, res)=>{
+    try{
+        console.log('update service', req.body)
+        const service = await Service.findOneAndUpdate(
+            {service: { $elemMatch: {serviceId: req.body.id}}}, 
+            {$set: {  
+                "service.$.name" : req.body.name, 
+                "service.$.description" : req.body.description, 
+                "service.$.duration" : req.body.duration, 
+                "service.$.image" : req.body.image, 
+                "service.$.price" : req.body.price
+            }} 
+            )
+
+        // const service = await Service.updateOne({},  {$set: { "service.$[elem].name" : req.body.name }}, 
+        // { arrayFilters: [ { "service.serviceId": req.body.id ], multi: true }
+        // )
+        res.json(service)
+    }
+    catch(err){
+        res.json({message: err})
+    }
+})
+
+router.put('/update/:id', async(req,res)=>{
+    try{
+        console.log(req.body)
+        const service = await Service.updateOne({_id: req.params.id}, {$set: { category: req.body.category }})
+        res.json(service)
+    }
+    catch(err){
+        res.json({message: err})
+    }
+})
+
 // UPDATE $push in Array (Service)
 router.put('/:postId', async (req, res)=>{
     try{
@@ -67,6 +102,7 @@ router.put('/:postId', async (req, res)=>{
 router.post('/', async (req, res)=>{
     const service = new Service({
         category: req.body.category,
+        toggle: req.body.toggle
     })
 
     try{

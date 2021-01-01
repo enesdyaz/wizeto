@@ -29,15 +29,16 @@
 
     <br>
 
-<!-- View -->
+<!-- View -->{{service}}
         <div v-for='(c, index) in service' :key='index' style='margin-bottom: 40px'>
-            <div class='body-2' style='color: #455a64;margin: 10px 0;'>
-                <v-icon style='font-size: 12px;'>mdi-menu-right-outline</v-icon> {{c.category.toUpperCase()}}
+            <div class='body-2' style='display: flex; color: #455a64;margin: 10px 0;'>
+                <v-icon style='font-size: 12px;'>mdi-menu-right-outline</v-icon> 
+                <input autofocus ref='inputTitle' class='ml-1 body pl-2' :value='c.category.toUpperCase()' :readonly='toggleC' style='margin-top: -1; color: #455a64; font-weight: 400' type='text' @click='toggleC=!toggleC' @keyup.enter="categoryUpdate(c._id, index)" >
+                <v-spacer></v-spacer>
 
                 <div v-if="c.service?c.service.length:c.service" style='display: none;'></div>
-                <div v-else> <button style='display: inline-block;float: right; border: 1px solid #455a64; margin-left: 10px;padding: 0 10px;border-radius: 5px;' text color='blue-grey' dark small v-on:click='onDelete(c._id)'>DELETE</button></div>
-
-                <button style='float: right; border: 1px solid #455a64; padding: 0 10px;border-radius: 5px;' text color='blue-grey' dark small v-on:click='addService(c._id)'>ADD SERVICE</button>
+                <div v-else> <v-btn style=' margin-right: 5px;height: 25px;'  color='red darken-2' dark small v-on:click='onDelete(c._id)'><v-icon class='body-2'>mdi-delete-outline</v-icon></v-btn></div>
+                <v-btn style='height: 25px;' color='blue-grey lighten-1' dark small v-on:click='addService(c._id)'><v-icon class='body-2'>mdi-plus</v-icon></v-btn>
 
             </div>
 
@@ -105,6 +106,11 @@ export default {
             //layout
             serviceLayoutSelect: '',
             dialogLayout: false,
+
+            //categoryUpdate
+            categoryButton: false,
+            categoryName: '',
+            toggleC: true,
             
         }
     },
@@ -120,6 +126,7 @@ export default {
             }
             return data
         }
+
         
     },
     watch:{
@@ -128,6 +135,18 @@ export default {
         }
     },
     methods:{
+
+        categoryUpdate(id, index){
+            this.toggleC = !this.toggleC
+            const category = this.$refs.inputTitle[index].value.trim()
+            if (!category) return 
+            this.$store.dispatch('service/updateCategory', {
+                id: id,
+                category: category
+            })
+        },
+
+
         fetchData(){
             this.$store.dispatch('service/fetchData', {})
         },
@@ -170,7 +189,7 @@ export default {
                 alert('same name exists')
                 return
             }
-            this.$store.dispatch('service/addCategory', this.category1)
+            this.$store.dispatch('service/addCategory', {category: this.category1, toggle: this.categoryButton})
             this.category1 = ''
 
         },
