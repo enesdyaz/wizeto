@@ -1,5 +1,9 @@
 <template> 
+<<<<<<< HEAD
 <div>  index{{service_id}}{{parent_id}}
+=======
+
+>>>>>>> db20d6aee1ae7acadbf3729aa081976cdc10fbe9
     <div class='mb-3'>
         <v-icon class='body' @click='routerBack'>mdi-arrow-left</v-icon>
     </div>
