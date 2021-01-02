@@ -8,6 +8,9 @@ export const state = () => ({
 export const mutations = {
     ADD_CATEGORY(state, payload){
         console.log('ADD_CATEGORY', payload)
+        if(state.service === null || undefined){
+            state.service = []
+        }
         state.service.unshift(payload)
     },
     DELETE_CATEGORY(state, payload){
@@ -27,6 +30,7 @@ export const mutations = {
 
     
     ADD_SERVICE(state, payload){
+
         const index = state.service.findIndex(v => v._id == payload.categoryId)
         console.log('index', index)
         if(!state.service[index].service){
@@ -35,9 +39,12 @@ export const mutations = {
         state.service[index].service.unshift(payload)
     },
     DELETE_SERVICE(state, payload){
+        console.log('DELETE PALYLOAD', payload)
         const i = state.service.findIndex(e=>e._id === payload.category_id)
-        const j = state.service[i].service.findIndex(e=>e.serviceId === payload.service_id)
-        state.service[i].service.splice(j, 1)
+        console.log('DELETE i', i)
+        const j = state.service[i].item.findIndex(e=>e.serviceId === payload.service_id)
+        console.log('DELETE j', j)
+        state.service[i].item.splice(j, 1)
     },
     UPDATE_SERVICE(state, payload){
 
@@ -83,6 +90,7 @@ export const actions= {
 
 
     addService({commit, dispatch}, payload){
+        console.log('addService', payload)
         this.$axios.put(`/service/${payload.categoryId}`, payload, {withCredentials: true})
         .then((res)=>{
             dispatch('fetchData')
@@ -90,15 +98,20 @@ export const actions= {
         .catch((err)=>{console.log(err)})
     },
 
-    deleteService({commit}, payload){
-        this.$axios.put(`/service/delete/${payload.category_id}`, payload, {withCredentials: true})
+    deleteService({dispatch}, payload){
+        this.$axios.put(`/service/delete/${payload.sid}`, payload, {withCredentials: true})
         .then((res)=>{
-            commit('DELETE_SERVICE', payload)
+            dispatch('fetchData')
         })
         .catch((err)=>{console.log(err)})
     },
+
+
+
+
     updateService({commit, dispatch}, payload){
-        this.$axios.put(`/service/update`, payload, {withCredentials: true})
+        console.log('updateService', payload.parent_id)
+        this.$axios.put(`/service/update/${payload.parent_id}`, payload, {withCredentials: true})
         .then((res)=>{
             // commit('UPDATE_SERVICE', payload)
             dispatch('fetchData')

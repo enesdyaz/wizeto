@@ -29,11 +29,11 @@
 
     <br>
 
-<!-- View -->{{service}}
+<!-- View -->
         <div v-for='(c, index) in service' :key='index' style='margin-bottom: 40px'>
             <div class='body-2' style='display: flex; color: #455a64;margin: 10px 0;'>
                 <v-icon style='font-size: 12px;'>mdi-menu-right-outline</v-icon> 
-                <input autofocus ref='inputTitle' class='ml-1 body pl-2' :value='c.category.toUpperCase()' :readonly='toggleC' style='margin-top: -1; color: #455a64; font-weight: 400' type='text' @click='toggleC=!toggleC' @keyup.enter="categoryUpdate(c._id, index)" >
+                <input autofocus ref='inputTitle' class='ml-1 body pl-2' :value='c.category.toUpperCase()' :readonly='toggleC' style='margin-top: -1; color: #455a64; font-weight: 400' type='text' @click='toggleC=!toggleC' @blur="categoryUpdate(c._id, index)" @keyup.enter="categoryUpdate(c._id, index)" >
                 <v-spacer></v-spacer>
 
                 <div v-if="c.service?c.service.length:c.service" style='display: none;'></div>
@@ -43,11 +43,11 @@
             </div>
 
             <div style='display: flex; background: #fff;color: #455a64;border-radius: 5px;padding-bottom: 4px;margin: 5px 0;' 
-            v-for='(a, i) in c.service' :key='i' >
+            v-for='(a, i) in c.item' :key='i' >
                 <div style='width: 15%;line-height: 40px; text-align: center;' ><v-icon>mdi-checkbox-marked-circle-outline</v-icon></div>
                 <div style='width: 65%;'>
-                    <div class='overline'><button v-on:click="editService(a.categoryId, a.serviceId)">{{a.name?textCut(a.name, 30):''}}</button></div>
-                    <div class='caption' style='margin-top: -11px;'><button v-on:click="editService(a.categoryId, a.serviceId)">{{a.description?textCut(a.description, 40):''}}</button></div>
+                    <div class='overline'><button v-on:click="editService(a.categoryId, a.serviceId, i, a._id)">{{a.name?textCut(a.name, 30):''}}</button></div>
+                    <div class='caption' style='margin-top: -11px;'><button v-on:click="editService(a.categoryId, a.serviceId, i, a._id)">{{a.description?textCut(a.description, 40):''}}</button></div>
                 </div>
                 <div style='width: 20%;color: #ff6f00;' class='d-flex align-center mt-1'><div>$ {{a.price}}</div></div>
             </div>
@@ -67,7 +67,7 @@
         <transition name='fade'> 
             <div v-if='isEditModal'>
                 <v-container >
-                    <service-registration-form-edit :service_id='service_id' :parent_id='parent_id' @ModalEmit="ModalInfo"/>
+                    <service-registration-form-edit :service_id='service_id' :parent_id='parent_id' :index='index' :sid='sid' @ModalEmit="ModalInfo"/>
                 </v-container>
             </div>
         </transition>
@@ -102,6 +102,7 @@ export default {
             categoryParent: "",
             service_id: '',
             parent_id: '',
+            index: '',
 
             //layout
             serviceLayoutSelect: '',
@@ -111,6 +112,9 @@ export default {
             categoryButton: false,
             categoryName: '',
             toggleC: true,
+
+            //serviceupdate
+            sid: '',
             
         }
     },
@@ -179,25 +183,27 @@ export default {
     
         onEnter(){
             const serviceItem = this.$store.state.service.service
-            const index = serviceItem.findIndex(e=>e.category === this.category1)
+            // const index = serviceItem.findIndex(e=>e.category === this.category1)
 
             if(!this.category1.length){
                 alert('no empty value')
                 return  
             } 
-            if(index >= 0){
-                alert('same name exists')
-                return
-            }
+            // if(index >= 0){
+            //     alert('same name exists')
+            //     return
+            // }
             this.$store.dispatch('service/addCategory', {category: this.category1, toggle: this.categoryButton})
             this.category1 = ''
 
         },
 
-        editService(categoryId, serviceId){
+        editService(categoryId, serviceId, index, _id){
             this.isEditModal = true
             this.service_id = serviceId
             this.parent_id = categoryId
+            this.index = index
+            this.sid = _id
             // this.$store.category.dispatch('editData', todo)
         },
 

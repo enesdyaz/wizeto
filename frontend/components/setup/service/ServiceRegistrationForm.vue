@@ -113,6 +113,7 @@ export default {
     methods:{
         onSubmit(){
                 if(this.service_name && this.service_price){
+                    
                     this.$store.dispatch('service/addService', {
                     categoryId: this.parentId,
                     serviceId: Date.now(),

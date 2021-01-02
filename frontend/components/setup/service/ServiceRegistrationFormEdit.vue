@@ -1,5 +1,5 @@
 <template> 
-<div>  
+<div>  index{{service_id}}{{parent_id}}
     <div class='mb-3'>
         <v-icon class='body' @click='routerBack'>mdi-arrow-left</v-icon>
     </div>
@@ -113,6 +113,10 @@ export default {
         parent_id:{
             data: String,
             required: true
+        },
+
+        sid: {
+            data: String
         }
     },
 
@@ -137,12 +141,14 @@ export default {
     // },
     computed:{
         data(){
-            const Item = this.$store.state.service.service
+            const data = this.$store.state.service.service
             // const data = Item.find(e=>e._id === this.parent_id)
             // const result = data.filter(e=>e.serviceId === this.service_id)
+            console.log('ocomputed', data)
 
-            const result = Item.find(e=>e._id === this.parent_id).service.filter(e=>e.serviceId === this.service_id)
-
+            // const result = data.find(e=>e._id === this.parent_id).item.filter(e=>e.serviceId === this.service_id)
+            const result =  data.find(e=>e._id === this.parent_id).item.filter(e=>e._id === this.sid)
+            console.log('result', result)
             this.service_name = result[0].name
             this.service_price = result[0].price
             this.service_duration = result[0].duration
@@ -161,6 +167,7 @@ export default {
             this.$store.dispatch('service/updateService', {
                 id: this.service_id,
                 parent_id: this.parent_id,
+                sid: this.sid,
 
                 name: this.service_name,
                 price: this.service_price,
@@ -175,8 +182,9 @@ export default {
             // const id = this.service_id
             // const parent_id = this.parent_id
             this.$store.dispatch('service/deleteService', {
-                service_id: this.service_id,
-                category_id: this.parent_id
+                sid: this.sid,
+                category_id: this.parent_id,
+                service_id: this.service_id
             })
             this.dialog = false
             
