@@ -1,7 +1,6 @@
 <template>
 <!-- Registration Form -->
 <div>
-
 <!-- 1. Service Registration -->
     <v-card class='card'  style='width: 330px;'>
         <div class='card_title' style='font-size: 0.8rem;height: 30px;line-height: 30px;text-align: center;background: #627F8C;color: #fff;'>
@@ -11,21 +10,7 @@
         </div>
 
         <v-card-text>
-<!-- 5. Category_list  ---->                            
-            <table style='font-size: 0.8rem;width: 98%;margin-bottom: 10px;'>
-                <tr style='text-align: left;'>
-                    <!-- <th> <v-icon style='font-size: 1rem;'>mdi-chevron-down</v-icon>Category</th>  -->
-                </tr>
-                <tr>
-                    <td >
-                        <div v-if="prop.child" style='color: #627F8C'> <v-icon style='font-size: 1rem;color: #627F8C'>mdi-focus-field-horizontal</v-icon> {{prop.parent.parent.toUpperCase()}} <v-icon style='font-size: 1rem;padding-bottom: 2px;'>mdi-chevron-right</v-icon> {{prop.child.child.toUpperCase()}} </div>
-                        <div v-else-if="prop.parent" style='color: #627F8C'><v-icon style='font-size: 1rem; color: #627F8C'>mdi-focus-field-horizontal</v-icon> {{prop.parent.parent.toUpperCase()}}</div>
-
-                        <!-- <div v-else>Parent: {{prop}} </div> -->
-              
-                    </td>
-                </tr>
-            </table>
+            <form>
 
 <!-- 2. Service Name ----->                            
             <table style='font-size: 0.8rem;width: 98%;margin-bottom: 10px;color: #627F8C'>
@@ -71,7 +56,7 @@
                     <th> <v-icon style='font-size: 1rem;'>mdi-chevron-down</v-icon>Description</th> 
                 </tr>
                 <tr>
-                    <td><textarea v-model='service_description' style='border: 1px solid grey; width: 99%; padding-left: 10px;' ></textarea></td>
+                    <td><textarea v-model='service_description' rows='6' style='border: 1px solid grey; width: 99%; padding-left: 10px;' ></textarea></td>
                 </tr>
             </table>
 
@@ -90,12 +75,14 @@
                     </td>
                 </tr>
             </table>
+            </form>
         </v-card-text>
-        
+
 <!-- 9. Submit ---->
         <v-card-actions>
             <v-btn style='margin-left: 77%;bottom: 10px;' depressed outlined small @click="onSubmit">SAVE</v-btn>
         </v-card-actions>
+        <div  v-if='error' class='pb-8'><v-btn text color='red' x-small><v-icon>mdi-alert-octagon-outline</v-icon>{{error}}</v-btn></div>
     </v-card>
 <!-- Registration ends ---->
 </div>
@@ -104,15 +91,11 @@
 
 <script>
 export default {
-    props:{
-        prop:{
-            type:Object,
-            required: true
-        },
-    },
+    props:['parentId'],
 
     data () {
         return {
+            //STORE
             service_name: '',
             service_price: '',
             service_duration: '',
@@ -121,40 +104,32 @@ export default {
 
             category_input: 'basic',
             service_category: '',  //upper category of the service
+            
+            //not STORE
+            error:'',
         }
     },
-    computed:{
-        category_list(){
-            return this.$store.state.parent.category
-        }
-    },
-    methods:{
-   
 
+    methods:{
         onSubmit(){
-            if(this.prop.child){
-                this.$store.dispatch('parent/addChildData', {
-                id: this.prop.child.id,
-                parentId: this.prop.parent.id,
-                service_name: this.service_name,
-                price: this.service_price,
-                duration: this.service_duration,
-                description: this.service_description,
-                image: this.service_image,
-                }).then(()=>{console.log('child data wasinserted')}).catch(()=>{console.log('error')})
-            }else if(this.prop.parent){
-                this.$store.dispatch('parent/addParentData', {
-                id: this.prop.parent.id,
-                index: this.prop,
-                service_name: this.service_name,
-                price: this.service_price,
-                duration: this.service_duration,
-                description: this.service_description,
-                image: this.service_image,
-                }).then(()=>{console.log('parent data was inserted')}).catch(()=>{console.log('error')})
-            }
-          
-            this.$emit("ModalEmit", false)  // close this windows of the registration form 
+                if(this.service_name && this.service_price){
+                    
+                    this.$store.dispatch('service/addService', {
+                    categoryId: this.parentId,
+                    serviceId: Date.now(),
+                    name: this.service_name,
+                    price: this.service_price,
+                    duration: this.service_duration,
+                    description: this.service_description,
+                    image: this.service_image,
+                    }).then(()=>{console.log('parent data was inserted')}).catch(()=>{console.log('error')})
+                                this.$emit("ModalEmit", false)  // close this windows of the registration form 
+
+                }else{
+                    console.log('no service name')
+                    this.error = "please insert the service name or price"
+                    setTimeout(()=>{this.error = ''}, 5000)
+                }
         },
         window_close(){
             this.$emit("ModalEmit", false)  // close this windows of the registration form 

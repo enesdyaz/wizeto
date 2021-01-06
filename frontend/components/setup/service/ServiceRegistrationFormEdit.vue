@@ -1,111 +1,110 @@
 <template> 
-<div>  index{{service_id}}{{parent_id}}
+<div> 
+    <div style='display: flex;justify-content: space-between;'>
+        <div>
+            <v-icon @click='routerBack' style='color: #607D8A;font-size: 1.2rem;'>mdi-chevron-left-circle</v-icon>
+        </div>
+        <div >
+            <v-btn class=' subtitle-2'  text small  elevation='0' color='blue-grey' >
+            
+            EDIT Your Service
+            </v-btn>
+        </div>
+        <div style='width: 5%;'></div>
+    </div>
+<hr><br>
 
-    <div class='mb-3'>
-        <v-icon class='body' @click='routerBack'>mdi-arrow-left</v-icon>
-    </div>
-    <div style='text-align: center;'>
-        <v-btn class=' subtitle-2' text color='blue-grey' >
-            <v-icon class='body-1 pr-2'>mdi-plus</v-icon> EDIT Your Service
-        </v-btn>
-    </div>
-<!-- 2. Service Name ----->                            
             <table style='font-size: 0.8rem;width: 95%;margin: 0 auto;'>
                 <tr style='text-align: left;'>
-                    <th> <v-icon style='font-size: 1rem;'>mdi-chevron-down</v-icon>Service Name</th> 
+                    <th> <div class='caption blue-grey--text font-weight-bold'><v-icon style='font-weight: bold; font-size: 1rem; color: #607d8a'>mdi-chevron-right</v-icon> NAME</div></th> 
+                    <td><input style='width: 100%;padding-left: 10px;' v-model='service_name' v-text='data[0].name' required  type="text" /></td>
                 </tr>
                 <tr>
-                    <td><input v-model='service_name' v-text='data[0].name' required style='border: 1px solid grey; width: 99%; padding-left: 10px;' type="text" /></td>
-                </tr>
-            </table>
-
-<!-- 3. Price, 4. Duration ---->                            
-            <table style='font-size: 0.8rem;width: 95%;margin: 0 auto;'>
-                <tr style='text-align: left;'>
-                    <th> <v-icon style='font-size: 1rem;'>mdi-chevron-down</v-icon>Price ($AU)</th> 
-                    <th> <v-icon style='font-size: 1rem;'>mdi-chevron-down</v-icon>Duration</th> 
+                    <th> <div class='caption blue-grey--text font-weight-bold'><v-icon style='font-weight: bold; font-size: 1rem; color: #607d8a'>mdi-chevron-right</v-icon> PRICE</div></th> 
+                    <td><input v-model='service_price' required style='width: 100%;padding-left: 10px;' type="number" min='1'></td>
                 </tr>
                 <tr>
-                    <td><input v-model='service_price' required style='border: 1px solid grey; width: 95%; padding-left: 10px;' type="number" min='1'></td>
-                    <td><select v-model='service_duration' style='border: 1px solid grey; width: 97%; padding-left: 10px;' type="text" >
-                        <option value="0" selected>none</option>    
-                        <option value="10">10 min</option>    
-                        <option value="15">15 min</option>    
-                        <option value="30">30 min</option>    
-                        <option value="45">45 min</option>    
-                        <option value="60">1 hr</option>    
-                        <option value="90">1.5 hr</option>    
-                        <option value="120">2 hr</option>    
-                        <option value="150">2.5 hr</option>    
-                        <option value="180">3 hr</option>    
-                        <option value="240">4 hr</option>    
-                        <option value="300">5 hr</option>    
-                        
-                        </select>
+                    <th> <div class='caption blue-grey--text font-weight-bold'><v-icon style='font-weight: bold; font-size: 1rem; color: #607d8a'>mdi-chevron-right</v-icon> DURATION</div></th> 
+                    <td><select v-model='service_duration' style='width: 100%;padding-left: 10px;' type="text" >
+                                <option value="0" selected>none</option>    
+                                <option value="10">10 min</option>    
+                                <option value="15">15 min</option>    
+                                <option value="30">30 min</option>    
+                                <option value="45">45 min</option>    
+                                <option value="60">1 hr</option>    
+                                <option value="90">1.5 hr</option>    
+                                <option value="120">2 hr</option>    
+                                <option value="150">2.5 hr</option>    
+                                <option value="180">3 hr</option>    
+                                <option value="240">4 hr</option>    
+                                <option value="300">5 hr</option>       
+                            </select>
                     </td>
                 </tr>
             </table>
-
+<br>
 
 <!-- 7. description ------------------>
             <table style='font-size: 0.8rem;width: 95%;margin: 0 auto;'>
                 <tr style='text-align: left;'>
-                    <th> <v-icon style='font-size: 1rem;'>mdi-chevron-down</v-icon>Description</th> 
+                    <th> <div class='caption blue-grey--text font-weight-bold'><v-icon style='font-weight: bold; font-size: 1rem; color: #607d8a'>mdi-chevron-right</v-icon> DESCRIPTION</div></th> 
                 </tr>
                 <tr>
-                    <td><textarea v-model='service_description' style='border: 1px solid grey; width: 99%; padding-left: 10px;' ></textarea></td>
+                    <td>
+                        <editor @content="editorContent" :description="service_description" />
+                    </td>
+                    <!-- <td><textarea v-model='service_description' style='border: 1px solid grey; width: 99%; padding-left: 10px;' ></textarea></td> -->
                 </tr>
-            </table>
+            </table><br>
 
 <!-- 8. photo upload ------------------>
-            <table style='font-size: 0.8rem;width: 95%;margin: 0 auto;'>
+   <table style='font-size: 0.8rem;width: 95%;margin: 0 auto;'>
                 <tr style='text-align: left;'>
-                    <th> <v-icon style='font-size: 1rem;'>mdi-chevron-down</v-icon>Photo Upload (upto 2M)</th> 
+                    <th> <div class='caption blue-grey--text font-weight-bold'><v-icon style='font-weight: bold; font-size: 1rem; color: #607d8a'>mdi-chevron-right</v-icon> PHOTO</div></th> 
                 </tr>
                 <tr>
                     <td v-if='!service_image'>  
-                        <input type="file" @change='onFileChange'>
+                        <input type="file" @change='onChangeImage' >
                     </td>
                     <td v-else>
-                        <img class='image' :src="service_image" />
+                        <img style='margin-top: 5px;'  class='image' :src="`http://localhost:3085/${service_image}`" />
                         <button @click="removeImage" style='padding-left: 10px'>Remove image</button>
                     </td>
                 </tr>
-            </table>
+            </table><br><br>      
 
         
 <!-- 9. Submit ---->
+        <div style='text-align: center;'>
+                <v-dialog v-model="dialog" width="370">
+                    <template v-slot:activator="{ on, attrs }">
+                        <v-btn color='blue-grey' v-bind="attrs" v-on="on"  depressed outlined small>Remove</v-btn> 
+                    </template>
 
-            <v-dialog v-model="dialog" width="370">
-                <template v-slot:activator="{ on, attrs }">
-                    <v-btn color='blue-grey' v-bind="attrs" v-on="on" style='display: inline-block; float: left; margin-left: 47%;bottom: 10px;' depressed outlined small>Remove</v-btn> 
-                </template>
+                    <v-card>
+                        <v-card-title></v-card-title>
+                        <v-card-text class='body-2'>
+                        Are you really want to delete this item?
+                        </v-card-text>
 
-                <v-card>
-                    <v-card-title></v-card-title>
-                    <v-card-text class='body-2'>
-                    Are you really want to delete this item?
-                    </v-card-text>
+                        <v-divider></v-divider>
 
-                    <v-divider></v-divider>
-
-                    <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn color="blue-grey" small text @click="onDelete" >I accept </v-btn>
-                    </v-card-actions>
-                </v-card>
-            </v-dialog>
-            <v-btn color='lime darken-4' style='display: inline-block; float: left;; bottom: 10px;' depressed outlined small @click="onSubmit">Update</v-btn>
-
- 
-
-
+                        <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn color="blue-grey" small text @click="onDelete" >I accept </v-btn>
+                        </v-card-actions>
+                    </v-card>
+                </v-dialog>
+                <v-btn color='lime darken-4'  depressed outlined small @click="onSubmit">Update</v-btn>
+            </div>
 </div>
 </template>
 
 
 <script>
 export default {
+    components:{
+    },
     props: {
         service_id:{
             data: String,
@@ -133,10 +132,10 @@ export default {
             service_category: '',  //upper category of the service
             service_item: [],  // all data of the service
             dialog: false,  // dialog for removing a category selected
+
         }
     },
-
-
+    
     // created(){
     //     this.fetchData()
     // },
@@ -158,11 +157,24 @@ export default {
 
             return result
         },
+        image(){
+            return this.$store.state.service.imagePath
+        }
+    },
+   
+
+    watch:{
+        image(){
+            this.service_image = this.image
+        }
     },
 
     methods:{
         routerBack(){
             this.$emit("ModalEmit", false)
+        },
+        editorContent(text){
+            this.service_description=text
         },
         onSubmit(){
             this.$store.dispatch('service/updateService', {
@@ -175,10 +187,27 @@ export default {
                 duration: this.service_duration,
                 description: this.service_description,
                 image: this.service_image,
-            })
+            }).then(()=>{})
             this.$emit("ModalEmit", false)  // close this windows of the registration form 
         },
- 
+        onChangeImage(e) {
+            let i = 0
+            e.target.files.forEach(e=> i = i + e.size) 
+
+            if(i>3000000){   // 3Mb
+                console.log(i)
+                this.message = 'Please upload less than 3 Mb'
+                this.snackbar = true 
+            }else{
+                const imageFormData = new FormData();
+                [].forEach.call(e.target.files, (f) => {
+                imageFormData.append('image', f);   // { image: [file1, file2] }
+                });
+                console.log(imageFormData)
+                this.$store.dispatch('service/uploadImages', imageFormData);
+            }
+        },
+
         onDelete(){
             // const id = this.service_id
             // const parent_id = this.parent_id
@@ -186,37 +215,15 @@ export default {
                 sid: this.sid,
                 category_id: this.parent_id,
                 service_id: this.service_id
-            })
+            }).then()
             this.dialog = false
             
             this.$emit("ModalEmit", false)  // close this windows of the registration form 
         },
 
-
-        window_close(){
-            this.$emit("ModalEmit", false)  // close this windows of the registration form 
-        },
-
-        onFileChange(e) {
-            var files = e.target.files || e.dataTransfer.files;
-            if (!files.length)
-                return;
-            this.createImage(files[0]);
-        },
-
-        createImage(file) {
-            var image = new Image();
-            var reader = new FileReader();
-            var vm = this;
-
-            reader.onload = (e) => {
-                vm.service_image = e.target.result;
-            };
-            reader.readAsDataURL(file);
-        },
-
-        removeImage: function (e) {
-        this.service_image = '';
+        removeImage(){
+        this.service_image = ""
+        this.$store.commit('service/DELETE_IMAGE')
         }
     }   
 }

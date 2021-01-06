@@ -54,7 +54,14 @@ app.use(cookie('ns747800'))
 app.use(passport.initialize())
 app.use(passport.session())
 passportConfig()
+//------------------------------------------------//
+// MONGO DB CONNECTION
+//------------------------------------------------//
 
+mongoose.connect(process.env.MONGO_URI, 
+    { useUnifiedTopology: true, useNewUrlParser: true },
+    ()=>{console.log('connected to MONGO DB!!!')
+})
 
 //------------------------------------------------//
 // CORS FRONTEND PORT
@@ -86,14 +93,7 @@ app.use('/service', serviceRouter)
 
 
 
-//------------------------------------------------//
-// MONGO DB CONNECTION
-//------------------------------------------------//
 
-mongoose.connect(process.env.MONGO_URI, 
-    { useUnifiedTopology: true, useNewUrlParser: true },
-    ()=>{console.log('connected to MONGO DB!!!')
-})
 
 //------------------------------------------------//
 // LISTEN

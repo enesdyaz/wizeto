@@ -1,8 +1,53 @@
 <template>
   <v-app>
 
+<!-- Tool bar -->
+<client-only>
+    <v-app-bar  :clipped-left="clipped" color='white' hide-on-scroll height='60' app  flat dense >
+      <v-app-bar-nav-icon class='d-lg-none' @click.stop="drawer = !drawer" />
+
+      <div class='d-none d-sm-flex'>
+        <div class='title'>SETUP <div class='caption' style='margin-top: -8px;color: #90A4AE'>make your own website with widgets</div></div>
+      </div>
+
+      <v-spacer />
+      <div style='padding-right: 20px;'>
+          <v-text-field v-model="search" append-icon="mdi-magnify" label="Search"  outlined dense hide-details ></v-text-field>
+      </div>
+
+      <v-btn style='border-radius: 25px; padding: 0' elevation='0' color="red" >
+          <v-btn text v-model='avatar' @click='avatar = !avatar'><span class="white--text caption"><v-icon style='font-size: 1rem;padding-right: 4px;'>mdi-fingerprint</v-icon>{{me.username}}</span></v-btn>
+      </v-btn>
+
+      <transition name="slide-fade">
+          <div v-if='avatar' class='ml-4'>
+
+              <v-tooltip bottom>
+                <template v-slot:activator="{ on, attrs }">
+                      <v-avatar color='primary' size='30'>
+                        <v-btn text @click='logout' v-bind="attrs" v-on="on"><v-icon class='white--text body-1'>mdi-power</v-icon></v-btn>
+                      </v-avatar>
+                </template>
+                <span>Log out</span>
+              </v-tooltip>
+
+              <v-tooltip bottom>
+                <template v-slot:activator="{ on, attrs }">
+                      <v-avatar color='primary' size='30'>
+                        <v-btn text to='/setup/dashboard' v-bind="attrs" v-on="on"><v-icon class='white--text body-1'>mdi-cog-outline</v-icon></v-btn>
+                      </v-avatar>
+                </template>
+                <span>Account Setting</span>
+              </v-tooltip>
+
+          </div>
+      </transition>
+    </v-app-bar>
+</client-only>
+
 <!--- Drawer -->
-    <v-navigation-drawer color='grey darken-4' dark v-model="drawer" fixed app dense>
+<client-only>
+  <v-navigation-drawer color='grey darken-4' style='overflow: auto;z-index:1' dark  app dense>
 
       <v-list subheader>
         <br>
@@ -42,56 +87,14 @@
           </v-list-item-group>
             
       </v-list>
-    </v-navigation-drawer>
-
-<!-- Tool bar -->
-<client-only>
-    <v-app-bar  :clipped-left="clipped" color='white' hide-on-scroll height='60' app  flat dense >
-
-      <v-app-bar-nav-icon class='d-lg-none' @click.stop="drawer = !drawer" />
-
-      <div class='d-none d-sm-flex'>
-        <div class='title'>SETUP <div class='caption' style='margin-top: -8px;color: #90A4AE'>make your own website with widgets</div></div>
-      </div>
-
-      <v-spacer />
-      <div style='padding-right: 20px;'>
-          <v-text-field v-model="search" append-icon="mdi-magnify" label="Search"  outlined dense hide-details ></v-text-field>
-      </div>
-
-      <v-btn style='border-radius: 25px; padding: 0' elevation='0' color="red" >
-          <v-btn text v-model='avatar' @click='avatar = !avatar'><span class="white--text caption"><v-icon style='font-size: 1rem;padding-right: 4px;'>mdi-fingerprint</v-icon>{{me.username}}</span></v-btn>
-      </v-btn>
-
-      <transition name="slide-fade">
-          <div v-if='avatar' class='ml-4'>
-
-              <v-tooltip bottom>
-                <template v-slot:activator="{ on, attrs }">
-                      <v-avatar color='primary' size='30'>
-                        <v-btn text @click='logout' v-bind="attrs" v-on="on"><v-icon class='white--text body-1'>mdi-power</v-icon></v-btn>
-                      </v-avatar>
-                </template>
-                <span>Log out</span>
-              </v-tooltip>
-
-              <v-tooltip bottom>
-                <template v-slot:activator="{ on, attrs }">
-                      <v-avatar color='primary' size='30'>
-                        <v-btn text to='/setup/dashboard' v-bind="attrs" v-on="on"><v-icon class='white--text body-1'>mdi-cog-outline</v-icon></v-btn>
-                      </v-avatar>
-                </template>
-                <span>Sccount Setting</span>
-              </v-tooltip>
-
-          </div>
-      </transition>
-    </v-app-bar>
-</client-only>>
+    </v-navigation-drawer> 
+</client-only>
 
 <!-- content -->
     <v-main style='background: whitesmoke;'>
+      <div>
         <nuxt  />
+      </div>
     </v-main>
 
   </v-app>

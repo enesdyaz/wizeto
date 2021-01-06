@@ -1,78 +1,80 @@
 <template>
-<div style=' padding: 5%;  width: 100%;overflow: auto'>
-<!--  1. Form -->
-    <div :class="{modal: isModal || isEditModal}" >
-        <div style='text-align: center;'>
-            <v-btn class=' subtitle-2' text color='blue-grey' >
-                <v-icon class='body-1 pr-2'>mdi-plus</v-icon> Register Your Service
-            </v-btn>
-        </div>
+    <div style='padding: 5%;  width: 100%;overflow: auto'>
+    <!--  1. Form -->
+        <div :class="{modal: isModal || isEditModal}" >
+            <div style='text-align: center;'>
+                <v-btn class=' subtitle-2' text color='blue-grey' >
+                    <v-icon class='body-1 pr-2'>mdi-plus</v-icon> Register Your Service
+                </v-btn>
+            </div>
+            <br>
+            <div>
+                <div class='caption blue-grey--text font-weight-bold'><v-icon style='font-weight: bold; font-size: 1rem; color: #607d8a'>mdi-chevron-right</v-icon> CATEGORY NAME</div>
+                <div><input ref='category' style='margin-top: 2px; background: #fff;  width: 75%; margin-right: 10px;padding-left:10px;border-radius: 5px;' v-model='category1' v-on:keyup.enter="onEnter"  type="text" >
+                <v-btn color="blue-grey"  small text outlined @click.prevent="onEnter" >Enter </v-btn></div>
+            </div>
+            <br><br>
+
+    <!-- Control -->
+                <div class='caption blue-grey--text font-weight-bold'><v-icon style='font-weight: bold; font-size: 1rem; color: #607d8a'>mdi-chevron-right</v-icon> DISPLAY</div>
+
+            <div style='border: 1px solid #607d8a;padding: 5px;margin-top:5px; '>
+                <v-btn-toggle v-model='serviceLayoutSelect' mandatory>
+                    <v-btn color='blue-grey' text small><v-icon style='font-size: 1.2rem;color: #263238'>mdi-format-list-bulleted-square</v-icon></v-btn>
+                    <v-btn color='blue-grey' text small><v-icon style='font-size: 1.2rem;color: #263238'>mdi-table-arrow-right</v-icon></v-btn>
+                    <v-btn color='blue-grey' text small><v-icon style='font-size: 1.2rem;color: #263238'>mdi-table-arrow-down</v-icon></v-btn>
+                    <v-btn color='blue-grey' text small><v-icon style='font-size: 1.2rem;color: #263238'>mdi-view-grid-outline</v-icon></v-btn>
+                </v-btn-toggle>
+            </div>
+
         <br>
-        <div>
-            <div class='caption'><v-icon style='font-size: 1rem;'>mdi-chevron-down</v-icon>CATEGORY NAME</div>
-            <div><input ref='category' style='background: #fff; border: 1px solid grey; width: 82%;margin-right: 10px;' v-model='category1' v-on:keyup.enter="onEnter"  type="text" >
-            <v-btn color="blue-grey" style='float: right' x-small text outlined @click.stop="onEnter" >Enter </v-btn></div>
-        </div>
-        <br><br>
 
-<!-- Control -->
-        <div class='caption'><v-icon style='font-size: 1rem;'>mdi-chevron-down</v-icon>DISPLAY</div>
+    <!-- View -->
+            <div v-for='(c, index) in service' :key='index' style='margin-bottom: 30px'>
+                <div class='body-2' style='display: flex; color: #455a64;margin: 2px 0;'>
+                    <v-icon style='font-size: 12px;'>mdi-square-medium</v-icon> 
+                    <input ref='inputTitle' class='ml-1 body pl-2' :value='c.category.toUpperCase()' :readonly='toggleC' style='margin-top: -1; color: #455a64; font-weight: 400; width: 60%;border: none;' type='text' @click='toggleC=!toggleC' @blur="categoryUpdate(c._id, index)" @keyup.enter="categoryUpdate(c._id, index)" >
+                    <v-spacer></v-spacer>
 
-        <div style='border: 1px solid grey;padding: 5px; '>
-            <v-btn-toggle v-model='serviceLayoutSelect' mandatory>
-                <v-btn color='blue-grey' text small><v-icon style='font-size: 1.2rem;'>mdi-format-list-bulleted-square</v-icon></v-btn>
-                <v-btn color='blue-grey' text small><v-icon style='font-size: 1.2rem;'>mdi-table-arrow-right</v-icon></v-btn>
-                <v-btn color='blue-grey' text small><v-icon style='font-size: 1.2rem;'>mdi-table-arrow-down</v-icon></v-btn>
-                <v-btn color='blue-grey' text small><v-icon style='font-size: 1.2rem;'>mdi-view-grid-outline</v-icon></v-btn>
-            </v-btn-toggle>
-        </div>
+                    <div v-if="c.item?c.item.length:c.item" style='display: none;'></div>
+                    <div v-else> <v-btn style=' margin-right: 5px;height: 25px;margin-top: 7px;'  color='red darken-2' dark small v-on:click='onDelete(c._id)'><v-icon class='body-2'>mdi-delete-outline</v-icon></v-btn></div>
+                    <v-btn style='height: 25px;margin-top: 7px;' color='blue-grey lighten-1' dark small v-on:click='addService(c._id)'><v-icon class='body-2'>mdi-plus</v-icon></v-btn>
 
-    <br>
-
-<!-- View -->
-        <div v-for='(c, index) in service' :key='index' style='margin-bottom: 40px'>
-            <div class='body-2' style='display: flex; color: #455a64;margin: 10px 0;'>
-                <v-icon style='font-size: 12px;'>mdi-menu-right-outline</v-icon> 
-                <input autofocus ref='inputTitle' class='ml-1 body pl-2' :value='c.category.toUpperCase()' :readonly='toggleC' style='margin-top: -1; color: #455a64; font-weight: 400' type='text' @click='toggleC=!toggleC' @blur="categoryUpdate(c._id, index)" @keyup.enter="categoryUpdate(c._id, index)" >
-                <v-spacer></v-spacer>
-
-                <div v-if="c.service?c.service.length:c.service" style='display: none;'></div>
-                <div v-else> <v-btn style=' margin-right: 5px;height: 25px;'  color='red darken-2' dark small v-on:click='onDelete(c._id)'><v-icon class='body-2'>mdi-delete-outline</v-icon></v-btn></div>
-                <v-btn style='height: 25px;' color='blue-grey lighten-1' dark small v-on:click='addService(c._id)'><v-icon class='body-2'>mdi-plus</v-icon></v-btn>
-
-            </div>
-
-            <div style='display: flex; background: #fff;color: #455a64;border-radius: 5px;padding-bottom: 4px;margin: 5px 0;' 
-            v-for='(a, i) in c.item' :key='i' >
-                <div style='width: 15%;line-height: 40px; text-align: center;' ><v-icon>mdi-checkbox-marked-circle-outline</v-icon></div>
-                <div style='width: 65%;'>
-                    <div class='overline'><button v-on:click="editService(a.categoryId, a.serviceId, i, a._id)">{{a.name?textCut(a.name, 30):''}}</button></div>
-                    <div class='caption' style='margin-top: -11px;'><button v-on:click="editService(a.categoryId, a.serviceId, i, a._id)">{{a.description?textCut(a.description, 40):''}}</button></div>
                 </div>
-                <div style='width: 20%;color: #ff6f00;' class='d-flex align-center mt-1'><div>$ {{a.price}}</div></div>
+
+                <div style='display: flex; background: #fff;color: #455a64;border-radius: 5px;padding-bottom: 4px;margin: 5px;' 
+                v-for='(a, i) in c.item' :key='i' >
+                    <div style='width: 15%;line-height: 40px; text-align: center;' ><v-icon>mdi-checkbox-marked-circle-outline</v-icon></div>
+                    <div style='width: 65%;'>
+                        <div class='overline' style='font-weight:bold'><button v-on:click="editService(a.categoryId, a.serviceId, i, a._id)">{{a.name?textCut(a.name.toUpperCase(), 40):''}}</button></div>
+                        <div class='caption' style='margin-top: -11px;'><button v-on:click="editService(a.categoryId, a.serviceId, i, a._id)">{{(a.description?textCut(removeHTML(a.description.trim()), 25):'')}}</button></div>
+                    </div>
+                    <div style='width: 20%;color: #ff6f00;' class='d-flex align-center mt-1'><div>$ {{a.price}}</div></div>
+                </div>
             </div>
         </div>
-    </div>
 
 
-<!-- transition -->
+    <!-- transition -->
         <transition name='fade'> 
             <div v-if='isModal' >
-                <v-container >
-                    <service-registration-form :parentId='categoryParent' @ModalEmit="ModalInfo"/>
-                </v-container>
+                <service-registration-form :parentId='categoryParent' @ModalEmit="ModalInfo"/>
             </div>
         </transition>
 
         <transition name='fade'> 
             <div v-if='isEditModal'>
-                <v-container >
-                    <service-registration-form-edit :service_id='service_id' :parent_id='parent_id' :index='index' :sid='sid' @ModalEmit="ModalInfo"/>
-                </v-container>
+                <service-registration-form-edit :service_id='service_id' :parent_id='parent_id' :index='index' :sid='sid' @ModalEmit="ModalInfo"/>
             </div>
         </transition>
+        <v-dialog v-model='loading' persistent>
+                <loading />
+        </v-dialog>
 
 </div>
+
+
+
 </template>
 
 
@@ -84,6 +86,7 @@ import serviceView from '../service/view/serviceView'
 import serviceView2 from '../service/view/serviceView2'
 import serviceView3 from '../service/view/serviceView3'
 import {mapState} from 'vuex'
+import loading from '../../loader/loading'
 export default {
     components:{
         ServiceRegistrationForm,
@@ -91,6 +94,7 @@ export default {
         serviceView,
         serviceView2,
         serviceView3,
+        loading
     },
     data(){
         return{
@@ -115,6 +119,9 @@ export default {
 
             //serviceupdate
             sid: '',
+
+            //loader
+            loading: false,
             
         }
     },
@@ -129,7 +136,8 @@ export default {
                 return 
             }
             return data
-        }
+        },
+    
 
         
     },
@@ -139,7 +147,9 @@ export default {
         }
     },
     methods:{
-
+        removeHTML(text){
+            return text.replace(/(<([^>]+)>)/ig,"")
+        },
         categoryUpdate(id, index){
             this.toggleC = !this.toggleC
             const category = this.$refs.inputTitle[index].value.trim()
@@ -153,6 +163,7 @@ export default {
 
         fetchData(){
             this.$store.dispatch('service/fetchData', {})
+            
         },
 
         setFocus: function() {
@@ -183,18 +194,20 @@ export default {
     
         onEnter(){
             const serviceItem = this.$store.state.service.service
-            // const index = serviceItem.findIndex(e=>e.category === this.category1)
+            const index = serviceItem.findIndex(e=>e.category.toUpperCase() === this.category1.toUpperCase())
+            const name = this.category1
+            console.log(name)
 
-            if(!this.category1.length){
-                alert('no empty value')
+            if(!name.length){
                 return  
             } 
-            // if(index >= 0){
-            //     alert('same name exists')
-            //     return
-            // }
-            this.$store.dispatch('service/addCategory', {category: this.category1, toggle: this.categoryButton})
+            else if(index >= 0){
+                alert('same name exists')
+                return
+            } else {
+            this.$store.dispatch('service/addCategory', {category: name, toggle: this.categoryButton})
             this.category1 = ''
+            }
 
         },
 
@@ -224,7 +237,59 @@ export default {
 </script>
 
 
-<style lang="scss" scoped>
+<style lang="scss" >
+input[type=text] {
+    padding: 2px;
+    margin: 3px 0;
+    box-sizing: border-box;
+    -webkit-transition: 0.5s;
+    transition: 0.5s;
+    border: 2px solid #ccc; border-radius: 5px;
+    outline: none;
+}
+input[type=text]:focus {
+    border: 2px solid #455a64; border-radius: 5px;
+    background: white;
+}
+input[type=text]:hover {
+    border: 2px solid #455a64; border-radius: 5px;
+    background: white;
+}
+input[type=number] {
+    padding: 2px;
+    margin: 3px 0;
+    box-sizing: border-box;
+    -webkit-transition: 0.5s;
+    transition: 0.5s;
+    border: 2px solid #ccc; border-radius: 5px;
+    outline: none;
+}
+input[type=number]:focus {
+    border: 2px solid #455a64;
+    background: white; border-radius: 5px;
+}
+input[type=number]:hover {
+    border: 2px solid #455a64;
+    background: white; border-radius: 5px;
+}
+select {
+    padding: 2px;
+    margin: 3px 0;
+    box-sizing: border-box;
+    -webkit-transition: 0.5s;
+    transition: 0.5s;
+    border: 2px solid #ccc; border-radius: 5px;
+    outline: none;
+}
+select:focus {
+    border: 2px solid #455a64; border-radius: 5px;
+    background: white;
+}
+select:hover {
+    border: 2px solid #455a64; border-radius: 5px;
+    background: white;
+}
+
 
 .slide-fade-enter-active {
     transition: all .5s ;
