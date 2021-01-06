@@ -7,7 +7,7 @@
 <!-- step 1 -->
             <div>
                 <div style='text-align: left'>1. Choose your date</div>
-                <v-date-picker  :first-day-of-week="1" v-model="date"  class="mt-4" 
+                <v-date-picker  :first-day-of-week="1" v-model="date" no-title class="mt-4" 
                 :allowed-dates="allowedDates" :min='min' :max='this.max' color="blue-grey">
                 </v-date-picker>
             </div>

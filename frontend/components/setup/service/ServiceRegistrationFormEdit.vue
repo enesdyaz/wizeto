@@ -142,8 +142,7 @@ export default {
     computed:{
         data(){
             const data = this.$store.state.service.service
-            // const data = Item.find(e=>e._id === this.parent_id)
-            // const result = data.filter(e=>e.serviceId === this.service_id)
+
             console.log('ocomputed', data)
 
             // const result = data.find(e=>e._id === this.parent_id).item.filter(e=>e.serviceId === this.service_id)
@@ -224,7 +223,7 @@ export default {
         removeImage(){
         this.service_image = ""
         this.$store.commit('service/DELETE_IMAGE')
-        }
+        },
     }   
 }
 

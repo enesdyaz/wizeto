@@ -238,6 +238,14 @@ export default {
 
 
 <style lang="scss" >
+
+// Quill CSS
+.ql-align-center{
+    text-align: center
+}
+.ql-align-right{
+    text-align: right
+}
 input[type=text] {
     padding: 2px;
     margin: 3px 0;
