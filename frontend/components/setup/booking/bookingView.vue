@@ -1,5 +1,5 @@
 <template>
-<div>{{period}}
+<div>
     <div class='container' style='text-align: center;padding-bottom: 7vh;'>
 
         <div class='title'>{{dataName}} <span class='caption'>(${{dataPrice}})</span> </div><br><br>
@@ -119,7 +119,7 @@
 <script>
 import moment from 'moment'
 export default {
-    props:['dataName', 'dataPrice'],
+    props:['dataName', 'dataPrice', 'dataDuration'],
     data () {
         return {
             dialog: false, 
@@ -144,7 +144,6 @@ export default {
 
     methods: {
         confirmBook(){
-                console.log('ok')
                 this.$store.dispatch('booking/confirmBooking', {
                 date: this.date,
                 time: this.time,
@@ -153,7 +152,8 @@ export default {
                 name: this.name,
                 email: this.email,
                 mobile: this.mobile,
-                color: this.colors[Math.floor(Math.random() * 6) + 0]
+                color: this.colors[Math.floor(Math.random() * 6) + 0],
+                duration: this.dataDuration
 ,
             }).then(()=>{ 
                 this.snackbar = true 

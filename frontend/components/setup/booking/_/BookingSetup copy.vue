@@ -1,37 +1,34 @@
 <template>
-<!-- Registration Form -->
-<div>
-
-        <div class='left'>
-            <v-date-picker 
-            :first-day-of-week="1" v-model="date"  :allowed-dates="allowedDates" class="mt-4" :min="this.today"
-            :max="this.max" color="blue-grey" @change='onChange()' ></v-date-picker>
-        </div>
-
-
-
-        <div class='right'>
-             <div>
-                    <v-btn class= 'body-2' color='blue-grey' style='margin-left: -30px;' text><v-icon >mdi-chevron-right</v-icon>Calendar Setup</v-btn>
-            </div>
-
-            <table style='font-size: 0.8rem;width: 98%;margin-bottom: 10px;'>
-                <tr style='text-align: left;'>
-                    <th> <v-icon style='font-size: 1rem;'>mdi-chevron-down</v-icon>Booking Available</th> 
-                    <th> <v-icon style='font-size: 1rem;'>mdi-chevron-down</v-icon>Interval</th> 
-                </tr>
-                <tr>
-                    <td><select v-model='period' required style='border: 1px solid grey; width: 99%; padding-left: 10px;' type="number" min='1'>
+<!-- Booking Registration Form -->
+<div style='padding: 5%;'>
+    <div style='text-align: center;'>
+            <v-btn class=' subtitle-2' text color='blue-grey' >
+                <v-icon class='body-1 pr-2'>mdi-plus</v-icon> Setting up Your Booking 
+            </v-btn>
+    </div>
+    <br>
+    <div>
+        <form @submit.prevent="onClick">
+        <table class='body-1' >  
+            <tr>
+                <th>Available</th> 
+                <td :class='{disable: disabled}'>
+                    <select v-model='period' :disabled='disabled' style='font-size: 0.8rem; border: 1px solid grey; width: 90%; padding-left: 10px;' type="number" min='1' required>
                             <option value="7" selected>weekly</option>    
                             <option value="14">Fornightly</option>    
-                            <option value="31">Monthly</option>    
-                            <option value="183">Half yearly</option>    
-                            <option value="365">Yearly</option>    
-                        
-                        </select></td>
-        
-                    <td><select v-model='duration' style='border: 1px solid grey; width: 99%; padding-left: 10px;' type="text" >
-                        <option value="0" selected>none</option>    
+                            <option value="30">Monthly</option>    
+                            <option value="90">3 Months</option>    
+                            <option value="180">half yearly</option>    
+                    </select>
+                </td>
+            </tr>
+
+            <tr>
+                <th>
+                    Interval
+                </th>
+                <td :class='{disable: disabled}'>
+                    <select v-model='duration' :disabled='disabled' style='font-size: 0.8rem; border: 1px solid grey; width: 90%; padding-left: 10px;' type="text" required>
                         <option value="10">10 min</option>    
                         <option value="15">15 min</option>    
                         <option value="30">30 min</option>    
@@ -43,115 +40,134 @@
                         <option value="180">3 hr</option>    
                         <option value="240">4 hr</option>    
                         <option value="300">5 hr</option>    
-                        
-                        </select>
-                    </td>
-                </tr>
-            </table>
-            
-            <table style='font-size: 0.8rem;width: 98%;margin-bottom: 10px;'>
-            
-                <tr style='text-align: left;'>
-                    <th style='padding-left: 6px;'>M</th> 
-                    <th style='padding-left: 6px;'>T</th> 
-                    <th style='padding-left: 6px;'>W</th> 
-                    <th style='padding-left: 6px;'>T</th> 
-                    <th style='padding-left: 6px;'>F</th> 
-                    <th style='padding-left: 6px;'>S</th> 
-                    <th style='padding-left: 6px;'>S</th> 
-                </tr>
-                    <td><v-checkbox style='float: left; padding: 0;margin: 0;' dense multiple v-model="arrayDay"  value="1"></v-checkbox></td>
-                    <td><v-checkbox style='float: left; padding: 0;margin: 0;' dense multiple v-model="arrayDay"  value="2"></v-checkbox></td>
-                    <td><v-checkbox style='float: left; padding: 0;margin: 0;' dense multiple v-model="arrayDay"  value="3"></v-checkbox></td>
-                    <td><v-checkbox style='float: left; padding: 0;margin: 0;' dense multiple v-model="arrayDay"  value="4"></v-checkbox></td>
-                    <td><v-checkbox style='float: left; padding: 0;margin: 0;' dense multiple v-model="arrayDay"  value="5"></v-checkbox></td>
-                    <td><v-checkbox style='float: left; padding: 0;margin: 0;' dense multiple v-model="arrayDay"  value="6"></v-checkbox></td>
-                    <td><v-checkbox style='float: left; padding: 0;margin: 0;' dense multiple v-model="arrayDay"  value="0"></v-checkbox></td>
+                    </select>
+                </td>
+            </tr>
+            <br>
+            <tr>
+                <th>Start Time</th>
+                <td :class='{disable: disabled}'> 
+                    <input v-model='start_time'  :disabled='disabled' placeholder='ex. 0900'  maxlength = '4' min="0000" max="2359"  type="number" required
+                    style='font-size: 0.8rem; border: 1px solid grey; width: 90%; padding-left: 10px;'>
+                </td>
+            </tr>
+            <tr>
+                <th>Finish Time</th>
+                <td :class='{disable: disabled}'>
+                    <input v-model='finish_time' :disabled='disabled' placeholder='ex. 1700' maxlength = '4' min="0000" max="2359" type="number" required 
+                    style='font-size: 0.8rem; border: 1px solid grey; width: 90%; padding-left: 10px;' >
+                </td>
+            </tr>
+            <br>
+            <tr >
+                <th>
+                    Working Day
+                </th>
+                <td>
+                    <input style='border: 1px solid red;' id='mon' multiple v-model="arrayDay" type="checkbox" value='1' >
+                    <label for="mon" style='font-size: 0.7rem; margin: -3px;padding-right: 6px;'>Mon</label>
 
-                <tr>
+                    <input style='border: 1px solid red;' id='Tue' multiple v-model="arrayDay" type="checkbox" value='2' >
+                    <label for="Tue" style='font-size: 0.7rem; margin: -3px;padding-right: 6px;'>Tue</label>
 
-                    
-                </tr>
-            </table>
+                    <input style='border: 1px solid red;' id='Wed' multiple v-model="arrayDay" type="checkbox" value='3' >
+                    <label for="Wed" style='font-size: 0.7rem; margin: -3px;padding-right: 6px;'>Wed</label>
 
-            <table style='font-size: 0.8rem;width: 48%;margin-bottom: 10px;float: left;'>
-                <tr style='text-align: left;'>
-                    <th> <v-icon style='font-size: 1rem;'>mdi-chevron-down</v-icon>Start Time</th> 
-                </tr>
-                <tr>
-                    <td><input v-model='start_time' required  style='border: 1px solid grey; width: 99%; padding-left: 10px;' type="time" ></td>
-                </tr>
-            </table>
+                    <input style='border: 1px solid red;' id='Thu' multiple v-model="arrayDay" type="checkbox" value='4' >
+                    <label for="Thu" style='font-size: 0.7rem; margin: -3px;padding-right: 6px;'>Thu</label>
 
-            <table style='font-size: 0.8rem;width: 48%;margin-bottom: 10px;float: left;'>
-                <tr style='text-align: left;'>
-                    <th> <v-icon style='font-size: 1rem;'>mdi-chevron-down</v-icon>Fininsh Time</th> 
-                </tr>
-                <tr>
-                    <td><input v-model='finish_time' required  style='border: 1px solid grey; width: 99%; padding-left: 10px;' type="time" ></td>
-                </tr>
-            </table> 
-            <div>
-                <v-btn text x-small @click='onClick()'>save</v-btn>
+                    <input style='border: 1px solid red;' id='Fri' multiple v-model="arrayDay" type="checkbox" value='5' >
+                    <label for="Fri" style='font-size: 0.7rem; margin: -3px;padding-right: 6px;'>Fri</label>
+
+                    <input style='border: 1px solid red;' id='Sat' multiple v-model="arrayDay" type="checkbox" value='6' >
+                    <label for="Sat" style='font-size: 0.7rem; margin: -3px;padding-right: 6px;'>Sat</label>
+
+                    <input style='border: 1px solid red;' id='Sun' multiple v-model="arrayDay" type="checkbox" value='0' >
+                    <label for="Sun" style='font-size: 0.7rem; margin: -3px;padding-right: 6px;'>Sun</label>
+                </td>
+            </tr>
+        
+            <tr>
+                <th>
+                </th>
+                <td>
+                    <v-btn class='mt-4' color='indigo' dark small type='submit'>SAVE</v-btn>
+                    <!-- snackbar ( popping up a window ) --> 
+                    <v-snackbar top v-model="snackbar" :timeout="timeout"> {{ text }}
+                        <template v-slot:action="{ attrs }">
+                            <v-btn color="blue" text  v-bind="attrs" @click="snackbar = false" > Close </v-btn>
+                        </template>
+                    </v-snackbar>
+                </td>
+            </tr>
+        </table>
+        </form>
+    </div>   <!-- end of Booking Form -->
+
+
+
+<!-- Registered Booking Display-->
+    <div>
+            <v-btn class= 'body-2' color='blue-grey' style=' margin-left: -30px;margin-top: 33px;' text><v-icon >mdi-chevron-down</v-icon>Available Time</v-btn>
+            <div style='display: inline-block;float: right;'>
             </div>
 
-        </div>  <!-- end_ left box-->
-
-
-
-
-
-        <br>
-     
-        <div v-if='date' style='clear: both;'>
-            <v-btn class= 'body-2' color='blue-grey' style='margin-left: -30px;margin-top: 30px;' text><v-icon >mdi-chevron-down</v-icon>Available Time</v-btn>
             <v-chip-group v-for="(d, i) in book" :key="i">
+        
+                <div style='width: 70px; margin-right: 10px;'>
+                    <div class='caption' :class="[ new Date(d.date).getDay() == 6 ? 'sat' :  new Date(d.date).getDay() == 0 ? 'sun' : 'else' ]" style='border-radius: 5px; margin-top: 5px; margin-right: 5px;font-size: 1rem;text-align: center;'>  
+                        {{changeDay(d.date)}} 
+                    </div>
+                </div>
 
-                <v-chip  color='blue-grey lighten-4 font-weight-bold' small label>  {{changeDay(d.date)}}  </v-chip>
-            
-                <v-chip  
-                color='blue-grey lighten-4' outlined small label v-for="(a, i) in d.time" :key='i' @click='a.booking = !a.booking'>
-                    <div :class="{chip:a.booking}">{{a.hour}}</div>
+                <v-chip color='blue-grey lighten-4' close-icon='mdi-circle' close @click:close="close(a.hour)" outlined small label v-for="(a, i) in d.time" :key='i' @click='chipBookingToggle(d.date, a.hour)'>
+                    <div v-if='d.condition' :class="{chip:a.booking}">{{a.hour}}</div>
+                    <div v-else >Close</div>
+
                 </v-chip>
             </v-chip-group> 
-        </div>
+
+            
+            <div style='float: right'>
+                <v-btn class='mt-4' color='blue-grey' @click ='onReset()' dark small>RESET</v-btn>
+            </div>
+
+    </div> 
+    <br><br><br><br><br><br>
+ 
         
 </div>
 </template>
 
-
 <script>
 import moment from 'moment'
 export default {
-data: () => ({
-    date: new Date().toISOString().substr(0, 10),  // picking a date
-    period: '',
-    duration:'',
-    arrayDay: [],
-    start_time: '',
-    finish_time: '',
+    data: () => ({
+        date: new Date().toISOString().substr(0, 10),  // picking a date
+        period: '',
+        duration: '',
+        arrayDay: [],
+        start_time: '',
+        finish_time: '',
 
-    book: [ {date: '1981-07-17', time: [{hour: '00:00', booking: false}]}], // initial 
+        book: [], // initial 
+        // display
+        min: moment().format('YYYY[-]MM[-]DD'),
+        // snackbar
+        snackbar: false,
+        text: 'Your data have been securely saved. To change the date information, set it up again pressing the reset button which is located down at the bottom',
+        timeout: 6000,
+        disabled: false,
+    }),
 
-    
-}),
- 
     methods: {
-        allowedDates(val){
-            var date = new Date(val).getDay()
-            for (var i = 0; i < this.arrayDay.length; i++) {
-                if (this.arrayDay[i] == date){
-                    this.booking = val
-                    return val
-                } 
-            }
-        },
-        getDateRangeData(param){  //param1은 시작일, param2는 종료일이다.
+        getInitialDate(param){  //param1은 시작일, param2는 종료일이다.
             var selectedDate = moment().add(+param, 'days').format("YYYY-MM-DD")
             var res_day = [];
             var ss_day = new Date();
             var ee_day = new Date(selectedDate);    	
                 while(ss_day.getTime() <= ee_day.getTime()){
+
                     var _mon_ = (ss_day.getMonth()+1);
                     _mon_ = _mon_ < 10 ? '0'+_mon_ : _mon_;
                     var _day_ = ss_day.getDate();
@@ -159,131 +175,249 @@ data: () => ({
                     res_day.push(ss_day.getFullYear() + '-' + _mon_ + '-' +  _day_);
                     ss_day.setDate(ss_day.getDate() + 1);
             }
-            console.log(res_day)
             return res_day;
         },
 
-        getFullData(selectedDate){
-            const setFirstTime = this.start_time
-            const setFinishTime = this.finish_time
-            const setInterval = this.duration
+
+        getBookingData(selectedDate){
             
+            var first = String(this.start_time).substring(0,2)
+            var second = String(this.start_time).substring(2,4)
+            var firstLetter = first + ":" + second
+            const setFirstTime = firstLetter
+
+            var third = String(this.finish_time).substring(0,2)
+            var fourth = String(this.finish_time).substring(2,4)
+            var secondLetter = third + ":" + fourth
+            const setFinishTime = secondLetter
+           
+            const setInterval = this.duration
+            var day = new Date(selectedDate).getDay()
             var date = new Date(selectedDate+" "+setFirstTime)
             var finish = new Date(selectedDate+" "+setFinishTime)
 
-            var timeObject = {date: selectedDate, time: []}
+
+            var timeObject = {date: selectedDate, day: day, condition: false, time: []}
+
 
             for(var i=0;i<this.book.length;i++){
-                if(this.date == this.book[i].date){
-                    return
-                }else{
                     for( date ; date<=finish ; date.setMinutes(date.getMinutes()+Number(setInterval))) {
                     var h = date.getHours()
                     var m = date.getMinutes()
                     var hours = h >= 10 ? h : '0' + h
                     var minutes = m >= 10 ? m : '0' + m;
-                    timeObject.time.push({hour: hours+":"+minutes, booking: true})
-                }
+                    timeObject.time.push({hour: hours+":"+minutes, booking: true, count: 1})
+                
                 }         
             }
-
             return timeObject    
         },
 
+
+
+
+
         onClick(){
-            var dateArray = this.getDateRangeData(this.period)  // 2020-10-26, 2020-10,27...
-            var bookArray = []
-            for(var i=0; i< dateArray.length; i++){
-                var dateTimeArray = this.getFullData(dateArray[i])
-                bookArray.push(dateTimeArray)
+            console.log('onClick', this.book.length == 0)
+            if(this.book.length === 0){
+                console.log('if.... just if!')
+
+
+                this.book = [ {date: '1981-07-17', day: 5,  time: [{hour: '00:00', booking: false}]} ]
+
+
+                var dateArray = this.getInitialDate(this.period)  // this.period -> 변경된 2020-10-26, 2020-10,27...  현재일부터 this.period기간 까지 날짜를 만듦
+
+
+
+                var bookArray = []
+                  
+                for(var i=0; i< dateArray.length; i++){
+                    var dateTimeArray = this.getBookingData(dateArray[i]) // this.interval, this.start_time, this.finish_time -> 변경된 timeObject에 시간을 interval로 계산하여 다 넣음.
+                    bookArray.push(dateTimeArray)
+                }
+                this.book = bookArray    // this.book에 넣음  // 신규건
+                console.log('book', this.book)
+                
+                this.arrayDay.forEach(e=>this.extract(e))   // this.arrayDay 변화된 폼의 월, 화, 수, 목, 금.. 을 체크한대로 데이터에 매칭 시킴
+
+                this.$store.dispatch('booking/addBooking', {
+                    id: Date.now(),
+                    date: this.date,  // picking a date
+                    period: this.period,
+                    duration: this.duration,
+                    arrayDay: this.arrayDay,
+                    start_time: this.start_time,
+                    finish_time: this.finish_time,
+                    book: this.book,
+                }).then(()=>{ 
+                    this.disabled = true;
+                    this.snackbar = true;
+                    }
+                    ).catch(()=>{console.log('error')})
+
+                console.log('onClick end', this.book.length)
+            }else{
+                console.log('if... else, there is data')
+         
+                this.$store.dispatch('booking/updateBooking', {
+                    date: this.date,  // picking a date
+                    period: this.period,
+                    duration: this.duration,
+                    arrayDay: this.arrayDay,
+                    start_time: this.start_time,
+                    finish_time: this.finish_time,
+                    book: this.book
+                    
+                }).then(()=>{ 
+                    this.disabled = true;
+                    this.snackbar = true;
+                    console.log('saved')}
+                    ).catch(()=>{console.log('error')})
             }
-            this.book = bookArray
+        
+        },
+
+        onReset(){
+            this.$store.dispatch('booking/resetBooking'
+                    // date: this.date,  // picking a date
+                    // period: this.period,
+                    // duration: this.duration,
+                    // arrayDay: this.arrayDay,
+                    // start_time: this.start_time,
+                    // finish_time: this.finish_time,
+                    // book: this.book
+                    
+                ).then(()=>{ 
+                        this.disabled = false;
+                        this.date = ''
+                        this.period =''
+                        this.duration = ''
+                        this.arrayDay= []
+                        this.start_time = ''
+                        this.finish_time = ''
+                        this.book = []
+                    console.log('saved')}
+                    ).catch(()=>{console.log('error')
+                })
             
-            console.log('bookArray', bookArray)
+        },
+
+        
+
+        arrayDayChanged(){
+            this.$store.dispatch('booking/arrayDayChanged', this.arrayDay)
+        },
+        extract(num){  // book에서 mon, tue, wed 체크 된 것을 찾아서 해당 condition값을 true로 만들어줌 -
+            this.book.filter(f=>f.day===Number(num)).map(m=>m.condition=true)
         },
         changeDay(day){ // array 를 요일로 만들기
-            var week = ['(Sun)', '(Mon)', '(Tue)', '(Wed)', '(Thu)', '(Fri)', '(Sat)'];
-            var dayOfWeek = moment(day).format('DD[/]MM')+""+week[new Date(day).getDay()];
+            var week = ['(S)', '(M)', '(T)', '(W)', '(T)', '(F)', '(S)'];
+            var dayOfWeek = moment(day).format('DD[/]MM')+" "+week[new Date(day).getDay()];
             return dayOfWeek;
-        }
-
-
-        // onChange(){
-        //     const setFirstTime = this.start_time
-        //     const setFinishTime = this.finish_time
-        //     const setInterval = this.duration
-        //     const selectedDate = this.date
-            
-        //     var date = new Date(selectedDate+" "+setFirstTime)
-        //     var finish = new Date(selectedDate+" "+setFinishTime)
-
-        //     var timeObject = {date: selectedDate, time: []}
-
-        //     for(var i=0;i<this.book.length;i++){
-        //         if(this.date == this.book[i].date){
-        //             return
-        //         }else{
-        //             for( date ; date<=finish ; date.setMinutes(date.getMinutes()+Number(setInterval))) {
-        //             var h = date.getHours()
-        //             var m = date.getMinutes()
-        //             var hours = h >= 10 ? h : '0' + h
-        //             var minutes = m >= 10 ? m : '0' + m;
-        //             timeObject.time.push({hour: hours+":"+minutes, booking: true})
-        //         }
-        //         }         
-        //     }
-        //     this.book.push(timeObject)
-        //     console.log(this.book)
-
-        //     return timeObject    
-        // }
+        },
+        satSunCheck(day){
+            var dayOfWeek = new Date(day).getDay()
+            if(dayOfWeek == 5){
+            }
+        },
+        close(hour){  // chip에서 O 선택하면 모든 시간이 동일하게 true/false 되는 함수
+        this.$store.dispatch('booking/closeCols', hour)
+        },
+        chipBookingToggle(date, hour){
+            this.$store.dispatch('booking/chipBookingToggle', {date: date, hour: hour})
+        },
     },
 
+    created(){
+    const data = this.$store.state.booking.bookingData
+    console.log(data)
+
+        if(data.length !== 0){
+
+            console.log('created - data 1')
+                this.period= data.period
+                this.duration =  data.duration
+                this.arrayDay =  data.arrayDay
+                this.start_time= data.start_time
+                this.finish_time = data.finish_time
+                this.book = data.book 
+                }else{
+                    console.log('no data length')
+                }
+    },
 
     computed: {
+        max(){
+            return moment().add(this.period, 'day').format('YYYY[-]MM[-]DD')
+        },
+        bookingData(){
+            const data = this.$store.state.booking.bookingData
+                if(typeof data === 'object'){
+                this.period= data.period
+                this.duration =  data.duration
+                this.arrayDay =  data.arrayDay
+                this.start_time= data.start_time
+                this.finish_time = data.finish_time
+                this.book = data.book // initial 
+                }
+                console.log('computed', data.book)
+                return data.book
+                
+        },
         booking_time(){
             const d = this.date
             var result = this.book.filter(e=> e.date == d)
-            return result
-            
+            return result  
         },
         today(){
             var t = new Date()
             var m = t.getMonth()+1
             var m = m >= 10 ? m : '0' + m
-
             var d = t.getDate()
             var d = d >= 10 ? d : '0' + d;
-
-            
             var today = t.getFullYear()+"-"+m+"-"+d
             return today
         },
+    }, 
 
-        max(){
-            var t = new Date()
-            t.setDate(t.getDate()+Number(this.period))  // this.period was string so the years was ramdomly changed.
-                var m = t.getMonth()+1
-                var m = m >= 10 ? m : '0' + m
-
-                var d = t.getDate()
-                var d = d >= 10 ? d : '0' + d;
-
-                
-            return t.getFullYear()+"-"+m+"-"+d
+    watch:{
+        arrayDay(){
+            this.$store.dispatch('booking/arrayDayChanged', this.arrayDay)
+        },
+        start_time(){
+            console.log('start time', this.start_time.length)
+            if(this.start_time.length > 4){
+            this.start_time = this.start_time.slice(0, 4);
             }
-            
+        },
+        finish_time(){
+            if(this.finish_time.length > 4){
+            this.finish_time = this.finish_time.slice(0, 4);
+            }
         }
-    
-    
-    
+    },
 }
 </script>
 
 
 
 
-<style lang="scss">
+<style lang="scss" scoped>
+table{
+    border-collapse: collapse;
+    width: 100%;
+    tr{
+        th{ width: 30%;
+            font-size: 0.7rem;
+            font-weight: 500;
+        }
+        td{ width: 70%;}
+    }
+}
+.sat{ color: #1A67C0; border: 1px solid #1A67C0}
+.sun{  color: #E91F62; border: 1px solid #E91F62}
+.else{ color: #fff; background: #607D8A}
 .left{
     width: 50%;
     float: left;
@@ -313,19 +447,18 @@ data: () => ({
     position: absolute;
     right: 10px;
     top: 8px;
-
 }
 .image {
     width: 100%;
     display: block;
     margin-bottom: 10px;
 }
-
 .chip{
     
     color: rgb(96,125,138);
     font-weight: bold;
 }
-
-
+.disable{
+    color: rgb(164, 178, 184);
+}
 </style>

@@ -36,8 +36,39 @@ export const mutations = {
     },
 
     CONFIRM_BOOKING(state, payload){
-        console.log(payload)
+        console.log('서비스 시간 booking', payload.duration)
+        console.log('10분 단위 duration', state.bookingData.duration)
+        const serviceTime = payload.duration
+        const bookingTime = state.bookingData.duration
+        const rate = Math.ceil(serviceTime/bookingTime)
+        console.log('rate는 몇일까?' , rate)
+        //  추가하고
         state.book.unshift(payload)
+        console.log('state,bookingData', state.bookingData)
+        // 빼고
+        const index = state.bookingData.book.findIndex(e=>e.date === payload.date)
+        console.log('찾았니 index', index)
+        // state.bookingData.book[index].time.filter(m => m.hour === payload.time).map(m => m.booking = false)
+        // state.bookingData.book[index].time.filter(m => m.hour === payload.time).map(
+        //     function(e) {
+        //         if(e.count===1){
+        //             e.booking = false
+        //         }else{
+        //             e.count --
+        //         }
+        //     }
+        // )
+        const time = state.bookingData.book[index].time
+        const timeIndex = state.bookingData.book[index].time.findIndex(e=>e.hour === payload.time)
+
+        //30분 단위로했을 때 1시간 30분 짜리 서비스  (3개 동시에 booking=false)
+        for(var i=0; i< rate;i++){
+            if(time[timeIndex + i].count === 1){
+                time[timeIndex + i].booking=false
+            }else{
+                time[timeIndex + i].count--
+            }
+        }
     },
 
     CLOSE_COLS(state, hour){

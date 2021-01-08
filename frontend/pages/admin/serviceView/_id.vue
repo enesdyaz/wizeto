@@ -5,7 +5,7 @@
         <div class='mb-3'>
             <v-icon @click='dialog=false'>mdi-arrow-left</v-icon>
         </div>
-            <booking-view :dataName = 'data.name' :dataPrice='data.price' @bookingEmit='bookingInfo'></booking-view>
+            <booking-view :dataName='data.name' :dataDuration="data.duration" :dataPrice='data.price' @bookingEmit='bookingInfo'></booking-view>
     </div>
 
 

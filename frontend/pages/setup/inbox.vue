@@ -2,7 +2,7 @@
 <div>
 
     <div>
-        <calendar :inbox="inbox" />
+        <calendar/>
     </div>
 </div>
 </template>
@@ -13,12 +13,7 @@ export default {
     components: {
         calendar
     },
-    computed:{
-        inbox(){
-            const inbox = this.$store.state.booking.book
-            return inbox
-        }
-    }
+    
 }
 </script>
 

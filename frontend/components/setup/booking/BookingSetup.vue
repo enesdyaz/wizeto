@@ -38,8 +38,6 @@
                         <option value="120">2 hr</option>    
                         <option value="150">2.5 hr</option>    
                         <option value="180">3 hr</option>    
-                        <option value="240">4 hr</option>    
-                        <option value="300">5 hr</option>    
                     </select>
                 </td>
             </tr>
@@ -56,6 +54,23 @@
                 <td :class='{disable: disabled}'>
                     <input v-model='finish_time' :disabled='disabled' placeholder='ex. 1700' maxlength = '4' min="0000" max="2359" type="number" required 
                     style='font-size: 0.8rem; border: 1px solid grey; width: 90%; padding-left: 10px;' >
+                </td>
+            </tr>
+            <tr>
+                <th>Max Num of Booking</th>
+                <td :class='{disable: disabled}'>
+                    <select v-model='maxNumber' :disabled='disabled' style='font-size: 0.8rem; border: 1px solid grey; width: 90%; padding-left: 10px;' type="text" required>
+                        <option value="1">1 (default)</option>    
+                        <option value="2">2</option>    
+                        <option value="3">3</option>    
+                        <option value="4">4</option>    
+                        <option value="5">5</option>    
+                        <option value="6">6</option>    
+                        <option value="7">7</option>    
+                        <option value="8">8</option>    
+                        <option value="9">9</option>    
+                        <option value="10">10</option>    
+                    </select>
                 </td>
             </tr>
             <br>
@@ -150,6 +165,7 @@ export default {
         arrayDay: [],
         start_time: '',
         finish_time: '',
+        maxNumber: 1,   
 
         book: [], // MONGO DB 연결 파일
         // display
@@ -178,23 +194,6 @@ export default {
                 console.log('dates', dates)
             return dates
         },
-
-        // getInitialDate(param){  //param1은 시작일, param2는 종료일이다.
-        //     var selectedDate = moment().add(+param, 'days').format("YYYY-MM-DD")
-        //     var res_day = [];
-        //     var ss_day = new Date();
-        //     var ee_day = new Date(selectedDate);    	
-        //         while(ss_day.getTime() <= ee_day.getTime()){
-
-        //             var _mon_ = (ss_day.getMonth()+1);
-        //             _mon_ = _mon_ < 10 ? '0'+_mon_ : _mon_;
-        //             var _day_ = ss_day.getDate();
-        //             _day_ = _day_ < 10 ? '0'+_day_ : _day_;
-        //             res_day.push(ss_day.getFullYear() + '-' + _mon_ + '-' +  _day_);
-        //             ss_day.setDate(ss_day.getDate() + 1);
-        //     }
-        //     return res_day;
-        // },
 
         intervalDate(param){  //param1은 시작일, param2는 종료일이다.
             var selectedDate = moment().add(+param, 'days').format("YYYY-MM-DD")
@@ -241,7 +240,7 @@ export default {
                     var m = date.getMinutes()
                     var hours = h >= 10 ? h : '0' + h
                     var minutes = m >= 10 ? m : '0' + m;
-                    timeObject.time.push({hour: hours+":"+minutes, booking: true, count: 1, customerId: '', })
+                    timeObject.time.push({hour: hours+":"+minutes, booking: true, count: this.maxNumber, customerId: '', })
                 
                 }         
             }
