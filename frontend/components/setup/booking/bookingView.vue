@@ -137,6 +137,7 @@ export default {
             name: '',
             email: '',
             mobile: '',
+            colors: ['blue', 'indigo', 'deep-purple', 'cyan', 'green', 'orange', 'grey darken-1']
 
         }
     },
@@ -147,10 +148,13 @@ export default {
                 this.$store.dispatch('booking/confirmBooking', {
                 date: this.date,
                 time: this.time,
+                start: this.date + " " + this.time, 
                 service: this.dataName,
                 name: this.name,
                 email: this.email,
-                mobile: this.mobile
+                mobile: this.mobile,
+                color: this.colors[Math.floor(Math.random() * 6) + 0]
+,
             }).then(()=>{ 
                 this.snackbar = true 
                 this.$emit('bookingEmit', false)
