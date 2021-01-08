@@ -21,7 +21,7 @@ export default {
                 theme: 'bubble',
                 modules: {
                     toolbar: [
-                        [{ 'header': [1, 2, 3, 4, 5, 6, false] }, 'bold', 'blockquote', { 'color': [] }, { 'background': [] }, { 'align': [] }]
+                        [{ 'header': [1, 2, 3, 4, 5, 6, false] }, 'bold', 'blockquote', { 'color': [] }, { 'background': [] }, { 'align': [] }, 'image', 'video']
                     ]
                 }
                 }

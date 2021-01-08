@@ -14,11 +14,11 @@
                 <th>Available</th> 
                 <td :class='{disable: disabled}'>
                     <select v-model='period' :disabled='disabled' style='font-size: 0.8rem; border: 1px solid grey; width: 90%; padding-left: 10px;' type="number" min='1' required>
-                            <option value="1" selected>This Week</option>    
-                            <option value="2">Next Week</option>    
-                            <option value="3">3 Weeks</option>    
-                            <option value="4">4 Weeks</option>    
-                            <option value="8">8 Weeks</option>    
+                            <option value="7" selected>weekly</option>    
+                            <option value="14">Fornightly</option>    
+                            <option value="30">Monthly</option>    
+                            <option value="90">3 Months</option>    
+                            <option value="180">half yearly</option>    
                     </select>
                 </td>
             </tr>
@@ -141,7 +141,6 @@
 
 <script>
 import moment from 'moment'
-moment.locale('en-au')
 export default {
     data: () => ({
         date: new Date().toISOString().substr(0, 10),  // picking a date
@@ -151,7 +150,7 @@ export default {
         start_time: '',
         finish_time: '',
 
-        book: [], // MONGO DB 연결 파일
+        book: [], // initial 
         // display
         min: moment().format('YYYY[-]MM[-]DD'),
         // snackbar
@@ -162,41 +161,7 @@ export default {
     }),
 
     methods: {
-        //1. DATE 만들기
-        getInitialDate(){  
-            console.log('period', this.period)
-            const current = moment().week()  
-            console.log('current', current)    
-            var input = moment().day("Sunday").week(current+Number(this.period))
-            console.log('input', input)
-            const diff = input.diff(moment(),'days') + 2
-            console.log('diff', diff)
-                let dates = [] 
-                for (let i = 0; i < diff; i++) {
-                    dates.push(moment(new Date()).add(i, 'days').format('YYYY-MM-DD'))
-                }
-                console.log('dates', dates)
-            return dates
-        },
-
-        // getInitialDate(param){  //param1은 시작일, param2는 종료일이다.
-        //     var selectedDate = moment().add(+param, 'days').format("YYYY-MM-DD")
-        //     var res_day = [];
-        //     var ss_day = new Date();
-        //     var ee_day = new Date(selectedDate);    	
-        //         while(ss_day.getTime() <= ee_day.getTime()){
-
-        //             var _mon_ = (ss_day.getMonth()+1);
-        //             _mon_ = _mon_ < 10 ? '0'+_mon_ : _mon_;
-        //             var _day_ = ss_day.getDate();
-        //             _day_ = _day_ < 10 ? '0'+_day_ : _day_;
-        //             res_day.push(ss_day.getFullYear() + '-' + _mon_ + '-' +  _day_);
-        //             ss_day.setDate(ss_day.getDate() + 1);
-        //     }
-        //     return res_day;
-        // },
-
-        intervalDate(param){  //param1은 시작일, param2는 종료일이다.
+        getInitialDate(param){  //param1은 시작일, param2는 종료일이다.
             var selectedDate = moment().add(+param, 'days').format("YYYY-MM-DD")
             var res_day = [];
             var ss_day = new Date();
@@ -213,7 +178,7 @@ export default {
             return res_day;
         },
 
-        //2. TIME 만들어 DATE에 집어넣기 
+
         getBookingData(selectedDate){
             
             var first = String(this.start_time).substring(0,2)
@@ -241,7 +206,7 @@ export default {
                     var m = date.getMinutes()
                     var hours = h >= 10 ? h : '0' + h
                     var minutes = m >= 10 ? m : '0' + m;
-                    timeObject.time.push({hour: hours+":"+minutes, booking: true, count: 1, customerId: '', })
+                    timeObject.time.push({hour: hours+":"+minutes, booking: true, count: 1})
                 
                 }         
             }
@@ -249,43 +214,32 @@ export default {
         },
 
 
-        bookingInterval(number){
-            let count = 0
-            const tick = () => {
-                setTimeout(()=>{
-                    if (count >= number) return;
-                    console.log({count})
-                    // const dateArray = this.getInitialDate()
 
-                    tick()
-                    count++
-                    },2000)
-            }
-                tick()
-        },
 
 
         onClick(){
             console.log('onClick', this.book.length == 0)
-            this.bookingInterval(5)   // 자동으로 한주가 끝나면 다음주에 부킹이 추가로 나타나게 하기 
-
-
-
             if(this.book.length === 0){
-                this.book = [ {date: '1981-07-17', day: 5,  time: [{hour: '00:00', booking: false}]} ]
-                var dateArray = this.getInitialDate()  // 1. fornightly 입력되면 14 - 2주 Date 데이터 만들기 this.period -> 변경된 2020-10-26, 2020-10,27...  현재일부터 this.period기간 까지 날짜를 만듦
-                var bookArray = []
+                console.log('if.... just if!')
 
+
+                this.book = [ {date: '1981-07-17', day: 5,  time: [{hour: '00:00', booking: false}]} ]
+
+
+                var dateArray = this.getInitialDate(this.period)  // this.period -> 변경된 2020-10-26, 2020-10,27...  현재일부터 this.period기간 까지 날짜를 만듦
+
+
+
+                var bookArray = []
+                  
                 for(var i=0; i< dateArray.length; i++){
-                    var dateTimeArray = this.getBookingData(dateArray[i]) // 2. 30min 분 간격으로 날짜 아래에 입력하기 this.interval, this.start_time, this.finish_time -> 변경된 timeObject에 시간을 interval로 계산하여 다 넣음.
+                    var dateTimeArray = this.getBookingData(dateArray[i]) // this.interval, this.start_time, this.finish_time -> 변경된 timeObject에 시간을 interval로 계산하여 다 넣음.
                     bookArray.push(dateTimeArray)
                 }
                 this.book = bookArray    // this.book에 넣음  // 신규건
                 console.log('book', this.book)
                 
-                this.arrayDay.forEach(e=>this.extract(e))   // 3.  this.arrayDay 변화된 폼의 월, 화, 수, 목, 금.. 을 체크한대로 데이터에 매칭 시킴
-
-
+                this.arrayDay.forEach(e=>this.extract(e))   // this.arrayDay 변화된 폼의 월, 화, 수, 목, 금.. 을 체크한대로 데이터에 매칭 시킴
 
                 this.$store.dispatch('booking/addBooking', {
                     id: Date.now(),

@@ -12,11 +12,18 @@
             </li>
         </ul>
     </div>
+    <div>
+        <calendar />
+    </div>
 </div>
 </template>
 
 <script>
+import calendar from '../../components/calendar/calendar'
 export default {
+    components: {
+        calendar
+    },
     computed:{
         inbox(){
             const inbox = this.$store.state.booking.book

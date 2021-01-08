@@ -25,8 +25,11 @@
                 <v-icon style='font-size: 1rem;margin-top: -2px'>mdi-clock-outline</v-icon> {{data.duration}}min
             </div>
             <br>
-            <div class='subtitle-2'>
-                <div v-html="data.description"></div>
+            <div class='subtitle-2' >
+
+                <!-- <div  v-html="data.description"></div> -->
+                    <quill-editor style='position: relative' class='editor' v-model="data.description" value='aaa'
+                    ref="quillEditor" :options="editorOption" :disabled='true' />
             </div>
     <!-- booking -->     
             <div style='text-align: center;margin-top: 20px;'>
@@ -92,7 +95,17 @@ export default {
         return{
             dialog: false,
             bookingInfoMessage: '',
-            service: ''
+            service: '',
+
+            //quill
+            editorOption: {
+            // Some Quill options...
+                theme: 'bubble',
+                readOnly: true,
+                modules: {
+                    toolbar: [ ]
+                }
+            }
         }
     },
     created(){
@@ -146,6 +159,9 @@ export default {
 }
 </script>
 
-<style>
+<style lang='css' scoped>
+
+
 
 </style>
+

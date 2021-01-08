@@ -1,9 +1,8 @@
 <template>
-<div>
+<div>{{period}}
     <div class='container' style='text-align: center;padding-bottom: 7vh;'>
 
         <div class='title'>{{dataName}} <span class='caption'>(${{dataPrice}})</span> </div><br><br>
-
 <!-- step 1 -->
             <div>
                 <div style='text-align: left'>1. Choose your date</div>
@@ -196,7 +195,7 @@ export default {
     computed: {
         bookingData(){
             const data = this.$store.state.booking.bookingData
-                console.log(data)
+                console.log('data', data)
                 if(typeof data === 'object'){
                     console.log('yes data exist')
 
@@ -206,7 +205,7 @@ export default {
                 }
         },
         max(){
-            return moment().add(this.period-1, 'day').format('YYYY[-]MM[-]DD')
+            return moment().add(this.period-1, 'week').format('YYYY[-]MM[-]DD')
         },
         booking_time(){
             const d = this.date

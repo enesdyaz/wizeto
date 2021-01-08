@@ -1,6 +1,6 @@
 <template>
 <div> 
-
+    
 <p>오늘은 2021-01-06</p>
 <hr>
 
@@ -77,7 +77,6 @@ export default {
         weekArray(number){     
             const current = moment().week()      
             var input = moment().day("Sunday").week(current+number)   
-            
             const diff = input.diff(moment(),'days') + 2 
                 let dates = [] 
                 for (let i = 0; i < diff; i++) {
