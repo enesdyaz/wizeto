@@ -7,7 +7,7 @@
             </v-btn>
     </div>
     <br>
-    <div>
+    <div v-if='book.length<1'>
         <form @submit.prevent="onClick">
         <table class='body-1' >  
             <tr>
@@ -122,12 +122,12 @@
 
 
 <!-- Registered Booking Display-->
-    <div>
-            <v-btn class= 'body-2' color='blue-grey' style=' margin-left: -30px;margin-top: 33px;' text><v-icon >mdi-chevron-down</v-icon>Available Time</v-btn>
+    <div v-else>
+            <v-btn class= 'body-2' color='blue-grey' style=' margin-left: -30px;;' text><v-icon >mdi-chevron-down</v-icon>Available Time</v-btn>
             <div style='display: inline-block;float: right;'>
             </div>
 
-            <v-chip-group v-for="(d, i) in book" :key="i">
+            <v-chip-group v-for="(d, i) in getData" :key="i">
         
                 <div style='width: 70px; margin-right: 10px;'>
                     <div class='caption' :class="[ new Date(d.date).getDay() == 6 ? 'sat' :  new Date(d.date).getDay() == 0 ? 'sun' : 'else' ]" style='border-radius: 5px; margin-top: 5px; margin-right: 5px;font-size: 1rem;text-align: center;'>  
@@ -143,7 +143,8 @@
             </v-chip-group> 
 
             
-            <div style='float: right'>
+            <div class='text-center'>
+                <v-btn class='mt-4' color='indigo' dark small @click="onClick">UPDATE</v-btn>
                 <v-btn class='mt-4' color='blue-grey' @click ='onReset()' dark small>RESET</v-btn>
             </div>
 
@@ -180,20 +181,16 @@ export default {
     methods: {
         //1. DATE 만들기
         getInitialDate(){  
-            console.log('period', this.period)
             const current = moment().week()  
-            console.log('current', current)    
             var input = moment().day("Sunday").week(current+Number(this.period))
-            console.log('input', input)
             const diff = input.diff(moment(),'days') + 2
-            console.log('diff', diff)
                 let dates = [] 
                 for (let i = 0; i < diff; i++) {
                     dates.push(moment(new Date()).add(i, 'days').format('YYYY-MM-DD'))
                 }
-                console.log('dates', dates)
             return dates
         },
+
 
         intervalDate(param){  //param1은 시작일, param2는 종료일이다.
             var selectedDate = moment().add(+param, 'days').format("YYYY-MM-DD")
@@ -247,28 +244,67 @@ export default {
             return timeObject    
         },
 
+        makeArray(){   // 자동으로 this.book ARRAY에 일주일씩 추가/삭제 시켜주기
+            const lastBook = this.book[this.book.length-1]
+            const firstDay = moment(lastBook.date).add(1, 'days').format('YYYY-MM-DD')
+            const today = moment()
+            const current = moment().week()
+            var startDate = moment().day("Saturday").week(current+Number(this.period)-1)
+            var start = moment(startDate).hours('00').minutes('00').seconds('00')
+            const diff = start.diff(moment(today),'seconds')
 
-        bookingInterval(number){
-            let count = 0
-            const tick = () => {
-                setTimeout(()=>{
-                    if (count >= number) return;
-                    console.log({count})
-                    // const dateArray = this.getInitialDate()
-
-                    tick()
-                    count++
-                    },2000)
+            let dateArray = []
+            for (let i = 0; i < 7; i++) {
+                const setDate = moment(firstDay).add(i, 'days').format('YYYY-MM-DD')
+                dateArray.push(setDate)
             }
+
+            let book = []
+            for(var j=0; j< dateArray.length; j++){
+                let timeArray = this.getBookingData(dateArray[j]) // 2. 30min 분 간격으로 날짜 아래에 입력하기 this.interval, this.start_time, this.finish_time -> 변경된 timeObject에 시간을 interval로 계산하여 다 넣음.
+                book.push(timeArray)
+            }
+
+            const extract = (num) =>{  
+                book.filter(f=>f.day===Number(num)).map(m=>m.condition=true)
+            }
+            this.arrayDay.forEach(e=>extract(e))
+                
+            this.$store.dispatch('booking/setTimeoutBooking', book)
+            
+        },
+
+
+        bookingInterval(){   // 자동으로 날짜를 추가로 입력해주는 기능
+            const today = moment()
+            const current = moment().week()
+            var startDate = moment().day("Saturday").week(current+Number(this.period)-1)
+            var start = moment(startDate).hours('00').minutes('00').seconds('00')
+            const diff = start.diff(moment(today),'seconds')
+            console.log('얼마나 걸릴까', diff*1000)
+            const autoArray = () => {
+                this.makeArray()
+                const tick = () => {
+                    let count = 0
+                    setTimeout(()=>{
+                        this.makeArray()
+                        console.log(count)
+                        count++
+                        tick()
+                    },604800000)    // 7주일
+                }
                 tick()
+            }
+
+            setTimeout(()=>{
+                console.log('firstSetTimeout 실행됨')
+                autoArray()
+            }, diff*1000)   // 
+            
         },
 
 
         onClick(){
-            console.log('onClick', this.book.length == 0)
-            this.bookingInterval(5)   // 자동으로 한주가 끝나면 다음주에 부킹이 추가로 나타나게 하기 
-
-
 
             if(this.book.length === 0){
                 this.book = [ {date: '1981-07-17', day: 5,  time: [{hour: '00:00', booking: false}]} ]
@@ -287,7 +323,6 @@ export default {
 
 
                 this.$store.dispatch('booking/addBooking', {
-                    id: Date.now(),
                     date: this.date,  // picking a date
                     period: this.period,
                     duration: this.duration,
@@ -305,35 +340,20 @@ export default {
             }else{
                 console.log('if... else, there is data')
          
-                this.$store.dispatch('booking/updateBooking', {
-                    date: this.date,  // picking a date
-                    period: this.period,
-                    duration: this.duration,
-                    arrayDay: this.arrayDay,
-                    start_time: this.start_time,
-                    finish_time: this.finish_time,
-                    book: this.book
-                    
-                }).then(()=>{ 
+                this.$store.dispatch('booking/updateBooking', {                }).then(()=>{ 
                     this.disabled = true;
                     this.snackbar = true;
                     console.log('saved')}
                     ).catch(()=>{console.log('error')})
             }
+            this.bookingInterval(5)   // 자동으로 한주가 끝나면 다음주에 부킹이 추가로 나타나게 하기 
+
         
         },
 
         onReset(){
-            this.$store.dispatch('booking/resetBooking'
-                    // date: this.date,  // picking a date
-                    // period: this.period,
-                    // duration: this.duration,
-                    // arrayDay: this.arrayDay,
-                    // start_time: this.start_time,
-                    // finish_time: this.finish_time,
-                    // book: this.book
-                    
-                ).then(()=>{ 
+            this.$store.dispatch('booking/resetBooking')
+            .then(()=>{ 
                         this.disabled = false;
                         this.date = ''
                         this.period =''
@@ -342,7 +362,7 @@ export default {
                         this.start_time = ''
                         this.finish_time = ''
                         this.book = []
-                    console.log('saved')}
+                    }
                     ).catch(()=>{console.log('error')
                 })
             
@@ -375,24 +395,28 @@ export default {
     },
 
     created(){
-    const data = this.$store.state.booking.bookingData
-    console.log(data)
+        const data = this.$store.state.booking.bookingData
+        console.log(data)
+        if(data === undefined || null) return
 
-        if(data.length !== 0){
+            if(data.length !== 0){
 
-            console.log('created - data 1')
-                this.period= data.period
-                this.duration =  data.duration
-                this.arrayDay =  data.arrayDay
-                this.start_time= data.start_time
-                this.finish_time = data.finish_time
-                this.book = data.book 
-                }else{
-                    console.log('no data length')
-                }
-    },
+                console.log('created - data 1')
+                    this.period= data.period
+                    this.duration =  data.duration
+                    this.arrayDay =  data.arrayDay
+                    this.start_time= data.start_time
+                    this.finish_time = data.finish_time
+                    this.book = data.book 
+                    }else{
+                        console.log('no data length')
+                    }
+        },
 
     computed: {
+        getData(){
+             return this.$store.getters['booking/getData']
+        },
         max(){
             return moment().add(this.period, 'day').format('YYYY[-]MM[-]DD')
         },
@@ -431,7 +455,6 @@ export default {
             this.$store.dispatch('booking/arrayDayChanged', this.arrayDay)
         },
         start_time(){
-            console.log('start time', this.start_time.length)
             if(this.start_time.length > 4){
             this.start_time = this.start_time.slice(0, 4);
             }

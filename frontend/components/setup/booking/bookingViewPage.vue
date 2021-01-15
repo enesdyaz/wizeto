@@ -146,14 +146,12 @@ export default {
                 date: this.date,
                 time: this.time,
                 start: this.date + " " + this.time, 
-                end: this.finish,
                 service: this.dataName,
                 name: this.name,
                 email: this.email,
                 mobile: this.mobile,
                 color: this.colors[Math.floor(Math.random() * 6) + 0],
-                duration: this.dataDuration,
-                price: this.dataPrice
+                duration: this.dataDuration
 ,
             }).then(()=>{ 
                 this.snackbar = true 
@@ -206,73 +204,23 @@ export default {
                 this.book = data.book // initial 
                 this.arrayDay = data.arrayDay
                 this.period = data.period
-                
                 }
         },
-        finish(){
-            const date = this.date
-            const time = this.time
-            const dateTime = moment(this.date + " " + this.time).add(this.dataDuration, 'minutes').format('YYYY-MM-DD HH:mm')
-            // const finish = moment(date).add(this.dataDuration, 'minutes').format("HH:hh")
-            // const res = String(this.date + " " +finish)
-            return String(dateTime)
-
-            // return moment("2021-11-18"+this.date).add(this.dataDuration, 'minutes').format('HH:mm')
-        },
         min(){
-            // const firstBook = this.book?this.book[0]:''
-            // const firstDay = moment(firstBook.date).format('YYYY-MM-DD')
-            const firstDay = moment().format('YYYY-MM-DD')
-
+            const firstBook = this.book[0]
+            const firstDay = moment(firstBook.date).format('YYYY-MM-DD')
             return firstDay
         },
         max(){
-            const lastBook = this.book?this.book[this.book.length-1]:''
+            const lastBook = this.book[this.book.length-1]
             const lastDay = moment(lastBook.date).format('YYYY-MM-DD')
             return lastDay
         },
         booking_time(){
-            const date = this.date
-            var result = this.book.filter(e=> e.date == date)
+            const d = this.date
+            var result = this.book.filter(e=> e.date == d)
             return result  
         },
-    },
-
-    watch:{
-        time(){
-            const duration = this.$store.state.booking.bookingData.duration //45
-            const serviceTime = this.dataDuration  //120
-
-            const date = this.date  // "2021-01-01"
-            const time = this.time  // "09:00"
-
-            const rate = Math.floor(serviceTime/duration)   // 3
-
-            const i = this.book.findIndex(e=>e.date===date)
-            const j = this.book[i].time.findIndex(e=>e.hour === time)
-            const lastArray = this.book[i].time.length  - 1
-            console.log('lastArray', lastArray)
-            const current = this.book[i].time
-            if((j+rate)>lastArray){
-                alert('종료시간이라 부킹을 할수가 없습니다.')
-                return
-            }else{
-                for(var a=0;a<rate;a++){
-                    if(current[j+ a].booking === false || undefined){
-                        alert('중간에 예약시간이 겹쳐서 부킹을 할수가 없습니다.')
-
-                    }
-            }
-
-            }
-
-            
-
-    
-
-
-
-        }
     }
 }
 </script>

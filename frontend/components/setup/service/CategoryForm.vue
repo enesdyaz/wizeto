@@ -125,9 +125,9 @@ export default {
             
         }
     },
-    created(){
-        this.fetchData()
-    },
+    // created(){
+    //     this.fetchData()
+    // },
 
     computed:{
         service(){
@@ -161,10 +161,9 @@ export default {
         },
 
 
-        fetchData(){
-            this.$store.dispatch('service/fetchData', {})
-            
-        },
+        // fetchData(){
+        //     this.$store.dispatch('service/fetchData', {})
+        // },
 
         setFocus: function() {
         this.$refs.category.focus();

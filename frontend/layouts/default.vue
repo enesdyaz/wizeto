@@ -158,6 +158,12 @@ export default {
       return this.$store.state.user.me
     }
   },
+  created(){
+    this.$store.dispatch('service/fetchData')
+    this.$store.dispatch('booking/fetchData')
+    this.$store.dispatch('booking/fetchAppointment')
+
+  },
 
   methods:{
     click(item){

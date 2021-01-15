@@ -1,11 +1,25 @@
 
 export const state = () => ({
-    bookingData: [],
-    book: []
+    bookingData: '',  // available date and time
+    book: []       // customer can make an appintment
 })
 
+export const getters = {
+    getData(state){
+        return state.bookingData.book
+    },
+}
+
+
 export const mutations = {
-   
+    FETCH_DATA(state, payload){
+        console.log('booking-mutation', payload[0])
+        state.bookingData = payload[0]
+    },
+    FETCH_APPOINTMENT(state, payload){
+        state.book = payload
+    },
+
     // Parent Data from category form //
     ADD_BOOKING(state, payload){    
         state.bookingData = payload;
@@ -41,23 +55,15 @@ export const mutations = {
         const serviceTime = payload.duration
         const bookingTime = state.bookingData.duration
         const rate = Math.ceil(serviceTime/bookingTime)
-        console.log('rate는 몇일까?' , rate)
+        console.log('rate는 몇일까?' , state.book)
         //  추가하고
+        
         state.book.unshift(payload)
         console.log('state,bookingData', state.bookingData)
         // 빼고
         const index = state.bookingData.book.findIndex(e=>e.date === payload.date)
         console.log('찾았니 index', index)
-        // state.bookingData.book[index].time.filter(m => m.hour === payload.time).map(m => m.booking = false)
-        // state.bookingData.book[index].time.filter(m => m.hour === payload.time).map(
-        //     function(e) {
-        //         if(e.count===1){
-        //             e.booking = false
-        //         }else{
-        //             e.count --
-        //         }
-        //     }
-        // )
+
         const time = state.bookingData.book[index].time
         const timeIndex = state.bookingData.book[index].time.findIndex(e=>e.hour === payload.time)
 
@@ -81,38 +87,71 @@ export const mutations = {
     CHIP_BOOKING_TOGGLE(state, payload){
         for(let i=0; i<state.bookingData.book.length; i++){
             if(state.bookingData.book[i].date === payload.date){
-               state.bookingData.book[i].time.find(function(e){
+                state.bookingData.book[i].time.find(function(e){
                     if(e.hour === payload.hour){
                         e.booking = !e.booking
                     }
-               })
+                })
             
             }
             }
     },
 
     ARRAY_DAY_CHANGED(state, payload){
+        if(state.bookingData === undefined || null) return
         state.bookingData.arrayDay = payload
-    }
+    },
 
-   
-
+    SET_TIMEOUT_BOOKING(state, payload){
+        for(let i=0;i<payload.length;i++){
+            state.bookingData.book.push(payload[i])    
+        }
+        for(let i=0;i<7;i++){
+            state.bookingData.book.shift()    
+        }
+    },
 }
 
 export const actions= {
-    addBooking({commit}, payload){         // from category(Parent)
-        commit('ADD_BOOKING', payload)
+    async fetchData({commit}, payload){
+        const res = await this.$axios.get('/booking/', {widthCredentials: true})
+        commit('FETCH_DATA', res.data)
     },
-    updateBooking({commit}, payload){         // from category(Parent)
-        commit('UPDATE_BOOKING', payload)
+    fetchAppointment({commit}, payload){
+        this.$axios.get('booking/getAppointment', {withCredentials: true})
+        .then((res)=>{
+            commit('FETCH_APPOINTMENT', res.data)
+        })
+        .catch((err)=>{ console.log(err)})
+    },
+
+    addBooking({commit}, payload){         
+        this.$axios.post('/booking/addBooking', payload, {withCredentials: true})
+        .then((res)=>{
+            commit('ADD_BOOKING', res.data)
+        })
+        .catch((err)=>{ console.log(err)})
+        
+    },
+
+
+    updateBooking({state, commit}, payload){         // from category(Parent)
+        const statePayload = state.bookingData
+        console.log('statePayload', statePayload)
+        const res = this.$axios.put(`/booking/updateBooking/${statePayload._id}`, statePayload, {withCredentials:true})
+        .then((res)=>{})
+        
     },
     resetBooking({commit}){
+        this.$axios.delete(`/booking`)
         commit('RESET_BOOKING')
     },
     
     confirmBooking({commit}, payload){
-        console.log('actions')
-        commit('CONFIRM_BOOKING', payload)
+        this.$axios.post('/booking/addAppointment', payload, {withCredentials: true})
+        .then((res)=>{
+            commit('CONFIRM_BOOKING', res.data)
+        })
     },
 
     closeCols({commit}, hour){
@@ -120,12 +159,23 @@ export const actions= {
     },
 
     chipBookingToggle({commit}, payload){
+        console.log('chpbookingtoggle', payload)
         commit('CHIP_BOOKING_TOGGLE', payload)
     },
 
     arrayDayChanged({commit}, payload){
         commit('ARRAY_DAY_CHANGED', payload)
     },
+
+
+    //추가 자동 부킹
+    
+    setTimeoutBooking({commit}, payload){
+        console.log('setTimeoutBooking', payload)
+        commit('SET_TIMEOUT_BOOKING', payload)
+
+
+    }
 
 
 }

@@ -61,10 +61,6 @@
             </section>
         </header>
         
- 
-
-
-
         <div><nuxt /></div>
     </v-app>
 </template>
