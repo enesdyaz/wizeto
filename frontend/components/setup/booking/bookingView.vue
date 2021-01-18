@@ -13,7 +13,7 @@
 <!-- step 2 -->
             <div v-if='date'>
                 <div style='text-align: left'>2. Choose your Time</div>
-                <v-chip-group column v-for="(d, i) in booking_time" :key="i" v-model='time' active-class="deep-purple--text text--accent-4 font-weight-bold" >
+                <v-chip-group column v-for="(d, i) in booking_time" :key="i" v-model='time' @change='onChange' active-class="deep-purple--text text--accent-4 font-weight-bold" >
 
                     <div v-for="(a, i) in d.time" :key='i' >
                         <v-chip v-if='a.booking' color='blue-grey' outlined small label :value='a.hour'>
@@ -51,6 +51,7 @@
                 <div>
                 </div>
             </div>
+
 
 <!-- booking detail -->
             <v-dialog v-model="dialog" max-width="330" >
@@ -101,6 +102,8 @@
             </v-dialog>
 
 
+
+
             <div class="text-center">
 
             <v-snackbar color='primary'  v-model="snackbar" :timeout="timeout" >
@@ -135,13 +138,14 @@ export default {
             name: '',
             email: '',
             mobile: '',
-            colors: ['blue', 'indigo', 'deep-purple', 'cyan', 'green', 'orange', 'grey darken-1']
+            colors: ['blue', 'indigo', 'purple', 'red', 'green', 'orange', 'grey']
 
         }
     },
 
     methods: {
         confirmBook(){
+            console.log('time', this.time)
                 this.$store.dispatch('booking/confirmBooking', {
                 date: this.date,
                 time: this.time,
@@ -156,6 +160,7 @@ export default {
                 price: this.dataPrice
 ,
             }).then(()=>{ 
+                console.log('잘 도착함')
                 this.snackbar = true 
                 this.$emit('bookingEmit', false)
             
@@ -236,44 +241,47 @@ export default {
             var result = this.book.filter(e=> e.date == date)
             return result  
         },
-    },
-
-    watch:{
-        time(){
+        onChange(){
+            console.log('watch', this.time)
             const duration = this.$store.state.booking.bookingData.duration //45
             const serviceTime = this.dataDuration  //120
-
             const date = this.date  // "2021-01-01"
-            const time = this.time  // "09:00"
+            const time = this.time?this.time:''  // "09:00"
 
             const rate = Math.floor(serviceTime/duration)   // 3
 
+            console.log('thisbook', this.book)
             const i = this.book.findIndex(e=>e.date===date)
-            const j = this.book[i].time.findIndex(e=>e.hour === time)
+            const j = this.book[i].time.findIndex(e=>e.hour === time)===-1?'':this.book[i].time.findIndex(e=>e.hour === time) 
+
             const lastArray = this.book[i].time.length  - 1
             console.log('lastArray', lastArray)
+
+
             const current = this.book[i].time
+            console.log(current, i, j)
+            console.log('current', current[j+0].booking)
+
             if((j+rate)>lastArray){
                 alert('종료시간이라 부킹을 할수가 없습니다.')
                 return
             }else{
                 for(var a=0;a<rate;a++){
-                    if(current[j+ a].booking === false || undefined){
+                    if(current[j+ a].booking === false || current[j+ a].booking === undefined){
                         alert('중간에 예약시간이 겹쳐서 부킹을 할수가 없습니다.')
 
                     }
             }
 
             }
-
-            
-
-    
-
-
-
         }
-    }
+    },
+
+    // watch:{
+    //     time(){
+            
+    //     }
+    // }
 }
 </script>
 

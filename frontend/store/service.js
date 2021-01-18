@@ -4,24 +4,26 @@ export const state = () => ({
     imagePath: "",
 })
 
-export const getters = {
-    booking_date(state){
-        const data = state.service.service
-        console.log('booking/state -> data', data)
-        if(data === undefined || null) return
+// export const getters = {
+//     serviceList(state){
+//         const data = state.service
+//         console.log('serviceList', data)
+//         const data = state.service.service
+//         console.log('booking/state -> data', data)
+//         if(data === undefined || null) return
         
-        var array = []
-        for(var i=0;i<data.length;i++){
-            array.push(data[i].item)            
-        }
-        const reducer = array.reduce((acc, cur)=> acc.concat(cur))
-        const arr = new Array(reducer)
-        console.log(arr)
+//         var array = []
+//         for(var i=0;i<data.length;i++){
+//             array.push(data[i].item)            
+//         }
+//         const reducer = array.reduce((acc, cur)=> acc.concat(cur))
+//         const arr = new Array(reducer)
+//         console.log(arr)
         
-        return reducer
-    }
+//         return data
+//     }
     
-}
+// }
 
 export const mutations = {
     ADD_CATEGORY(state, payload){

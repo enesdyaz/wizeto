@@ -13,6 +13,13 @@ export default {
     components: {
         calendar
     },
+    created(){
+        console.log('inbox created 실행됨')
+
+        this.$store.dispatch('booking/fetchAppointment')
+        
+
+    }
     
 }
 </script>

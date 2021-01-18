@@ -22,7 +22,7 @@ router.get('/', async(req, res)=>{
 
 // POST BOOKING
 router.post('/addBooking', async (req, res)=>{
-    console.log('harry-req', req.body)
+    console.log('harry-req', req.body) 
     const booking = new Booking({
         period: req.body.peirod,
         duration: req.body.duration,
@@ -87,9 +87,9 @@ router.get('/getAppointment', async(req, res)=>{
         res.json(err)
     }
 })
-// POST APPOINTMENT
-router.post('/addAppointment', async (req, res)=>{
-    console.log('harry-req', req.body)
+
+
+router.post('/addAppointment/:id', async (req, res)=>{
     const appointment = new Appointment({
         date: req.body.date,
         time: req.body.time,
@@ -103,13 +103,59 @@ router.post('/addAppointment', async (req, res)=>{
         duration: req.body.duration,
         price: req.body.price
     })
-
     try{
         const newAppointment = await appointment.save()
-        res.json(newAppointment)
+
+        const newBooking = await Booking.findById(req.params.id, function (err, booking) {
+
+            const serviceTime = req.body.duration
+            const bookingTime = booking.duration
+            const rate = Math.ceil(serviceTime/bookingTime)
+
+            const index = booking.book.findIndex(e=>e.date === req.body.date)
+            const time = booking.book[index].time
+            const timeIndex = booking.book[index].time.findIndex(e=>e.hour === req.body.time)
+
+            for(var i=0; i< rate;i++){
+                if(time[timeIndex + i].count === 1){
+                    console.log(time['바뀔것', timeIndex + i].booking)
+                    time[timeIndex + i].booking=false
+                    console.log(time['바뀐것', timeIndex + i].booking)
+                    
+                }else{
+                    console.log(time['카운트', timeIndex + i].count)
+
+                    time[timeIndex + i].count--
+                    console.log(time['바뀐 카운트', timeIndex + i].count)
+                }
+            }
+            console.log('booking-total=changed', booking)
+
+            booking.save(function (err) {
+            if (!err) console.log('Success!');
+            res.json({bookingData: booking})
+            }); 
+    
+        })
+        
     }
     catch(err){
         res.json({message: err})
     }
 })
+
+
+router.delete('/deleteAppointment/:id', async (req, res)=>{
+    console.log('req-harry-delete')
+    try{
+        const appointment = await Appointment.deleteOne({_id: req.params.id})
+        res.json(appointment)
+    }
+    catch(err){
+        res.json({message: err})
+    }
+    
+})
+
+
 module.exports = router;
