@@ -91,61 +91,14 @@ router.get('/getAppointment', async(req, res)=>{
 
 
 router.put('/updateAppointment/:id', async(req, res)=>{
-    console.log('req.body', req.body)
-    // 1. 새로운 appointment 추가 생성
-    const appointment = new Appointment({
-        date: req.body.date,
-        time: req.body.time,
-        start: req.body.start, 
-        end: req.body.end,
-        service: req.body.service,
-        name: req.body.name,
-        email: req.body.email,
-        mobile: req.body.mobile,
-        color: req.body.color,
-        duration: req.body.duration,
-        price: req.body.price
-    })
-
-    // 2. 이전 appointment의 date, time 가져오기
+    console.log('updateApp-harry', req.body)
     const pre = await Appointment.findById(req.body.id)
-    console.log('pre', pre)
-
     const preDate = pre.date
     const preTime = pre.time
-    const preDuration = pre.duration
+    console.log(preDate, preTime)
 
-    // 3. 이전 bookingData 데이터 내용을 복구하기
     const newApp = await Booking.findById(req.params.id, function(err,booking){
-
-        const serviceTime = preDuration
-        const bookingTime = booking.duration
-        const rate = Math.ceil(serviceTime/bookingTime)
-
-        const index = booking.book.findIndex(e=>e.date === preDate)
-        const time = booking.book[index].time
-        const timeIndex = booking.book[index].time.findIndex(e=>e.hour === preTime)
-
-        for(var i=0; i< rate;i++){
-            if(time[timeIndex + i].count === 0){
-                time[timeIndex + i].booking=true
-                time[timeIndex + i].count++
-            }else{
-                time[timeIndex + i].count++
-            }
-        }
-        booking.save(function (err) {
-            if (!err) console.log('Success!');
-        }); 
-    })
-    // 4. 기존의 appointment는 삭제
-    const deleteAppointment = await Appointment.deleteOne({_id: req.body.id})
-
-    // 5. 새로운 appointment 추가
-    const newAppointment = await appointment.save()
-
-    // 6. 새로운 BookingData 만들기
-    const newBooking = await Booking.findById(req.params.id, function (err, booking) {
+        console.log(booking)
 
         const serviceTime = req.body.duration
         const bookingTime = booking.duration
@@ -155,25 +108,30 @@ router.put('/updateAppointment/:id', async(req, res)=>{
         const time = booking.book[index].time
         const timeIndex = booking.book[index].time.findIndex(e=>e.hour === req.body.time)
 
+        console.log('details', index, timeIndex)
+
         for(var i=0; i< rate;i++){
-            if(time[timeIndex + i].count === 1){
-                time[timeIndex + i].booking=false
-                time[timeIndex + i].count--
+            if(time[timeIndex + i].count === 0){
+                console.log(time['바뀔것', timeIndex + i].booking)
+                time[timeIndex + i].booking=true
+                time[timeIndex + i].count++
+                console.log(time['바뀐것', timeIndex + i].booking)
                 
             }else{
-                time[timeIndex + i].count--
+                console.log(time['카운트', timeIndex + i].count)
+
+                time[timeIndex + i].count++
+                console.log(time['바뀐 카운트', timeIndex + i].count)
             }
         }
-
+        console.log('booking-total=changed', booking)
         booking.save(function (err) {
-        if (!err) console.log('Success!');
-        res.json({
-            book: newAppointment,
-            bookingData: booking
-        })
-        }); 
+            if (!err) console.log('Success!');
+            res.json({bookingData: booking})
+            }); 
+    })
 
-    })   
+
 })
 
 router.post('/addAppointment/:id', async (req, res)=>{
@@ -206,23 +164,26 @@ router.post('/addAppointment/:id', async (req, res)=>{
 
             for(var i=0; i< rate;i++){
                 if(time[timeIndex + i].count === 1){
+                    console.log(time['바뀔것', timeIndex + i].booking)
                     time[timeIndex + i].booking=false
                     time[timeIndex + i].count--
+                    console.log(time['바뀐것', timeIndex + i].booking)
                     
                 }else{
+                    console.log(time['카운트', timeIndex + i].count)
+
                     time[timeIndex + i].count--
+                    console.log(time['바뀐 카운트', timeIndex + i].count)
                 }
             }
+            console.log('booking-total=changed', booking)
 
-            var newbook = booking.save(function (err) {
+            booking.save(function (err) {
             if (!err) console.log('Success!');
-            res.json({
-                book: newAppointment,
-                bookingData: booking
-            })
+            res.json({bookingData: booking})
             }); 
     
-        })        
+        })
         
     }
     catch(err){
