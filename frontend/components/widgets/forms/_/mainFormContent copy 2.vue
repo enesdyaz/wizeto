@@ -1,7 +1,7 @@
 <template>
 <div>
     <div style='padding: 5%;'>
-        <form @submit.prevent='onSubmit'>
+        <form @submit.prevent='onSubmit'>{{imagePath}}
             <table  style='width: 100%;' >
                 <tr>
                     <th class='caption blue-grey--text font-weight-bold'><v-icon class='vIcon'>mdi-chevron-right</v-icon>LOGO NAME</th> 
@@ -30,7 +30,7 @@
                     </td>
 
                     <td v-else>
-                        <img style='width: 150px;' :src="`http://localhost:3085/cards/${backgroundImage}`" />
+                        <img style='width: 150px;' :src="backgroundImage" />
                         <button @click="removeImage" style='padding-left: 10px'>Remove image</button>
                     </td>   
                 </tr><br>
@@ -182,7 +182,7 @@
 
 <!-- mainView -->    
     <div :style="{textAlign: textAlignUi, color: colorNumber(fontArray)}">
-        <div class='mainDiv-1' :style="{backgroundColor: colorNumber(bgArray), lineHeight: sliderLineHeightValue, color: colorNumber(fontArray), backgroundImage: 'url(http://localhost:3085/cards/' + backgroundImage + ')', } " >
+        <div class='mainDiv-1' :style="{backgroundColor: colorNumber(bgArray), lineHeight: sliderLineHeightValue, color: colorNumber(fontArray), backgroundImage: 'url(' + backgroundImage + ')', } " >
             <div :style="{background: sliderOpacityValue}">
                 <div :style="{ padding: sliderPaddingValue }">
                     <div class='logoDiv' :style="{fontSize: sliderFontLogo}">
@@ -228,8 +228,8 @@
                 </v-card-actions>
             </v-card>
             </v-dialog>
-        <span v-if='!editToggle'><v-btn color='blue-grey' small dark @click='onSubmit'>SAVE</v-btn></span>
-        <span v-else><v-btn color='blue-grey' small dark @click='onUpdate'>UPDATE</v-btn></span>
+
+        <v-btn color='blue-grey' small dark @click='onSubmit'>SAVE it</v-btn>
 
         <v-snackbar color='blue-grey' top small v-model="snackbar" :timeout="timeout" >
             <div style='text-align: center;'>
@@ -276,7 +276,6 @@ export default {
             dialog: false,
             snackbar: false,
             timeout: 3000,
-            editToggle: false,
             // template popup
             menuFont: false,  
             menuBackground: false,
@@ -285,34 +284,9 @@ export default {
     },
 
     methods:{
-        onUpdate(){
-            this.$store.dispatch('cards/updateCards', {
-                page: 4,
-                logo: this.logo,
-                title: this.title,
-                subtitle: this.subtitle,
-                buttonName: this.buttonName,
-                description: this.description,
-                addOn: true,
-                textAlign: this.textAlign,
-                bgArray: this.bgArray,
-                fontArray: this.fontArray,
-                buttonArray: this.buttonArray,
-                sliderFont: this.sliderFont,
-                sliderPadding: this.sliderPadding,
-                sliderOpacity: this.sliderOpacity,
-                sliderLineHeight: this.sliderLineHeight,
-                backgroundImage: this.imagePath
-
-            }).then(()=>{
-                this.snackbar = true
-                this.editToggle = true
-                }).catch(()=>{console.log('form input error')})
-        },
-
         onSubmit(){
             this.$store.dispatch('cards/addCards', {
-                page: 4,
+                page: 1,
                 logo: this.logo,
                 title: this.title,
                 subtitle: this.subtitle,
@@ -329,20 +303,19 @@ export default {
                 sliderLineHeight: this.sliderLineHeight,
                 backgroundImage: this.imagePath
 
-            }).then(()=>{
-                this.snackbar = true
-                this.editToggle = true
-                }).catch(()=>{console.log('form input error')})
+            }).then(()=>{this.snackbar = true}).catch(()=>{console.log('form input error')})
         },
 
         onRemove(){
-                    this.logo=""
+                this.$store.dispatch('widget/removeMain', false).then(()=>{
+                    this.logo=''
                     this.title= ''
                     this.subtitle= ''
                     this.buttonName= ''
                     this.description= ''
                     this.addOn= false
                     this.backgroundImage= ''
+
                     this.textAlign= ''
                     this.bgArray= ''
                     this.fontArray= ''
@@ -351,24 +324,39 @@ export default {
                     this.sliderPadding= ''
                     this.sliderOpacity= ''
                     this.sliderLineHeight= ''
-                    this.dialog=false
-                    this.editToggle = false
-                this.$store.dispatch('cards/removeCards', 4).then(()=>{
-                    
                 }).catch(()=>{console.log('onRemove error')})
 
         },
 
         //image
         onFileChange(e) {
+            console.log(e) 
             var imageFormData = new FormData();
             [].forEach.call(e.target.files, (f)=>{
                 imageFormData.append('image', f)    // { image: [file1, file2]}
             }) 
+
             this.$store.dispatch('cards/uploadImages', imageFormData)
+            console.log('files', imageFormData)
+            
+            var files = e.target.files || e.dataTransfer.files;
+            if (!files.length)
+                return;
+            this.createImage(files[0]);
         },
 
-        
+        createImage(file) {
+            var image = new Image();
+            var reader = new FileReader();
+
+            reader.onload = (e) => {
+                this.backgroundImage = e.target.result;
+            };
+            reader.readAsDataURL(file);
+
+            // DB save
+            
+        },
         removeImage: function (e) {
             this.backgroundImage = '';
         }, 
@@ -378,48 +366,37 @@ export default {
             const res = tags[array]
             return res
         },
-
-        fetchCard(){
-            const data = this.$store.state.cards.cardData
-            const index = data.findIndex(e=>e.page === 4)
-            if(index === -1){ 
-                return 
-            }
-            else{
-                    this.editToggle = true
-
-                    this.logo= data[index].logo
-                    this.title =  data[index].title
-                    this.subtitle =  data[index].subtitle
-                    this.buttonName= data[index].buttonName
-                    this.description = data[index].description
-                    this.addOn = data[index].addOn
-                    this.backgroundImage = data[index].backgroundImage
-
-                    this.textAlign= data[index].textAlign
-                    this.bgArray= data[index].bgArray
-                    this.fontArray= data[index].fontArray
-                    this.buttonArray= data[index].buttonArray
-                    this.sliderFont= data[index].sliderFont
-                    this.sliderPadding= data[index].sliderPadding
-                    this.sliderOpacity= data[index].sliderOpacity
-                    this.sliderLineHeight= data[index].sliderLineHeight
-            }
-        },
     },
-
 
     created(){
-        this.fetchCard()
-    },
-    watch:{
-        imagePath(){
-            this.backgroundImage = this.imagePath
-        }
+    const data = this.$store.state.cards.cardData
+        if(data.length !== 0){
+            const index = data.findIndex(e=>e.page === 1)
+            
+            this.logo= data[index].logo
+            this.title =  data[index].title
+            this.subtitle =  data[index].subtitle
+            this.buttonName= data[index].buttonName
+            this.description = data[index].description
+            this.addOn = data[index].addOn
+            this.backgroundImage = data[index].backgroundImage
+
+            this.textAlign= data[index].textAlign
+            this.bgArray= data[index].bgArray
+            this.fontArray= data[index].fontArray
+            this.buttonArray= data[index].buttonArray
+            this.sliderFont= data[index].sliderFont
+            this.sliderPadding= data[index].sliderPadding
+            this.sliderOpacity= data[index].sliderOpacity
+            this.sliderLineHeight= data[index].sliderLineHeight
+
+            }else{
+                console.log('no data length')
+            }
     },
     computed:{
         imagePath(){
-                return this.$store.state.cards.imagePaths[0]
+            return this.$store.state.cards.imagePaths[0]
         },
         textAlignUi(){
         const items = ['left', 'center', 'right']

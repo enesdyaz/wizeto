@@ -1,7 +1,7 @@
 <template> 
 <v-row class="fill-height">
-    <v-col>{{selectedEvent.time}}
-    <v-sheet height="64">
+    <v-col>
+    <v-sheet height="64">{{booking_time}}
         <v-toolbar flat color="white">
         <v-btn outlined class="mr-4" color="grey darken-2" @click="setToday">
             Today
@@ -59,8 +59,8 @@
         @click:time='addEvent'
         ></v-calendar>
 
-        <v-menu v-model="selectedOpen"  :activator="selectedElement" offset-y :close-on-content-click="false">
-            <v-card :style="{border: `3px solid ${selectedEvent.color}`}"  >
+        <v-menu min-width="355px" v-model="selectedOpen"  :activator="selectedElement" offset-y :close-on-content-click="false">
+            <v-card >
             
             <div style='padding: 2%;'>
                     <div :class=" `${selectedEvent.color}`">
@@ -73,77 +73,99 @@
                 <v-card-text>
                     <table style='width: 100%;'>
                         <tr>
-                            <td width="30%" class='caption'>NAME</td>
+                            <td width="30%" class='caption font-weight-bold'>NAME</td>
                             <td>
-                                <input style='width: 100%;padding-left: 10px;' ref='inputName' :value="selectedEvent.name" :readonly='toggle'  type="text">
+                                <div  class='selected' v-if="selectedEdit" style='font-weight: bold'>
+                                    {{selectedEvent.name}}
+                                </div>
+                                <div v-else>
+                                    <input style='width: 100%;padding-left: 10px;' ref="input" v-model='name' type="text" required>
+                                </div>
                             </td>
                         </tr>
                         <tr>
                             <td width="30%" class='caption'>SERVICE</td>
                             <td> 
-                                    <div v-if='serviceList?serviceList.length:""'>
-                                        <select style='width: 100%;padding-left: 10px;' ref='inputService'  :value='selectedEvent.service'  >
-                                            <option v-for="(service, i) in serviceList" :key='i'  :disabled="toggle"  >
-                                                <div color='blue-grey' outlined small label >
-                                                    {{service}}
-                                                </div>
-                                        
-                                            </option>
-                                        </select> 
+                                    <div  class='selected' v-if="selectedEdit">
+                                        {{selectedEvent.service}}
                                     </div>
                                     <div v-else>
-                                        No service
-                                    </div>
+                                            <select style='width: 100%;padding-left: 10px;' required v-model="service" >
+                                                <option value="" disabled >-- select --</option>
+                                                <option v-for="(service, i) in serviceList" :key='i'>
+                                                        {{service}}                                            
+                                                </option>
+                                            </select> 
+                                    </div> 
                                 </td>
                         </tr>
                         <tr>
                             <td width="30%" class='caption'>PRICE</td>
-
-                            <td style="padding-left: 5px;">$ {{selectedEvent.price}} <small>( {{ selectedEvent.duration}}min )</small></td>
-                            <!-- <td style="padding-left: 5px;">{{ price?" $ "+price:"N/A"}} <small>( {{ duration? duration: 'N/A'}}min )</small></td> -->
+                            <td style="padding-left: 5px;">
+                                <div  class='selected' v-if="selectedEdit">
+                                        ${{selectedEvent.price}} <small>( {{selectedEvent.duration}} min)</small>
+                                </div>
+                                <div v-else>
+                                        {{ price?" $ "+price:"N/A"}} <small>( {{ duration? duration: 'N/A'}}min )</small>
+                                </div>
+                            </td>
                         </tr>
                         <tr>
                             <td width="30%" class='caption'>DATE</td>
                             <td>
-                                <div v-if="state_bookingData">
-                                <select style='width: 100%;padding-left: 10px;' ref="inputDate"  :value="selectedEvent.date" >
-                                        <option v-for="(d, i) in state_bookingData.book" :key="i"  :disabled="toggle" >
-                                            {{d.date}}
-                                        </option>
-                                    </select> 
+                                <div  class='selected' v-if="selectedEdit">{{selectedEvent.date}}</div>
+                                <div v-else>
+                                    <div v-if="state_bookingData">
+                                        <select style='width: 100%;padding-left: 10px;' ref="inputDate" v-model="date" required>
+                                                <option v-for="(d, i) in state_bookingData.book" :key="i" >
+                                                    {{d.date}}
+                                                </option>
+                                        </select> 
                                     </div>
                                     <div v-else>
                                         This date is Not available
                                     </div>
+                                </div>
+                            
                             </td>
                         </tr>
 
                         <tr>
                             <td width="30%" class='caption'>TIME</td>
                                 <td> 
-                                    <div v-if='selectedEvent.time'>
-                                        {{selectedEvent.time}}
-                                    </div>
+                                    <div class='selected' v-if="selectedEdit">{{selectedEvent.time}}</div>
                                     <div v-else>
-                                        <select  v-for="(d, i) in booking_time" :key="i" ref="inputTime"  style='width: 100%;padding-left: 10px;' :value='selectedEvent.time'>
-                                            <option v-for="(a, i) in d.time" :key='i'  :disabled="toggle"  >
+                                        <div v-if='booking_time?booking_time.length:""'>
+                                        <select  v-for="(d, i) in booking_time" :key="i" v-model='time' required style='width: 100%;padding-left: 10px;'>
+                                            <option v-for="(a, i) in d.time" :key='i' :value='a.hour' :disabled="!a.booking">
                                                     {{a.hour}}
                                             </option>
                                         </select> 
+                                        </div>
+                                        <div v-else>
+                                            This time is Not available
+                                        </div>
                                     </div>
-                                    
                                 </td>
                         </tr>
                         <tr>
                             <td width="30%" class='caption'>MOBILE</td>
                             <td>
-                                <input style='width: 100%;padding-left: 10px;' ref="inputMobile" :value='selectedEvent.mobile' :readonly="toggle" type="text">
+                                <div  class='selected' v-if="selectedEdit">{{selectedEvent.mobile}}</div>
+                                <div v-else>
+                                    <input style='width: 100%;padding-left: 10px;' v-model='mobile' type="text" required>
+                                </div>
+                                
                             </td>
                         </tr>
                         <tr>
                             <td width="30%" class='caption'>EMAIL</td>
                             <td>
-                                <input style='width: 100%;padding-left: 10px;'  ref="inputEmail" :value="selectedEvent.email" :readonly="toggle" type="text">
+                                <div  class='selected' v-if="selectedEdit">{{selectedEvent.email}}</div>
+                                <div v-else>
+                                    <input style='width: 100%;padding-left: 10px;'  v-model='email' type="text" required>
+                                </div>
+                                
                             </td>
                         </tr>
                     </table>
@@ -154,62 +176,12 @@
 
             <v-spacer></v-spacer>
             <div style='display: block; text-align: center;'>
-                <v-btn color="primary" text @click="addBook" > BOOKING </v-btn>
-                <v-btn color="primary" text @click="dialog = false" > CLOSE </v-btn>
+                <span v-if="selectedEdit"><v-btn color="primary"  text @click="onEdit" > EDIT </v-btn></span>
+                <span v-else><v-btn color="primary" text @click='onUpdate' > UPDATE </v-btn></span>
+                <v-btn color="primary" text @click="onClose" > CLOSE </v-btn>
             </div>
-            
         </v-card>
-            <!-- <v-card color="grey lighten-4" min-width="350px" max-width="450px" flat dense >
-                <v-system-bar :color="selectedEvent.color"  height="20" ></v-system-bar>
-                <div style='padding: 5%;'>
-                    <div style='text-align: center;'>
-                        <v-btn class=' subtitle-2' text color='blue-grey' >
-                            <v-icon class='body-1 pr-2'>mdi-book-outline</v-icon> Booking  Details
-                        </v-btn>
-                    </div>
-                    <br>
-                    <div>
-                            <v-simple-table dense>
-                                <tbody>
-                                    <tr>
-                                        <td width="30%" class='caption'>NAME</td>
-                                        <td>{{ selectedEvent.name}}</td>
-                                    </tr>
-                                    <tr>
-                                        <td width="30%" class='caption'>SERVICE</td>
-                                        <td>{{ selectedEvent.service}}</td>
-                                    </tr>
-                                    <tr>
-                                        <td width="30%" class='caption'>PRICE</td>
-                                        <td>{{ selectedEvent.price?" $ "+selectedEvent.price:"N/A"}}</td>
-                                    </tr>
 
-                                    <tr>
-                                        <td width="30%" class='caption'>START</td>
-                                        <td>{{ selectedEvent.start}}</td>
-                                    </tr>
-                                    <tr>
-                                        <td width="30%" class='caption'>END</td>
-                                        <td>{{ selectedEvent.end}}</td>
-                                    </tr>
-                                    <tr>
-                                        <td width="30%" class='caption'>CONTACT</td>
-                                        <td><v-icon class='caption'>mdi-cellphone</v-icon> {{ selectedEvent.mobile?selectedEvent.mobile:"N/A"}}
-                                            <v-divider></v-divider>
-                                            <v-icon class='caption'>mdi-email-outline</v-icon> {{ selectedEvent.email?selectedEvent.email:"N/A"}}
-
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </v-simple-table>
-                        </div>  
-                        <v-card-actions>
-                        <v-btn text color="secondary" @click="selectedOpen = false" >edit </v-btn>
-                        <v-btn text color="secondary" @click="onDelete(selectedEvent._id)" >delete </v-btn>
-                        </v-card-actions>
-                </div>
-            
-            </v-card> -->
         </v-menu>
     </v-sheet>
     </v-col>
@@ -221,7 +193,8 @@
         </template>
 
         <v-card style='border: 5px solid #607d8a; ' >
-            
+            <form @submit.prevent ='addBook'>
+
             <div style='padding: 2%;'>
                     <div style='text-align: center;background: #607d8a'>
                     <v-btn class=' subtitle-2' dark text  >
@@ -235,15 +208,16 @@
                         <tr>
                             <td width="30%" class='caption'>NAME</td>
                             <td>
-                                <input style='width: 100%;padding-left: 10px;'  v-model='name' type="text">
+                                <input style='width: 100%;padding-left: 10px;'  v-model='name' type="text" required>
                             </td>
                         </tr>
                         <tr>
                             <td width="30%" class='caption'>SERVICE</td>
                             <td> 
                                     <div v-if='serviceList?serviceList.length:""'>
-                                        <select style='width: 100%;padding-left: 10px;' v-model='service'>
-                                            <option v-for="(service, i) in serviceList" :key='i' :value='service' >
+                                        <select style='width: 100%;padding-left: 10px;' required v-model='service'>
+                                            <option value="" disabled >-- select --</option>
+                                            <option v-for="(service, i) in serviceList" :key='i' :value='service' required >
                                                 <div color='blue-grey' outlined small label >
                                                     {{service}}
                                                 </div>
@@ -264,7 +238,7 @@
                             <td width="30%" class='caption'>DATE</td>
                             <td>
                                 <div v-if="state_bookingData">
-                                <select style='width: 100%;padding-left: 10px;'  v-model='date' >
+                                <select style='width: 100%;padding-left: 10px;'  v-model='date' required>
                                         <option v-for="(d, i) in state_bookingData.book" :key="i" :value='d.date' >
                                             {{d.date}}
                                         </option>
@@ -280,14 +254,11 @@
                             <td width="30%" class='caption'>TIME</td>
                                 <td> 
                                     <div v-if='booking_time?booking_time.length:""'>
-                                        <select  v-for="(d, i) in booking_time" :key="i" v-model='time' style='width: 100%;padding-left: 10px;'>
-                                            <option v-for="(a, i) in d.time" :key='i' :value='a.hour' >
-                                                <div v-if='a.booking' color='blue-grey' outlined small label >
+                                        <select  v-for="(d, i) in booking_time.time" :key="i" v-model='time' style='width: 100%;padding-left: 10px;' required>
+                                            <option value="" selected disabled> -- select -- </option>
+                                            <option v-for="(a, i) in d.time" :key='i' :disabled="!a.booking" :value='a.hour' >
                                                     {{a.hour}}
-                                                </div>
-                                                <div v-else >
-                                                    not available
-                                                </div>
+                                        
                                             </option>
                                         </select> 
                                     </div>
@@ -299,13 +270,13 @@
                         <tr>
                             <td width="30%" class='caption'>MOBILE</td>
                             <td>
-                                <input style='width: 100%;padding-left: 10px;' v-model='mobile' type="text">
+                                <input style='width: 100%;padding-left: 10px;' v-model='mobile' type="text" required>
                             </td>
                         </tr>
                         <tr>
                             <td width="30%" class='caption'>EMAIL</td>
                             <td>
-                                <input style='width: 100%;padding-left: 10px;'  v-model='email' type="text">
+                                <input style='width: 100%;padding-left: 10px;'  v-model='email' type="text" required>
                             </td>
                         </tr>
                     </table>
@@ -316,10 +287,10 @@
 
             <v-spacer></v-spacer>
             <div style='display: block; text-align: center;'>
-                <v-btn color="primary" text @click="addBook" > BOOKING </v-btn>
+                <v-btn color="primary" text type='submit' > BOOKING </v-btn>
                 <v-btn color="primary" text @click="dialog = false" > CLOSE </v-btn>
             </div>
-            
+        </form>
         </v-card>
 </v-dialog>
 </v-row>
@@ -345,10 +316,12 @@ export default {
         //dialog
         dialog: false,
         toggle: true,
+        selectedEdit: true,
 
         // add booking
         bookingData: '',
 
+        id: '',
         date: '',
         time: '',
         service: '',
@@ -357,14 +330,43 @@ export default {
         name: '',
         email: '',
         mobile: '',
-        colors: ['blue', 'indigo', 'purple', 'red', 'green', 'orange', 'grey']
+        colors: ['blue', 'indigo', 'deep-purple', 'cyan', 'green', 'orange', 'grey darken-1']
     }),
 
     mounted () {
     this.$refs.calendar.checkChange()
+    this.$refs.calendar.scrollToTime('06:00')
     },
 
     methods: {
+        onEdit(){
+            this.selectedEdit = false
+        },
+        onUpdate(){
+            this.$store.dispatch('booking/editAppointment', {
+                id: this.id,
+                date: this.date,
+                time: this.time,
+                start: this.date + " " + this.time, 
+                end: this.finish,
+                service: this.service,
+                name: this.name,
+                email: this.email,
+                mobile: this.mobile,
+                color: this.colors[Math.floor(Math.random() * 6) + 0],
+                duration: this.duration,
+                price: this.price,
+                
+            }).then(()=>{
+                this.selectedOpen = false
+                this.selectedEdit = true
+                this.$store.dispatch('booking/fetchData')
+            })
+        },
+        onClose(){
+            this.selectedOpen = false
+            this.selectedEdit = true
+        },
         addBook(){
             this.$store.dispatch('booking/confirmBooking', {
                 date: this.date,
@@ -380,14 +382,6 @@ export default {
                 price: this.price
             }).then(()=>{
                 this.dialog = false
-                this.date = ''
-                this.time =''
-                this.service = ''
-                this.name = ''
-                this.price = ''
-                this.date = ''
-                this.mobile = ''
-                this.email = ''
             })
         },
         onDelete(id){
@@ -412,11 +406,18 @@ export default {
         },
         showEvent ({ nativeEvent, event }) {
             const open = () => {
+            this.date = event.date
+            this.service = event.service
+            this.name = event.name
+            this.time = event.time
+            this.mobile = event.mobile
+            this.email = event.email
+            this.id = event._id
+
             this.selectedEvent = event
             this.selectedElement = nativeEvent.target
             setTimeout(() => this.selectedOpen = true, 10)
             }
-
             if (this.selectedOpen) {
             this.selectedOpen = false
             setTimeout(open, 10)
@@ -427,6 +428,14 @@ export default {
             nativeEvent.stopPropagation()
         },
         addEvent(tms){
+                this.date = ''
+                this.time =''
+                this.service = ''
+                this.name = ''
+                this.price = ''
+                this.date = ''
+                this.mobile = ''
+                this.email = ''
             this.date = tms.date
             this.dialog = true
 
@@ -465,16 +474,51 @@ export default {
         },
 
         booking_time(){
-                const d = this.date
+       
+            var dataResult = []
+            if(!this.date) return
+                const date = this.date
+                console.log('date', date)
                 const data = this.state_bookingData
-                console.log('booking_time', data)
+                if(!data) result
+                console.log('booking_time AAA', data)
                 
-                if(data.length<1){return}
-                else{
-                    var result = data.book.filter(e=> e.date == d)
-                    console.log('result', result)
+                const result = data.book.find(e=> e.date == date)
+                dataResult.push(result)
+                console.log('dataresult', dataResult)
+            
+            //서비스 시간
+            const serviceTime = this.duration
+            console.log('duratoin', serviceTime)
+            // 부킹 예약 단위 시간
+            const duration = this.state_bookingData.duration 
+            console.log('bookingduration', duration)
+            // 몇개 array
+            const rate = Math.floor(serviceTime/duration)   // 3
+            console.log('rate', rate)
+
+            // 선택한 시간이 몇번째 array 인가?
+            const lastArray = dataResult[0].time.length  - 1
+            console.log('lastArray', lastArray)
+
+            console.log('dataResult[0]', dataResult[0])
+            // 마지막 값에서 rate 빼기   2 >7
+            for(var i=0;i<rate;i++){
+                    dataResult[0].time[lastArray - i].booking = false
+            }
+            console.log('result-change', dataResult[0])
+
+
+            for(var k=0;k<lastArray;k++){
+                if(dataResult[0].time[k].booking === false && !dataResult[0].time[0] && (k+1)-rate>0 ){
+                    for(var l = 0; l < rate ; l++){
+                        dataResult[0].time[k - (l+1)].booking = false
+                    }
                 }
-                return result
+            }
+
+            console.log('dataResult[0]', dataResult[0])
+            return dataResult[0]
         },
     },
     watch:{
@@ -498,3 +542,10 @@ export default {
  
 }
 </script>
+
+<style lang="scss" scoped>
+.selected{
+    padding: 5px
+}
+
+</style>

@@ -109,6 +109,10 @@ router.put('/updateAppointment/:id', async(req, res)=>{
 
     // 2. 이전 appointment의 date, time 가져오기
     const pre = await Appointment.findById(req.body.id)
+    if(!pre){
+        console.log('there is no pre information')
+        return res.status(403).json({message: "please re-load "})
+    }
     console.log('pre', pre)
 
     const preDate = pre.date

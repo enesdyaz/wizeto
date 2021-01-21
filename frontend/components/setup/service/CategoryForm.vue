@@ -279,6 +279,8 @@ input[type=number]:hover {
     border: 2px solid #455a64;
     background: white; border-radius: 5px;
 }
+
+
 select {
     padding: 2px;
     margin: 3px 0;

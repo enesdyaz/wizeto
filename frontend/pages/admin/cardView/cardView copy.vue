@@ -1,5 +1,6 @@
 <template>
 <div  v-if='data.addOn'>
+<!-- ui --->   
     <div :style="{textAlign: textAlignUi, color: colorNumber(data.fontArray)}">
         <div class='mainDiv-1' :style="{backgroundColor: colorNumber(data.bgArray), lineHeight: sliderLineHeightValue, color: colorNumber(data.fontArray), backgroundImage: 'url(' + data.backgroundImage + ')', } " >
             <div :style="{background: sliderOpacityValue}">
@@ -24,7 +25,6 @@
         </div>
     </div>
 </div>
-
 </template>
 
 <script>
@@ -36,7 +36,6 @@ export default {
     },
     methods:{
         colorNumber(array){
-        if(!this.data) return
         const tags = this.data.tags
         const res = tags[array]
         return res
@@ -45,8 +44,18 @@ export default {
 
     computed:{
         data(){
-            console.log('getters 불러와주세요')
-            return this.$store.getters['cards/card1']
+            console.log('card')
+            const cardData = this.$store.state.cards.cardData
+            console.log('carddata', cardData)
+            if(!cardData) return ""
+
+            const index = cardData.findIndex(e=>e.page === 1)
+            console.log('index', index)
+            if(index === -1 ) return ""
+
+
+            return cardData[index]
+            
         },
 
         textAlignUi(){

@@ -43,6 +43,7 @@ export default {
       isActive: true
     }
   },
+
   methods: {
     admin(){
       this.isActive = true;

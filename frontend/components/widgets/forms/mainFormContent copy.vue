@@ -254,23 +254,23 @@ export default {
     data(){
         return{
             // store 
-            logo: '',
-            title: '',
-            subtitle: '',
-            buttonName: '',
-            description: '',
+            logo: 'WIZETO - EXAMPLE',
+            title: '"make it better for your service"',
+            subtitle: '"All you need to do is to put your content here"',
+            buttonName: 'Booking',
+            description: '"If you want your customer to make a booking for your service, Just use this web application with super easy platform"',
             addOn: false,
             backgroundImage: '',
 
-            textAlign: 'left',
+            textAlign: 1,
             tags: [ 'whitesmoke', '#000000', '#455a64', '#e64a19', '#5d4037', '#616161', '#1b5e20', '#827717', '#01579b', '#004d40', '#1a237e', '#311b92', '#b71c1c', '#7b1fa2', '#c2185b'],        
-            bgArray: '',
-            fontArray: '',
-            buttonArray: '', //button color
-            sliderFont: '22',
-            sliderPadding: '0',
-            sliderOpacity: '',
-            sliderLineHeight: '',
+            bgArray: 2,
+            fontArray: 0,
+            buttonArray: 5, //button color
+            sliderFont: 22,
+            sliderPadding: 6,
+            sliderOpacity: 0.1,
+            sliderLineHeight: 40,
 
             // dialog
             dialog: false,
@@ -287,13 +287,14 @@ export default {
     methods:{
         onUpdate(){
             this.$store.dispatch('cards/updateCards', {
-                page: 4,
+                page: 1,
                 logo: this.logo,
                 title: this.title,
                 subtitle: this.subtitle,
                 buttonName: this.buttonName,
                 description: this.description,
                 addOn: true,
+                tags: this.tags,
                 textAlign: this.textAlign,
                 bgArray: this.bgArray,
                 fontArray: this.fontArray,
@@ -312,7 +313,7 @@ export default {
 
         onSubmit(){
             this.$store.dispatch('cards/addCards', {
-                page: 4,
+                page: 1,
                 logo: this.logo,
                 title: this.title,
                 subtitle: this.subtitle,
@@ -336,7 +337,7 @@ export default {
         },
 
         onRemove(){
-                    this.logo=""
+                    this.logo=''
                     this.title= ''
                     this.subtitle= ''
                     this.buttonName= ''
@@ -353,7 +354,7 @@ export default {
                     this.sliderLineHeight= ''
                     this.dialog=false
                     this.editToggle = false
-                this.$store.dispatch('cards/removeCards', 4).then(()=>{
+                this.$store.dispatch('cards/removeCards', 1).then(()=>{
                     
                 }).catch(()=>{console.log('onRemove error')})
 
@@ -361,6 +362,7 @@ export default {
 
         //image
         onFileChange(e) {
+            console.log(e) 
             var imageFormData = new FormData();
             [].forEach.call(e.target.files, (f)=>{
                 imageFormData.append('image', f)    // { image: [file1, file2]}
@@ -370,6 +372,7 @@ export default {
 
         
         removeImage: function (e) {
+            console.log('removeImage')
             this.backgroundImage = '';
         }, 
         // image_end
@@ -378,15 +381,16 @@ export default {
             const res = tags[array]
             return res
         },
-
         fetchCard(){
+
             const data = this.$store.state.cards.cardData
-            const index = data.findIndex(e=>e.page === 4)
+            const index = data.findIndex(e=>e.page === 1)
             if(index === -1){ 
                 return 
-            }
-            else{
+            }else{
                     this.editToggle = true
+
+                    const index = data.findIndex(e=>e.page === 1)
 
                     this.logo= data[index].logo
                     this.title =  data[index].title
@@ -404,6 +408,7 @@ export default {
                     this.sliderPadding= data[index].sliderPadding
                     this.sliderOpacity= data[index].sliderOpacity
                     this.sliderLineHeight= data[index].sliderLineHeight
+
             }
         },
     },

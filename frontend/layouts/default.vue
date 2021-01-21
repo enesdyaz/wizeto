@@ -162,7 +162,7 @@ export default {
     console.log('default.vue 실행됨')
     this.$store.dispatch('service/fetchData')
     this.$store.dispatch('booking/fetchData')
-
+    this.$store.dispatch('cards/fetchData')
   },
 
   methods:{

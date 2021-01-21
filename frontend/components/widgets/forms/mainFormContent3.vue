@@ -2,34 +2,35 @@
 <div>
     <div style='padding: 5%;'>
         <form @submit.prevent='onSubmit'>
-            <table  style='width: 100%;'>
+            <table  style='width: 100%;' >
                 <tr>
-                    <th><v-icon class='vIcon'>mdi-chevron-down</v-icon>Logo Name</th> 
+                    <th class='caption blue-grey--text font-weight-bold'><v-icon class='vIcon'>mdi-chevron-right</v-icon>LOGO NAME</th> 
                     <td><input  v-model='logo'  type="text" ></td>
                 </tr>
                 <tr>
-                    <th><v-icon class='vIcon'>mdi-chevron-down</v-icon>Title</th> 
+                    <th class='caption blue-grey--text font-weight-bold'><v-icon class='vIcon'>mdi-chevron-right</v-icon>TITLE</th> 
                     <td ><input  v-model='title'  type="text" /></td>
                 </tr>
                 <tr>
-                    <th><v-icon class='vIcon'>mdi-chevron-down</v-icon>Subtitle</th> 
+                    <th class='caption blue-grey--text font-weight-bold'><v-icon class='vIcon'>mdi-chevron-right</v-icon>SUBTITLE</th> 
                     <td ><input  v-model='subtitle'  type="text"  /></td>
                 </tr>
                 <tr>
-                    <th><v-icon class='vIcon'>mdi-chevron-down</v-icon>Button Name</th> 
+                    <th class='caption blue-grey--text font-weight-bold'><v-icon class='vIcon'>mdi-chevron-right</v-icon>BUTTON NAME</th> 
                     <td ><input  v-model='buttonName'  type="text"  /></td>
                 </tr>
                 <tr>
-                    <th><v-icon class='vIcon'>mdi-chevron-down</v-icon>Description</th> 
+                    <th class='caption blue-grey--text font-weight-bold'><v-icon class='vIcon'>mdi-chevron-right</v-icon>DESCRIPTION</th> 
                     <td ><textarea  v-model='description'  type="text" ></textarea></td>
                 </tr>
                 <tr>
-                    <th><v-icon class='vIcon'>mdi-chevron-down</v-icon>Bg Image</th> 
+                    <th class='caption blue-grey--text font-weight-bold'><v-icon class='vIcon'>mdi-chevron-right</v-icon>BG IMAGE</th> 
                     <td  v-if='!backgroundImage'>  
                         <input  style='border: none;padding: 0;' type="file" @change='onFileChange'>
                     </td>
+
                     <td v-else>
-                        <img style='width: 150px;' :src="backgroundImage" />
+                        <img style='width: 150px;' :src="`http://localhost:3085/cards/${backgroundImage}`" />
                         <button @click="removeImage" style='padding-left: 10px'>Remove image</button>
                     </td>   
                 </tr><br>
@@ -181,7 +182,7 @@
 
 <!-- mainView -->    
     <div :style="{textAlign: textAlignUi, color: colorNumber(fontArray)}">
-        <div class='mainDiv-1' :style="{backgroundColor: colorNumber(bgArray), lineHeight: sliderLineHeightValue, color: colorNumber(fontArray), backgroundImage: 'url(' + backgroundImage + ')', } " >
+        <div class='mainDiv-1' :style="{backgroundColor: colorNumber(bgArray), lineHeight: sliderLineHeightValue, color: colorNumber(fontArray), backgroundImage: 'url(http://localhost:3085/cards/' + backgroundImage + ')', } " >
             <div :style="{background: sliderOpacityValue}">
                 <div :style="{ padding: sliderPaddingValue }">
                     <div class='logoDiv' :style="{fontSize: sliderFontLogo}">
@@ -227,8 +228,8 @@
                 </v-card-actions>
             </v-card>
             </v-dialog>
-
-        <v-btn color='blue-grey' small dark @click='onSubmit'>SAVE it</v-btn>
+        <span v-if='!editToggle'><v-btn color='blue-grey' small dark @click='onSubmit'>SAVE</v-btn></span>
+        <span v-else><v-btn color='blue-grey' small dark @click='onUpdate'>UPDATE</v-btn></span>
 
         <v-snackbar color='blue-grey' top small v-model="snackbar" :timeout="timeout" >
             <div style='text-align: center;'>
@@ -275,6 +276,7 @@ export default {
             dialog: false,
             snackbar: false,
             timeout: 3000,
+            editToggle: false,
             // template popup
             menuFont: false,  
             menuBackground: false,
@@ -283,16 +285,15 @@ export default {
     },
 
     methods:{
-        onSubmit(){
-            this.$store.dispatch('widget/addMain3', {
+        onUpdate(){
+            this.$store.dispatch('cards/updateCards', {
+                page: 3,
                 logo: this.logo,
                 title: this.title,
                 subtitle: this.subtitle,
                 buttonName: this.buttonName,
                 description: this.description,
                 addOn: true,
-                backgroundImage: this.backgroundImage,
-                tags: this.tags,
                 textAlign: this.textAlign,
                 bgArray: this.bgArray,
                 fontArray: this.fontArray,
@@ -301,20 +302,47 @@ export default {
                 sliderPadding: this.sliderPadding,
                 sliderOpacity: this.sliderOpacity,
                 sliderLineHeight: this.sliderLineHeight,
+                backgroundImage: this.imagePath
 
-            }).then(()=>{this.snackbar = true}).catch(()=>{console.log('form input error')})
+            }).then(()=>{
+                this.snackbar = true
+                this.editToggle = true
+                }).catch(()=>{console.log('form input error')})
+        },
+
+        onSubmit(){
+            this.$store.dispatch('cards/addCards', {
+                page: 3,
+                logo: this.logo,
+                title: this.title,
+                subtitle: this.subtitle,
+                buttonName: this.buttonName,
+                description: this.description,
+                addOn: true,
+                textAlign: this.textAlign,
+                bgArray: this.bgArray,
+                fontArray: this.fontArray,
+                buttonArray: this.buttonArray,
+                sliderFont: this.sliderFont,
+                sliderPadding: this.sliderPadding,
+                sliderOpacity: this.sliderOpacity,
+                sliderLineHeight: this.sliderLineHeight,
+                backgroundImage: this.imagePath
+
+            }).then(()=>{
+                this.snackbar = true
+                this.editToggle = true
+                }).catch(()=>{console.log('form input error')})
         },
 
         onRemove(){
-                this.$store.dispatch('widget/removeMain3', false).then(()=>{
-                    this.logo=''
+                    this.logo=""
                     this.title= ''
                     this.subtitle= ''
                     this.buttonName= ''
                     this.description= ''
                     this.addOn= false
                     this.backgroundImage= ''
-
                     this.textAlign= ''
                     this.bgArray= ''
                     this.fontArray= ''
@@ -323,28 +351,24 @@ export default {
                     this.sliderPadding= ''
                     this.sliderOpacity= ''
                     this.sliderLineHeight= ''
+                    this.dialog=false
+                    this.editToggle = false
+                this.$store.dispatch('cards/removeCards', 3).then(()=>{
+                    
                 }).catch(()=>{console.log('onRemove error')})
 
         },
 
         //image
         onFileChange(e) {
-            var files = e.target.files || e.dataTransfer.files;
-            if (!files.length)
-                return;
-            this.createImage(files[0]);
+            var imageFormData = new FormData();
+            [].forEach.call(e.target.files, (f)=>{
+                imageFormData.append('image', f)    // { image: [file1, file2]}
+            }) 
+            this.$store.dispatch('cards/uploadImages', imageFormData)
         },
 
-        createImage(file) {
-            var image = new Image();
-            var reader = new FileReader();
-            var vm = this;
-
-            reader.onload = (e) => {
-                vm.backgroundImage = e.target.result;
-            };
-            reader.readAsDataURL(file);
-        },
+        
         removeImage: function (e) {
             this.backgroundImage = '';
         }, 
@@ -354,33 +378,49 @@ export default {
             const res = tags[array]
             return res
         },
+
+        fetchCard(){
+            const data = this.$store.state.cards.cardData
+            const index = data.findIndex(e=>e.page === 3)
+            if(index === -1){ 
+                return 
+            }
+            else{
+                    this.editToggle = true
+
+                    this.logo= data[index].logo
+                    this.title =  data[index].title
+                    this.subtitle =  data[index].subtitle
+                    this.buttonName= data[index].buttonName
+                    this.description = data[index].description
+                    this.addOn = data[index].addOn
+                    this.backgroundImage = data[index].backgroundImage
+
+                    this.textAlign= data[index].textAlign
+                    this.bgArray= data[index].bgArray
+                    this.fontArray= data[index].fontArray
+                    this.buttonArray= data[index].buttonArray
+                    this.sliderFont= data[index].sliderFont
+                    this.sliderPadding= data[index].sliderPadding
+                    this.sliderOpacity= data[index].sliderOpacity
+                    this.sliderLineHeight= data[index].sliderLineHeight
+            }
+        },
     },
+
 
     created(){
-    const data = this.$store.state.widget.main3
-        if(data.length !== 0){
-            this.logo= data.logo
-            this.title =  data.title
-            this.subtitle =  data.subtitle
-            this.buttonName= data.buttonName
-            this.description = data.description
-            this.addOn = data.addOn
-            this.backgroundImage = data.backgroundImage
-
-            this.textAlign= data.textAlign
-            this.bgArray= data.bgArray
-            this.fontArray= data.fontArray
-            this.buttonArray= data.buttonArray
-            this.sliderFont= data.sliderFont
-            this.sliderPadding= data.sliderPadding
-            this.sliderOpacity= data.sliderOpacity
-            this.sliderLineHeight= data.sliderLineHeight
-
-            }else{
-                console.log('no data length')
-            }
+        this.fetchCard()
+    },
+    watch:{
+        imagePath(){
+            this.backgroundImage = this.imagePath
+        }
     },
     computed:{
+        imagePath(){
+                return this.$store.state.cards.imagePaths[0]
+        },
         textAlignUi(){
         const items = ['left', 'center', 'right']
         let select = items[this.textAlign]
@@ -437,9 +477,20 @@ table{
 .vIcon{
     font-size: 1rem;
     font-weight: 200;
+    color: #607d8a;
 }
-input{ width: 100%; padding-left: 5px;  font-size: 0.8rem; font-weight: 300; border: 1px solid grey; border-radius: 5px;  }
-textarea{ width: 100%; border: 1px solid grey; border-radius: 5px; font-size: 0.8rem; font-weight: 300; padding-left: 5px;}
+input{width: 100%; padding-left: 12px;}
+// input{ width: 100%; padding-left: 5px;  font-size: 0.8rem; font-weight: 300; border: 1px solid grey; border-radius: 5px;  }
+// textarea{ width: 100%; border-radius: 5px; font-size: 0.8rem; font-weight: 300; padding-left: 5px;}
+textarea{ width: 100%; border-radius: 5px; padding-left: 12px; border: 2px solid #ccc;border-radius: 5px; transition: 0.5s}
+textarea:focus{
+    border: 2px solid #455a64;
+    background: white; border-radius: 5px; 
+}
+textarea:hover{
+    border: 2px solid #455a64;
+    background: white; border-radius: 5px;
+}
 
 
 .mainDiv-1{

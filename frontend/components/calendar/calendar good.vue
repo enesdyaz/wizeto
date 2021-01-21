@@ -48,23 +48,20 @@
     
     <v-sheet height="600">
         <v-calendar
-        @click:event="showEvent"
         ref="calendar"
         v-model="focus"
         color="primary"
         :events="state_appointment"
         :event-color="getEventColor"
         :type="type"
-        @change='updateRange'
-        
+        @click:event="showEvent"
         @click:more="viewDay"
         @click:time='addEvent'
         ></v-calendar>
 
         <v-menu min-width="355px" v-model="selectedOpen"  :activator="selectedElement" offset-y :close-on-content-click="false">
             <v-card >
-                <form>
-<!-- BOOKING READ and UPDATE -->        
+            
             <div style='padding: 2%;'>
                     <div :class=" `${selectedEvent.color}`">
                     <v-btn class=' subtitle-2' dark text  >
@@ -138,13 +135,12 @@
                                 <td> 
                                     <div class='selected' v-if="selectedEdit">{{selectedEvent.time}}</div>
                                     <div v-else>
-                                        <div v-if='booking_time?booking_time.time.length:""'>
-                                            <select   v-model='time' style='width: 100%;padding-left: 10px;' required>
-                                                <option value="" selected disabled> -- select -- </option>
-                                                <option  v-for="(d, i) in booking_time.time" :key="i" :disabled="!d.booking" :value='d.hour' >
-                                                        {{d.hour}}
-                                                </option>
-                                            </select> 
+                                        <div v-if='booking_time?booking_time.length:""'>
+                                        <select  v-for="(d, i) in booking_time" :key="i" v-model='time' required style='width: 100%;padding-left: 10px;'>
+                                            <option v-for="(a, i) in d.time" :key='i' :value='a.hour' :disabled="!a.booking">
+                                                    {{a.hour}}
+                                            </option>
+                                        </select> 
                                         </div>
                                         <div v-else>
                                             This time is Not available
@@ -180,11 +176,10 @@
 
             <v-spacer></v-spacer>
             <div style='display: block; text-align: center;'>
-                <span v-if="selectedEdit"><v-btn color="primary" text @click="onEdit" > EDIT </v-btn></span>
+                <span v-if="selectedEdit"><v-btn color="primary"  text @click="onEdit" > EDIT </v-btn></span>
                 <span v-else><v-btn color="primary" text @click='onUpdate' > UPDATE </v-btn></span>
                 <v-btn color="primary" text @click="onClose" > CLOSE </v-btn>
             </div>
-            </form>
         </v-card>
 
         </v-menu>
@@ -196,7 +191,7 @@
         <template v-slot:activator="{ on, attrs }">
             <v-icon v-bind="attrs" v-on="on"  class='ml-4' style='font-size: 1.2rem;'>mdi-comment-outline</v-icon>
         </template>
-<!-- ADD NEW BOOKING  -->
+
         <v-card style='border: 5px solid #607d8a; ' >
             <form @submit.prevent ='addBook'>
 
@@ -258,11 +253,11 @@
                         <tr>
                             <td width="30%" class='caption'>TIME</td>
                                 <td> 
-                                    <div v-if='booking_time?booking_time.time.length:""'>
-                                        <select   v-model='time' style='width: 100%;padding-left: 10px;' required>
+                                    <div v-if='booking_time?booking_time.length:""'>
+                                        <select  v-for="(d, i) in booking_time" :key="i" v-model='time' style='width: 100%;padding-left: 10px;' required>
                                             <option value="" selected disabled> -- select -- </option>
-                                            <option  v-for="(d, i) in booking_time.time" :key="i" :disabled="!d.booking" :value='d.hour' >
-                                                    {{d.hour}}
+                                            <option v-for="(a, i) in d.time" :key='i' :disabled="!a.booking" :value='a.hour' >
+                                                    {{a.hour}}
                                         
                                             </option>
                                         </select> 
@@ -339,13 +334,11 @@ export default {
     }),
 
     mounted () {
+    this.$refs.calendar.checkChange()
     this.$refs.calendar.scrollToTime('06:00')
     },
 
     methods: {
-        updateRange(){
-            console.log('updateRange')
-        },
         onEdit(){
             this.selectedEdit = false
         },
@@ -367,8 +360,7 @@ export default {
             }).then(()=>{
                 this.selectedOpen = false
                 this.selectedEdit = true
-                this.loadOnce()
-
+                this.$store.dispatch('booking/fetchData')
             })
         },
         onClose(){
@@ -412,10 +404,6 @@ export default {
         next () {
             this.$refs.calendar.next()
         },
-        loadOnce(){
-            location.reload();
-        },
-
         showEvent ({ nativeEvent, event }) {
             const open = () => {
             this.date = event.date
@@ -428,25 +416,17 @@ export default {
 
             this.selectedEvent = event
             this.selectedElement = nativeEvent.target
-
-
             setTimeout(() => this.selectedOpen = true, 10)
             }
-
             if (this.selectedOpen) {
-
             this.selectedOpen = false
-
             setTimeout(open, 10)
-            } 
-            
-            else {
+            } else {
             open()
             }
 
             nativeEvent.stopPropagation()
         },
-        
         addEvent(tms){
                 this.date = ''
                 this.time =''
@@ -472,7 +452,6 @@ export default {
         },
         //state
         state_appointment(){
-            console.log('refs', this.$refs)
             return this.$store.state.booking.book?this.$store.state.booking.book:""
         },
         state_service(){
@@ -495,61 +474,18 @@ export default {
         },
 
         booking_time(){
-       
             if(!this.date) return
                 const date = this.date
                 console.log('date', date)
                 const data = this.state_bookingData
-                if(!data) return
-                console.log('booking_time AAA', data)
+                console.log('booking_time', data)
                 
-                var result = data.book.find(e=> e.date === date)
-                if (!result) return
-                console.log('JSON parse result', result)
-                let newTrack = JSON.parse(JSON.stringify(result))
-
-
-            //서비스 시간
-            const serviceTime = this.duration
-            console.log('duratoin', serviceTime)
-            // 부킹 예약 단위 시간
-            const duration = this.state_bookingData.duration 
-            console.log('bookingduration', duration)
-            // 몇개 array
-            const rate = Math.ceil(serviceTime/duration)  // 3
-            console.log('rate', rate)
-
-            // 선택한 시간이 몇번째 array 인가?
-            const lastArray = newTrack.time.length  - 1
-            console.log('lastArray', lastArray)
-
-            console.log('newTrack', newTrack)
-            // 마지막 값에서 rate 빼기   2 >7
-        
-            var newrate =''
-            // 중간에 false가 있으면 rate만큼 부킹안되게 함
-            for(var k=0;k<lastArray;k++){
-                if(newTrack.time[k].booking === false){
-                    rate >= (k+1) ? newrate = k : newrate = rate-1
-                    for(var l = 0; l < newrate ; l++){
-                        newTrack.time[k - (l+1)].booking = false
-                    }
+                if(data.length<1){return}
+                else{
+                    var result = data.book.filter(e=> e.date == date)
+                    console.log('result', result)
                 }
-            }
-
-            // 마지막 시간에 rate가 안맞으면 부킹이 안되게 함
-            for(var i=0;i<rate;i++){
-                    newTrack.time[lastArray - i].booking = false
-            }
-            console.log('result-change', newTrack)
-
-            console.log('newTrack', newTrack)
-            return newTrack
-
-
-
                 return result
-            
         },
     },
     watch:{
@@ -566,9 +502,9 @@ export default {
 
             this.price = total[0].price
             this.duration = total[0].duration
-        },
+            
 
-
+        }
     }
  
 }

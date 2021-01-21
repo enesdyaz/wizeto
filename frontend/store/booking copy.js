@@ -122,8 +122,7 @@ export const actions= {
 
     deleteAppointment({commit}, id){
         this.$axios.delete(`booking/deleteAppointment/${id}`, {}, {withCredentials:true} )
-        .then(()=>{commit('DELETE_APPOINTMENT', id)})
-        .catch((err)=>{console.log('error', err)}) 
+        .then(()=>{commit('DELETE_APPOINTMENT', id)}) 
     },
 
 
@@ -134,11 +133,10 @@ export const actions= {
     editAppointment({commit, state}, payload){
         console.log('editApp', payload)
         this.$axios.put(`booking/updateAppointment/${state.bookingData._id}`, payload, {withCredentials: true})
-        .then((res)=>{
+        .then((res)=>{ 
             console.log('editAppointmentRes', res.data)
             commit('EDIT_APPOINTMENT', {backend: res.data, bookId: payload.id})
         })
-        .catch((err)=>{console.log(err)})
     },
 
 

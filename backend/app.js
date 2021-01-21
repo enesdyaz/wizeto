@@ -25,6 +25,7 @@ const CategoryRouter = require('./routes/Category')
 
 const serviceRouter = require('./routes/service')
 const bookingRouter = require('./routes/booking')
+const cardsRouter = require('./routes/cards')
 
 
 //------------------------------------------------//
@@ -92,6 +93,7 @@ app.use('/Category', CategoryRouter)
 app.use('/post', postRouter)
 app.use('/service', serviceRouter)
 app.use('/booking', bookingRouter)
+app.use('/cards', cardsRouter)
 
 
 
