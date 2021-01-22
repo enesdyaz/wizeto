@@ -9,7 +9,7 @@
         </div>
         <v-spacer></v-spacer>
         <div>
-            wizeto
+            wizeto 
         </div>
         <v-spacer></v-spacer>
         <div>
@@ -54,9 +54,7 @@
             <div class='handle' style='cursor: all-scroll'><component  v-bind:is='item'></component></div>
         </div>
     </draggable>
-    <div>
-        
-    </div>
+
 
 
 </div>
@@ -70,10 +68,18 @@ import serviceView2 from './serviceView/serviceView2'
 import serviceView3 from './serviceView/serviceView3'
 import serviceView4 from './serviceView/serviceView4'
 import cardView from './cardView/cardView'
+import cardView2 from './cardView/cardView2'
+import cardView3 from './cardView/cardView3'
+import cardView4 from './cardView/cardView4'
+import cardView5 from './cardView/cardView5'
 export default {
     components: {
         draggable,
         cardView,
+        cardView2,
+        cardView3,
+        cardView4,
+        cardView5,
         serviceView,
         serviceView2,
         serviceView3,
@@ -81,7 +87,7 @@ export default {
     },
     data(){
         return{
-            component: ['cardView', 'serviceView', 'serviceView2', 'serviceView3','serviceView4'],
+            component: ['cardView', 'cardView2', 'cardView3', 'cardView4', 'cardView5', 'serviceView', 'serviceView2', 'serviceView3','serviceView4'],
             drawer: false,
             group: null,
 
@@ -92,22 +98,29 @@ export default {
                 to: '/setup/dashboard'
                 },
             ]
-
         }
     },
     methods:{
         onChange(){
-            this.$store.dispatch('phoneView/changeView', this.component)
-        }
+            this.$store.dispatch('cards/updatePhoneView', {
+                name: 'phoneView',
+                components: this.component
+            })
+        },
     },
 
-    created(){
-        const data = this.$store.state.phoneView.view
-        if(data.length !== 0){
-            this.component =  data
-            }
+    watch:{
+        phoneView(){
+            this.component = this.phoneView
+        }
     },
     computed:{
+        phoneView(){
+            const data = this.$store.state.cards.phoneView
+            console.log('phoneview', data)
+            if(!data) return
+            return data
+        },
         card(){
             return this.$store.state.widget.card
         },

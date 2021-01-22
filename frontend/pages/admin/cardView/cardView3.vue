@@ -51,7 +51,7 @@ export default {
             console.log('card', card)
             if(!card) return ""
 
-            const index = card.findIndex(e=>e.page === 1)
+            const index = card.findIndex(e=>e.page === 3)
             console.log(index)
             if(index <0) return ""
             console.log('card = ', card[index])

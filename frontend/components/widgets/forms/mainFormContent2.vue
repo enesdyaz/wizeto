@@ -56,7 +56,7 @@
                         <v-card-text>
                             <div>
                                 <span style='float: left;margin-top: 5px;' v-text='sliderFont + "px"'></span>
-                                <v-slider color='blue-grey' style='width: 85%;' hide-details v-model="sliderFont"  min='22' max='50' step="2" ></v-slider>
+                                <v-slider color='blue-grey' style='width: 85%;' hide-details v-model="sliderFont"  min='20' max='50' step="2" ></v-slider>
                             </div>
                         </v-card-text>
                     </v-card>
@@ -73,7 +73,7 @@
                         <v-card-text>
                             <div>
                                 <span style='float: left;margin-top: 5px;' v-text='sliderPadding + "%"'></span>
-                                <v-slider color='blue-grey' style='width: 85%;' hide-details v-model="sliderPadding" min='0' max='20' step="2" ></v-slider>
+                                <v-slider color='blue-grey' style='width: 85%;' hide-details v-model="sliderPadding" min='2' max='20' step="2" ></v-slider>
                             </div>
                         </v-card-text>
                     </v-card>
@@ -94,7 +94,7 @@
 
     <!-- background color -->        
             <v-btn-toggle  class='body-2' dense group >
-                <v-menu  v-model="menuBackground" :close-on-content-click="true" :nudge-width="200" offset-x >
+                <v-menu  v-model="menuBackground" :close-on-content-click="true" :max-width="200" bottom >
                     <template v-slot:activator="{ on, attrs }">
                         <v-btn small v-bind="attrs" v-on="on" style='padding: 5px;;' >
                             <v-icon>mdi-alpha-a-box</v-icon>
@@ -111,7 +111,7 @@
                 </v-menu>
 
 <!-- font color -->   
-                <v-menu v-model="menuFont" :close-on-content-click="true" :nudge-width="200" offset-x >
+                <v-menu v-model="menuFont" :close-on-content-click="true" :max-width="200" bottom left  offset-x >
                     <template v-slot:activator="{ on, attrs }">
                         <v-btn small v-bind="attrs" v-on="on" style='padding: 5px;;'>
                             <v-icon >mdi-alpha-a</v-icon>
@@ -127,7 +127,7 @@
                     </v-card>
                 </v-menu>
 <!-- button color -->
-        <v-menu v-model="menuButton" :close-on-content-click="true" :nudge-width="200" offset-x >
+        <v-menu v-model="menuButton" :close-on-content-click="true" :max-width="200" bottom left >
                 <template v-slot:activator="{ on, attrs }">
                     <v-btn small v-bind="attrs" v-on="on" style='padding: 5px;'>
                         <v-icon>mdi-alpha-b-box</v-icon>
@@ -154,7 +154,7 @@
                     <v-card-text>
                         <div>
                             <span style='float: left;margin-top: 5px;' v-text='sliderOpacity'></span>
-                            <v-slider color='blue-grey' style='width: 85%;' hide-details v-model="sliderOpacity" min='0.1' max='1' step="0.1" ></v-slider>
+                            <v-slider color='blue-grey' style='width: 85%;' hide-details v-model="sliderOpacity" min='0' max='1' step="0.1" ></v-slider>
                         </div>
                     </v-card-text>
                 </v-card>
@@ -171,7 +171,7 @@
                     <v-card-text>
                         <div>
                             <span style='float: left;margin-top: 5px;' v-text='sliderLineHeight'></span>
-                            <v-slider color='blue-grey' style='width: 85%;' hide-details v-model="sliderLineHeight" min='20' max='200' step="10" ></v-slider>
+                            <v-slider color='blue-grey' style='width: 85%;' hide-details v-model="sliderLineHeight" min='10' max='200' step="10" ></v-slider>
                         </div>
                     </v-card-text>
                 </v-card>
@@ -262,15 +262,15 @@ export default {
             addOn: false,
             backgroundImage: '',
 
-            textAlign: 0,
-            tags: [ 'whitesmoke', '#000000', '#455a64', '#e64a19', '#5d4037', '#616161', '#1b5e20', '#827717', '#01579b', '#004d40', '#1a237e', '#311b92', '#b71c1c', '#7b1fa2', '#c2185b'],        
-            bgArray: 0,
-            fontArray: 1,
-            buttonArray: 1, //button color
-            sliderFont: 2,
-            sliderPadding: 0,
-            sliderOpacity: 0.1,
-            sliderLineHeight: 20,
+            textAlign: "",
+            tags: [ '#ffffff', '#000000', '#455a64', '#e64a19', '#5d4037', '#616161', '#1b5e20', '#827717', '#01579b', '#004d40', '#1a237e', '#311b92', '#b71c1c', '#7b1fa2', '#c2185b'],        
+            bgArray: '',
+            fontArray: '',
+            buttonArray: '', //button color
+            sliderFont: 20,
+            sliderPadding: 2,
+            sliderOpacity: "",
+            sliderLineHeight: 10,
 
             // dialog
             dialog: false,
@@ -296,6 +296,7 @@ export default {
                 addOn: true,
                 tags: this.tags,
                 textAlign: this.textAlign,
+
                 bgArray: this.bgArray,
                 fontArray: this.fontArray,
                 buttonArray: this.buttonArray,
@@ -320,6 +321,7 @@ export default {
                 buttonName: this.buttonName,
                 description: this.description,
                 addOn: true,
+                tags: this.tags,
                 textAlign: this.textAlign,
                 bgArray: this.bgArray,
                 fontArray: this.fontArray,
@@ -337,7 +339,7 @@ export default {
         },
 
         onRemove(){
-                    this.logo=""
+                    this.logo=''
                     this.title= ''
                     this.subtitle= ''
                     this.buttonName= ''
@@ -362,7 +364,9 @@ export default {
 
         //image
         onFileChange(e) {
+            console.log(e.target.files) 
             var imageFormData = new FormData();
+            
             [].forEach.call(e.target.files, (f)=>{
                 imageFormData.append('image', f)    // { image: [file1, file2]}
             }) 
@@ -371,6 +375,8 @@ export default {
 
         
         removeImage: function (e) {
+            console.log('removeImage')
+            this.$store.commit('cards/REMOVE_IMAGE')
             this.backgroundImage = '';
         }, 
         // image_end
@@ -379,15 +385,16 @@ export default {
             const res = tags[array]
             return res
         },
-
         fetchCard(){
+
             const data = this.$store.state.cards.cardData
             const index = data.findIndex(e=>e.page === 2)
             if(index === -1){ 
                 return 
-            }
-            else{
+            }else{
                     this.editToggle = true
+
+                    const index = data.findIndex(e=>e.page === 2)
 
                     this.logo= data[index].logo
                     this.title =  data[index].title
@@ -405,6 +412,7 @@ export default {
                     this.sliderPadding= data[index].sliderPadding
                     this.sliderOpacity= data[index].sliderOpacity
                     this.sliderLineHeight= data[index].sliderLineHeight
+
             }
         },
     },
@@ -415,11 +423,14 @@ export default {
     },
     watch:{
         imagePath(){
+            console.log('imagePath WATCH')
+            console.log('imagePath content', this.imagePath)
             this.backgroundImage = this.imagePath
         }
     },
     computed:{
         imagePath(){
+            console.log('imagePath COMPUTED')
                 return this.$store.state.cards.imagePaths[0]
         },
         textAlignUi(){

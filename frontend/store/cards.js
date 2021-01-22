@@ -1,7 +1,8 @@
 
 export const state = () => ({
     imagePaths: "",
-    cardData: []
+    cardData: [],
+    phoneView: []
 })
 
 export const getters = {
@@ -16,7 +17,7 @@ export const getters = {
         console.log('card = ', card[index])
 
         return card[index]
-    }
+    },
 }
 
 
@@ -45,7 +46,12 @@ export const mutations = {
     },
 
     FETCH_DATA(state, payload){
-        state.cardData = payload
+        console.log('FETCH_DATA', payload)
+        state.cardData = payload.cards
+        state.phoneView = payload.phoneView[0].components
+    },
+    UPDATE_PHONE_VIEW(state, payload){
+        state.phoneView = payload.components
     }
 }
 
@@ -64,6 +70,7 @@ export const actions= {
     }, 
 
     addCards({commit}, payload){
+        console.log('addCards', payload)
         this.$axios.post('cards/addCards', payload, {withCredentials:true})
         .then((res)=>{
             console.log('addCard', res.data)
@@ -92,6 +99,13 @@ export const actions= {
             commit('REMOVE_CARDS', payload)
         })
     },
+
+    updatePhoneView({commit}, payload){
+        this.$axios.put('cards/updatePhoneView', payload, {withCredentials:true})
+        .then((res)=>{commit('UPDATE_PHONE_VIEW', res.data)})
+        .catch((err)=>{console.log(err)})
+
+    }
 
 
 

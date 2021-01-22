@@ -1,11 +1,22 @@
 <template>
 <div style='padding: 5%'>
+ 
 <!-- Content -->    
     <div style='text-align: center;'>
             <v-btn class=' subtitle-2' text color='blue-grey' >
-                <v-icon class='body-1 pr-2'>mdi-plus</v-icon> Main Section
+                <v-icon class='body-1 pr-2'>mdi-plus</v-icon> CARDS SECTION
             </v-btn>         
     </div>
+    <div class='text-center'>
+        <v-btn-toggle  v-model='mainFormSelect' mandatory>
+            <v-btn color='blue-grey' text small>1</v-btn>
+            <v-btn color='blue-grey' text small>2</v-btn>
+            <v-btn color='blue-grey' text small>3</v-btn>
+            <v-btn color='blue-grey' text small>4</v-btn>
+            <v-btn color='blue-grey' text small>5</v-btn>
+        </v-btn-toggle>
+    </div><br>
+<v-divider></v-divider>
     <div>
         <div v-if='mainFormSelect === 0 ' ><main-form-content /></div>
         <div v-else-if ='mainFormSelect === 1'><main-form-content2 /></div>
@@ -15,15 +26,7 @@
     </div>
 
     <br>
-        <div class='text-center'>
-            <v-btn-toggle v-model='mainFormSelect' mandatory>
-                <v-btn color='blue-grey' text small>1</v-btn>
-                <v-btn color='blue-grey' text small>2</v-btn>
-                <v-btn color='blue-grey' text small>3</v-btn>
-                <v-btn color='blue-grey' text small>4</v-btn>
-                <v-btn color='blue-grey' text small>5</v-btn>
-            </v-btn-toggle>
-        </div>
+        
     <br><br>
 </div>
 </template>

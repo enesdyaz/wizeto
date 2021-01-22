@@ -141,11 +141,7 @@ export default {
           title: 'Cards',
           to: '/admin'
         },
-        {
-          icon: 'mdi-text-box-outline',
-          title: 'text',
-          to: '/admin'
-        },
+  
       ],
       title: 'Wizeto',
 
@@ -163,6 +159,7 @@ export default {
     this.$store.dispatch('service/fetchData')
     this.$store.dispatch('booking/fetchData')
     this.$store.dispatch('cards/fetchData')
+    this.$store.dispatch('cards/fetchPhoneView')
   },
 
   methods:{

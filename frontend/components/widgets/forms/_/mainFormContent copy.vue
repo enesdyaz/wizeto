@@ -30,7 +30,7 @@
                     </td>
 
                     <td v-else>
-                        <img style='width: 150px;' :src="backgroundImage" />
+                        <img style='width: 150px;' :src="`http://localhost:3085/cards/${backgroundImage}`" />
                         <button @click="removeImage" style='padding-left: 10px'>Remove image</button>
                     </td>   
                 </tr><br>
@@ -182,7 +182,7 @@
 
 <!-- mainView -->    
     <div :style="{textAlign: textAlignUi, color: colorNumber(fontArray)}">
-        <div class='mainDiv-1' :style="{backgroundColor: colorNumber(bgArray), lineHeight: sliderLineHeightValue, color: colorNumber(fontArray), backgroundImage: 'url(' + backgroundImage + ')', } " >
+        <div class='mainDiv-1' :style="{backgroundColor: colorNumber(bgArray), lineHeight: sliderLineHeightValue, color: colorNumber(fontArray), backgroundImage: 'url(http://localhost:3085/cards/' + backgroundImage + ')', } " >
             <div :style="{background: sliderOpacityValue}">
                 <div :style="{ padding: sliderPaddingValue }">
                     <div class='logoDiv' :style="{fontSize: sliderFontLogo}">
@@ -228,8 +228,8 @@
                 </v-card-actions>
             </v-card>
             </v-dialog>
-
-        <v-btn color='blue-grey' small dark @click='onSubmit'>SAVE it</v-btn>
+        <span v-if='!editToggle'><v-btn color='blue-grey' small dark @click='onSubmit'>SAVE</v-btn></span>
+        <span v-else><v-btn color='blue-grey' small dark @click='onUpdate'>UPDATE</v-btn></span>
 
         <v-snackbar color='blue-grey' top small v-model="snackbar" :timeout="timeout" >
             <div style='text-align: center;'>
@@ -254,28 +254,29 @@ export default {
     data(){
         return{
             // store 
-            logo: '',
-            title: '',
-            subtitle: '',
-            buttonName: '',
-            description: '',
+            logo: 'WIZETO - EXAMPLE',
+            title: '"make it better for your service"',
+            subtitle: '"All you need to do is to put your content here"',
+            buttonName: 'Booking',
+            description: '"If you want your customer to make a booking for your service, Just use this web application with super easy platform"',
             addOn: false,
             backgroundImage: '',
 
-            textAlign: 'left',
+            textAlign: 1,
             tags: [ 'whitesmoke', '#000000', '#455a64', '#e64a19', '#5d4037', '#616161', '#1b5e20', '#827717', '#01579b', '#004d40', '#1a237e', '#311b92', '#b71c1c', '#7b1fa2', '#c2185b'],        
-            bgArray: '',
-            fontArray: '',
-            buttonArray: '', //button color
-            sliderFont: '22',
-            sliderPadding: '0',
-            sliderOpacity: '',
-            sliderLineHeight: '',
+            bgArray: 2,
+            fontArray: 0,
+            buttonArray: 5, //button color
+            sliderFont: 22,
+            sliderPadding: 6,
+            sliderOpacity: 0.1,
+            sliderLineHeight: 40,
 
             // dialog
             dialog: false,
             snackbar: false,
             timeout: 3000,
+            editToggle: false,
             // template popup
             menuFont: false,  
             menuBackground: false,
@@ -284,8 +285,9 @@ export default {
     },
 
     methods:{
-        onSubmit(){
-            this.$store.dispatch('widget/addMain', {
+        onUpdate(){
+            this.$store.dispatch('cards/updateCards', {
+                page: 1,
                 logo: this.logo,
                 title: this.title,
                 subtitle: this.subtitle,
@@ -301,12 +303,40 @@ export default {
                 sliderPadding: this.sliderPadding,
                 sliderOpacity: this.sliderOpacity,
                 sliderLineHeight: this.sliderLineHeight,
+                backgroundImage: this.imagePath
 
-            }).then(()=>{this.snackbar = true}).catch(()=>{console.log('form input error')})
+            }).then(()=>{
+                this.snackbar = true
+                this.editToggle = true
+                }).catch(()=>{console.log('form input error')})
+        },
+
+        onSubmit(){
+            this.$store.dispatch('cards/addCards', {
+                page: 1,
+                logo: this.logo,
+                title: this.title,
+                subtitle: this.subtitle,
+                buttonName: this.buttonName,
+                description: this.description,
+                addOn: true,
+                textAlign: this.textAlign,
+                bgArray: this.bgArray,
+                fontArray: this.fontArray,
+                buttonArray: this.buttonArray,
+                sliderFont: this.sliderFont,
+                sliderPadding: this.sliderPadding,
+                sliderOpacity: this.sliderOpacity,
+                sliderLineHeight: this.sliderLineHeight,
+                backgroundImage: this.imagePath
+
+            }).then(()=>{
+                this.snackbar = true
+                this.editToggle = true
+                }).catch(()=>{console.log('form input error')})
         },
 
         onRemove(){
-                this.$store.dispatch('widget/removeMain', false).then(()=>{
                     this.logo=''
                     this.title= ''
                     this.subtitle= ''
@@ -314,7 +344,6 @@ export default {
                     this.description= ''
                     this.addOn= false
                     this.backgroundImage= ''
-
                     this.textAlign= ''
                     this.bgArray= ''
                     this.fontArray= ''
@@ -323,6 +352,10 @@ export default {
                     this.sliderPadding= ''
                     this.sliderOpacity= ''
                     this.sliderLineHeight= ''
+                    this.dialog=false
+                    this.editToggle = false
+                this.$store.dispatch('cards/removeCards', 1).then(()=>{
+                    
                 }).catch(()=>{console.log('onRemove error')})
 
         },
@@ -334,29 +367,12 @@ export default {
             [].forEach.call(e.target.files, (f)=>{
                 imageFormData.append('image', f)    // { image: [file1, file2]}
             }) 
-
-            this.$store.dispatch('image/addMainFormImage', imageFormData)
-            console.log('files', imageFormData)
-            
-            var files = e.target.files || e.dataTransfer.files;
-            if (!files.length)
-                return;
-            this.createImage(files[0]);
+            this.$store.dispatch('cards/uploadImages', imageFormData)
         },
 
-        createImage(file) {
-            var image = new Image();
-            var reader = new FileReader();
-
-            reader.onload = (e) => {
-                this.backgroundImage = e.target.result;
-            };
-            reader.readAsDataURL(file);
-
-            // DB save
-            
-        },
+        
         removeImage: function (e) {
+            console.log('removeImage')
             this.backgroundImage = '';
         }, 
         // image_end
@@ -365,33 +381,51 @@ export default {
             const res = tags[array]
             return res
         },
+        fetchCard(){
+
+            const data = this.$store.state.cards.cardData
+            const index = data.findIndex(e=>e.page === 1)
+            if(index === -1){ 
+                return 
+            }else{
+                    this.editToggle = true
+
+                    const index = data.findIndex(e=>e.page === 1)
+
+                    this.logo= data[index].logo
+                    this.title =  data[index].title
+                    this.subtitle =  data[index].subtitle
+                    this.buttonName= data[index].buttonName
+                    this.description = data[index].description
+                    this.addOn = data[index].addOn
+                    this.backgroundImage = data[index].backgroundImage
+
+                    this.textAlign= data[index].textAlign
+                    this.bgArray= data[index].bgArray
+                    this.fontArray= data[index].fontArray
+                    this.buttonArray= data[index].buttonArray
+                    this.sliderFont= data[index].sliderFont
+                    this.sliderPadding= data[index].sliderPadding
+                    this.sliderOpacity= data[index].sliderOpacity
+                    this.sliderLineHeight= data[index].sliderLineHeight
+
+            }
+        },
     },
+
 
     created(){
-    const data = this.$store.state.widget.main
-        if(data.length !== 0){
-            this.logo= data.logo
-            this.title =  data.title
-            this.subtitle =  data.subtitle
-            this.buttonName= data.buttonName
-            this.description = data.description
-            this.addOn = data.addOn
-            this.backgroundImage = data.backgroundImage
-
-            this.textAlign= data.textAlign
-            this.bgArray= data.bgArray
-            this.fontArray= data.fontArray
-            this.buttonArray= data.buttonArray
-            this.sliderFont= data.sliderFont
-            this.sliderPadding= data.sliderPadding
-            this.sliderOpacity= data.sliderOpacity
-            this.sliderLineHeight= data.sliderLineHeight
-
-            }else{
-                console.log('no data length')
-            }
+        this.fetchCard()
+    },
+    watch:{
+        imagePath(){
+            this.backgroundImage = this.imagePath
+        }
     },
     computed:{
+        imagePath(){
+                return this.$store.state.cards.imagePaths[0]
+        },
         textAlignUi(){
         const items = ['left', 'center', 'right']
         let select = items[this.textAlign]
