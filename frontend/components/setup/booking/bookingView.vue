@@ -151,7 +151,7 @@ export default {
                 start: this.date + " " + this.time, 
                 end: this.finish,
                 service: this.dataName,
-                name: this.name,
+                name: this.name.toUpperCase(),
                 email: this.email,
                 mobile: this.mobile,
                 color: this.colors[Math.floor(Math.random() * 6) + 0],
@@ -239,32 +239,23 @@ export default {
        
             if(!this.date) return
                 const date = this.date
-                console.log('date', date)
                 const data = this.$store.state.booking.bookingData
                 if(!data) return
-                console.log('booking_time AAA', data)
                 
                 var result = data.book.find(e=> e.date === date)
                 if (!result) return
-                console.log('JSON parse result', result)
                 let newTrack = JSON.parse(JSON.stringify(result))
 
 
             //서비스 시간
             const serviceTime = this.dataDuration
-            console.log('duratoin', serviceTime)
             // 부킹 예약 단위 시간
             const duration = data.duration 
-            console.log('bookingduration', duration)
             // 몇개 array
             const rate = Math.ceil(serviceTime/duration)  // 3
-            console.log('rate', rate)
 
             // 선택한 시간이 몇번째 array 인가?
             const lastArray = newTrack.time.length  - 1
-            console.log('lastArray', lastArray)
-
-            console.log('newTrack', newTrack)
             // 마지막 값에서 rate 빼기   2 >7
         
             var newrate =''
@@ -282,45 +273,8 @@ export default {
             for(var i=0;i<rate;i++){
                     newTrack.time[lastArray - i].booking = false
             }
-            console.log('result-change', newTrack)
-
-            console.log('newTrack', newTrack)
             return newTrack
-
-
-
-                return result
-            
         },
-        // booking_time(){
-        //     if(!this.date) return
-        //         const date = this.date
-        //         const data = this.state_bookingData
-        //         if(!data) return
-        //         var result = data.book.find(e=> e.date === date)
-        //         if (!result) return
-        //         let newTrack = JSON.parse(JSON.stringify(result))
-
-        //     const serviceTime = this.duration
-        //     const duration = this.state_bookingData.duration 
-        //     const rate = Math.ceil(serviceTime/duration)  // 3
-        //     const lastArray = newTrack.time.length  - 1
-        //     var newrate =''
-        //     for(var k=0;k<lastArray;k++){
-        //         if(newTrack.time[k].booking === false){
-        //             rate >= (k+1) ? newrate = k : newrate = rate-1
-        //             for(var l = 0; l < newrate ; l++){
-        //                 newTrack.time[k - (l+1)].booking = false
-        //             }
-        //         }
-        //     }
-        //     for(var i=0;i<rate;i++){
-        //             newTrack.time[lastArray - i].booking = false
-        //     }
-        //     return newTrack
-            
-        // },
-        
     },
 
     watch:{

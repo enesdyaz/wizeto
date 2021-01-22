@@ -120,9 +120,19 @@ export const actions= {
         .catch((err)=>{ console.log(err)})
     },
 
-    deleteAppointment({commit}, id){
-        this.$axios.delete(`booking/deleteAppointment/${id}`, {}, {withCredentials:true} )
-        .then(()=>{commit('DELETE_APPOINTMENT', id)})
+
+
+    deleteAppointment({commit, state}, payload){
+        console.log('payload', payload)
+
+        const bookingId = state.bookingData._id
+
+        console.log('bookingId', bookingId)
+
+        this.$axios.put(`booking/deleteAppointment/${bookingId}`, payload, {withCredentials: true})
+        .then((res)=>{
+            console.log('res-deleteAppointment', res)
+            commit('DELETE_APPOINTMENT', payload.id)})
         .catch((err)=>{console.log('error', err)}) 
     },
 

@@ -144,8 +144,9 @@
 
             
             <div class='text-center'>
-                <v-btn class='mt-4' color='indigo' dark small @click="onClick">UPDATE</v-btn>
-                <v-btn class='mt-4' color='blue-grey' @click ='onReset()' dark small>RESET</v-btn>
+                <v-btn class='mt-4' color='blue-grey lighten-2' @click ='onReset()' dark small>RESET</v-btn>
+                <v-btn class='mt-4' color='blue-grey' dark small @click="onClick">UPDATE</v-btn>
+
             </div>
 
     </div> 

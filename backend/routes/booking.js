@@ -235,10 +235,48 @@ router.post('/addAppointment/:id', async (req, res)=>{
 })
 
 
-router.delete('/deleteAppointment/:id', async (req, res)=>{
-    console.log('req-harry-delete')
+
+router.put('/deleteAppointment/:id', async (req, res)=>{
+    console.log('req-harry-delete', req.body)
     try{
-        const appointment = await Appointment.deleteOne({_id: req.params.id})
+
+        // 2. 이전 appointment의 date, time 가져오기
+        const pre = await Appointment.findById(req.body.id)
+        if(!pre){
+            console.log('there is no pre information')
+            return res.status(403).json({message: "please re-load "})
+        }
+        console.log('pre', pre)
+
+        const preDate = pre.date
+        const preTime = pre.time
+        const preDuration = pre.duration
+
+        // 3. 이전 bookingData 데이터 내용을 복구하기
+        const newApp = await Booking.findById(req.params.id, function(err,booking){
+
+            const serviceTime = preDuration
+            const bookingTime = booking.duration
+            const rate = Math.ceil(serviceTime/bookingTime)
+
+            const index = booking.book.findIndex(e=>e.date === preDate)
+            const time = booking.book[index].time
+            const timeIndex = booking.book[index].time.findIndex(e=>e.hour === preTime)
+
+            for(var i=0; i< rate;i++){
+                if(time[timeIndex + i].count === 0){
+                    time[timeIndex + i].booking=true
+                    time[timeIndex + i].count++
+                }else{
+                    time[timeIndex + i].count++
+                }
+            }
+            booking.save(function (err) {
+                if (!err) console.log('Success!');
+            }); 
+        })
+
+        const appointment = await Appointment.deleteOne({_id: req.body.id})
         res.json(appointment)
     }
     catch(err){

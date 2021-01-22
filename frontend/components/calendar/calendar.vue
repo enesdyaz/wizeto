@@ -51,7 +51,8 @@
         @click:event="showEvent"
         ref="calendar"
         v-model="focus"
-        color="primary"
+        :weekdays="weekday"
+        color="blue-grey darken-2 white--text"
         :events="state_appointment"
         :event-color="getEventColor"
         :type="type"
@@ -179,10 +180,47 @@
             <v-divider></v-divider>
 
             <v-spacer></v-spacer>
-            <div style='display: block; text-align: center;'>
-                <span v-if="selectedEdit"><v-btn color="primary" text @click="onEdit" > EDIT </v-btn></span>
-                <span v-else><v-btn color="primary" text @click='onUpdate' > UPDATE </v-btn></span>
-                <v-btn color="primary" text @click="onClose" > CLOSE </v-btn>
+            <div style='display: block; text-align: center;padding: 10px;'>
+                <span v-if="selectedEdit"><v-btn  color='blue-grey darken-4 white--text' small @click="onEdit" > EDIT </v-btn></span>
+
+
+
+
+
+                <span v-else>
+                    
+                        <v-dialog v-model="removeDialog" width="500">
+                            <template v-slot:activator="{ on, attrs }">
+                                <v-btn color='blue-grey darken-4 white--text' small @click='removeDialog=true' v-bind="attrs" v-on="on"   > REMOVE </v-btn>
+                            </template>
+
+                            <v-card>
+                                <div style='padding: 10px' class="blue-grey darken-3 white--text">
+                                    DELETE
+                                </div>
+
+                                <v-card-text>
+                                    <br>
+                                    Do you want really want to delete this appointment?
+                                </v-card-text>
+
+                                <v-divider></v-divider>
+
+                                <v-card-actions>
+                                <v-spacer></v-spacer>
+                                <v-btn color='blue-grey darken-2 white--text' small @click="onRemove" >REMOVE </v-btn>
+                                <v-btn color='blue-grey darken-2 white--text' small @click="removeDialog = false" >CLOSE </v-btn>
+                                </v-card-actions>
+                            </v-card>
+                        </v-dialog>
+                    
+                    
+                    
+                <v-btn color='blue-grey darken-2 white--text' small @click='onUpdate' > UPDATE </v-btn>
+
+                
+                </span>
+                <v-btn color='blue-grey darken-4 white--text' small @click="onClose" > CLOSE </v-btn>
             </div>
             </form>
         </v-card>
@@ -194,14 +232,14 @@
     
     <v-dialog  v-model="dialog" width="420" persistent>
         <template v-slot:activator="{ on, attrs }">
-            <v-icon v-bind="attrs" v-on="on"  class='ml-4' style='font-size: 1.2rem;'>mdi-comment-outline</v-icon>
+            <v-icon v-bind="attrs" v-on="on"  class='ml-4' style='font-size: 1.2rem;'></v-icon>
         </template>
 <!-- ADD NEW BOOKING  -->
-        <v-card style='border: 5px solid #607d8a; ' >
+        <v-card style='border: 5px solid #263238; ' >
             <form @submit.prevent ='addBook'>
 
             <div style='padding: 2%;'>
-                    <div style='text-align: center;background: #607d8a'>
+                    <div style='text-align: center;background: #263238'>
                     <v-btn class=' subtitle-2' dark text  >
                         <v-icon class='body-1 pr-2'>mdi-book-outline</v-icon> ADD BOOKING
                     </v-btn>
@@ -291,13 +329,15 @@
             <v-divider></v-divider>
 
             <v-spacer></v-spacer>
-            <div style='display: block; text-align: center;'>
-                <v-btn color="primary" text type='submit' > BOOKING </v-btn>
-                <v-btn color="primary" text @click="dialog = false" > CLOSE </v-btn>
+            <div style='display: block; text-align: center;padding: 10px;'>
+                <v-btn color='blue-grey darken-4 white--text' small type='submit' > BOOKING </v-btn>
+                <v-btn color='blue-grey darken-4 white--text' small @click="dialog = false" > CLOSE </v-btn>
             </div>
         </form>
         </v-card>
 </v-dialog>
+
+
 </v-row>
 </template>
 
@@ -317,9 +357,12 @@ export default {
         selectedElement: null,
         selectedOpen: false,
         events: [],
+        weekday: [1, 2, 3, 4, 5, 6, 0],
+
 
         //dialog
         dialog: false,
+        removeDialog: false,
         toggle: true,
         selectedEdit: true,
 
@@ -335,14 +378,23 @@ export default {
         name: '',
         email: '',
         mobile: '',
-        colors: ['blue', 'indigo', 'deep-purple', 'cyan', 'green', 'orange', 'grey darken-1']
+        // colors: ['blue', 'indigo', 'deep-purple', 'cyan', 'green', 'orange', 'grey darken-1']
+        colors: ['grey darken-1', 'grey darken-2', 'grey darken-3', 'grey darken-4', 'blue-grey darken-2', 'blue-grey darken-3', 'blue-grey darken-4', ]
     }),
 
     mounted () {
-    this.$refs.calendar.scrollToTime('06:00')
+    this.$refs.calendar.scrollToTime('08:00')
     },
 
     methods: {
+        onRemove(){
+            this.$store.dispatch('booking/deleteAppointment', {id: this.id})
+            .then(()=>{
+                this.removeDialog = false
+                this.selectedOpen = false
+            })
+            
+        },
         updateRange(){
             console.log('updateRange')
         },
@@ -357,7 +409,7 @@ export default {
                 start: this.date + " " + this.time, 
                 end: this.finish,
                 service: this.service,
-                name: this.name,
+                name: this.name.toUpperCase(),
                 email: this.email,
                 mobile: this.mobile,
                 color: this.colors[Math.floor(Math.random() * 6) + 0],
@@ -382,7 +434,7 @@ export default {
                 start: this.date + " " + this.time, 
                 end: this.finish,
                 service: this.service,
-                name: this.name,
+                name: this.name.toUpperCase(),
                 email: this.email,
                 mobile: this.mobile,
                 color: this.colors[Math.floor(Math.random() * 6) + 0],
